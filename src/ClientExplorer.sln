@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AvaloniaUI", "AvaloniaUI", "{ACE44117-896E-40CF-B2C8-64FB1FCACC4B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{0F41A3A2-F2F2-49CE-979B-0106EB54A574}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientExplorer.AvaloniaUI", "AvaloniaUI\ClientExplorer.AvaloniaUI\ClientExplorer.AvaloniaUI.csproj", "{48B6C79D-FA84-4626-8936-F367BCBD675C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientExplorer.Shared.ViewModels", "Core\ClientExplorer.Shared.ViewModels\ClientExplorer.Shared.ViewModels.csproj", "{47D736F5-EB47-4D07-AB5B-DB54504926C9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{48B6C79D-FA84-4626-8936-F367BCBD675C} = {ACE44117-896E-40CF-B2C8-64FB1FCACC4B}
+		{47D736F5-EB47-4D07-AB5B-DB54504926C9} = {0F41A3A2-F2F2-49CE-979B-0106EB54A574}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{48B6C79D-FA84-4626-8936-F367BCBD675C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48B6C79D-FA84-4626-8936-F367BCBD675C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48B6C79D-FA84-4626-8936-F367BCBD675C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48B6C79D-FA84-4626-8936-F367BCBD675C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47D736F5-EB47-4D07-AB5B-DB54504926C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47D736F5-EB47-4D07-AB5B-DB54504926C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47D736F5-EB47-4D07-AB5B-DB54504926C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47D736F5-EB47-4D07-AB5B-DB54504926C9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
