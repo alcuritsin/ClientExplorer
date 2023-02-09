@@ -1,4 +1,5 @@
-﻿using System.Net.Mime;
+﻿using System.Collections.ObjectModel;
+using ClientExplorer.Application;
 
 namespace ClientExplorer.Shared.ViewModels;
 
