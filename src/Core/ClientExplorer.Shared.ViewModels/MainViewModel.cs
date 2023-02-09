@@ -1,22 +1,20 @@
-﻿namespace ClientExplorer.Shared.ViewModels;
+﻿using System.Net.Mime;
+
+namespace ClientExplorer.Shared.ViewModels;
 
 public class MainViewModel : BaseViewModel
 {
   #region Public Properties
 
   public string Greeting { get; set; }
-  
+
   #endregion
 
   #region Commands
 
-
-
   #endregion
 
   #region Events
-
-
 
   #endregion
 
@@ -24,20 +22,16 @@ public class MainViewModel : BaseViewModel
 
   public MainViewModel()
   {
-    Greeting = "_Welcome to Avalonia!_";
+    Greeting = AppDomain.CurrentDomain.BaseDirectory;
   }
 
   #endregion
 
   #region Commands Methods
 
-
-
   #endregion
 
   #region Private Methods
-
-
 
   #endregion
 }
