@@ -7,7 +7,9 @@ public class MainViewModel : BaseViewModel
 {
   #region Public Properties
 
-  public string Greeting { get; set; }
+  public string StatusInfo { get; set; }
+  
+  public ObservableCollection<string> Clients { get; set; }
 
   #endregion
 
@@ -23,7 +25,14 @@ public class MainViewModel : BaseViewModel
 
   public MainViewModel()
   {
-    Greeting = AppDomain.CurrentDomain.BaseDirectory;
+    Clients = new ObservableCollection<string>();
+    ClientEr.CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
+    // ClientEr.CurrentPath = "smb://192.168.0.88/clients";
+    
+    StatusInfo = ClientEr.CurrentPath;
+
+    GetClientList();
+
   }
 
   #endregion
@@ -34,5 +43,24 @@ public class MainViewModel : BaseViewModel
 
   #region Private Methods
 
+  private void GetClientList()
+  {
+    if (ClientEr.CurrentPath == null)
+    {
+      StatusInfo = "Err: CurrentPath = null";
+      return;
+    }
+    
+    Clients.Clear();
+   
+    var directoryInfo =new DirectoryInfo(ClientEr.CurrentPath);
+
+    foreach (var directory in directoryInfo.GetDirectories())
+    {
+      Clients.Add(directory.Name);
+    }
+
+  }
+  
   #endregion
 }

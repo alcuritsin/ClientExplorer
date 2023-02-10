@@ -34,12 +34,13 @@
       <!-- Панель - `Клиент` -->
       <StackPanel>
         <Label x:Name="LabelClientName">Наименование клиента</Label>
-        <ComboBox x:Name="ComboBoxClientName">
-          <ComboBox.ItemTemplate>
-            <DataTemplate>
-              <TextBlock Text="{Binding }"></TextBlock>
-            </DataTemplate>
-          </ComboBox.ItemTemplate>
+        <ComboBox x:Name="ComboBoxClientName"
+                  Items="{Binding Clients}">
+          <!-- <ComboBox.ItemTemplate> -->
+          <!--   <DataTemplate> -->
+          <!--     <TextBlock Text="{Binding  ClientEntityViewModel.Name}"></TextBlock> -->
+          <!--   </DataTemplate> -->
+          <!-- </ComboBox.ItemTemplate> -->
         </ComboBox>
       </StackPanel>
 
@@ -227,7 +228,7 @@
       <!-- Панель - `Информации` -->
       <StackPanel>
         <Label x:Name="LabelInfo"
-               Content="{Binding Greeting}"/>
+               Content="{Binding StatusInfo}"/>
       </StackPanel>
 
     </StackPanel>

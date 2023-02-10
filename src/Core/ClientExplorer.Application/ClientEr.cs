@@ -8,6 +8,7 @@ public static class ClientEr
 {
     public static string DefaultDataResourcePath = ".ClientExplorer.DataResource";
     public static string LocationsSourceFileName = ".ObjectLocations.json";
+    public static string? CurrentPath { get; set; }
 
     /*
      public  static async Task<ObservableCollection<LocationViewModel>?> GetLocations()

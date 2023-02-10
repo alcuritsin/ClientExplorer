@@ -8,6 +8,24 @@
     <AssemblyVersion>0.1.0</AssemblyVersion>
     <FileVersion>0.1.0</FileVersion>
     <NeutralLanguage>ru</NeutralLanguage>
+    <AssemblyName>ClientExplorer</AssemblyName>
+    <RootNamespace>ClientExplorer</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <Company>ClientExplorer</Company>
+    <Product>ClientExplorer</Product>
+    <SignAssembly>true</SignAssembly>
+    <PublicSign>false</PublicSign>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <Optimize>true</Optimize>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
