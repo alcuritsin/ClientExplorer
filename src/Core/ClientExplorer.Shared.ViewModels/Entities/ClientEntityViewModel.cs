@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace ClientExplorer.Shared.ViewModels;
 
 public sealed class ClientEntityViewModel
