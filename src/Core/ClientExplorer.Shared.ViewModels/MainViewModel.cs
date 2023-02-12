@@ -28,8 +28,9 @@ public class MainViewModel : BaseViewModel
   public MainViewModel()
   {
     Clients = new ObservableCollection<string>();
-    ClientEr.CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
-    // ClientEr.CurrentPath = "smb://192.168.0.88/clients";
+    //ClientEr.CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
+    //TODO: Хардкодим путь до папок с клиентами на время разработки и тестирования. В будущем значение будет вынесено в файл настроек "*.ini". 
+    ClientEr.CurrentPath = "/mnt/share/Clients";
     
     StatusInfo = ClientEr.CurrentPath;
 
