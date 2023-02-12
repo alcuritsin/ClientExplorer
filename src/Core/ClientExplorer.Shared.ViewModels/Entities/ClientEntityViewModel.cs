@@ -2,14 +2,15 @@ using System.IO;
 
 namespace ClientExplorer.Shared.ViewModels;
 
-public sealed class ClientEntityViewModel
+public class ClientEntityViewModel
 {
-  public ClientEntityViewModel(string directoryName, DirectoryInfo directoryFullName)
-  {
-    Name = directoryName;
-    Path = directoryFullName;
-  }
-
   public string? Name { get; set; }
+  public string Icon { get; set; }
   public DirectoryInfo? Path { get; set; }
+  public ClientEntityViewModel(string clientName, DirectoryInfo clientDirectory)
+  {
+    Name = clientName;
+    Path = clientDirectory;
+    Icon = "path to icon";
+  }
 }
