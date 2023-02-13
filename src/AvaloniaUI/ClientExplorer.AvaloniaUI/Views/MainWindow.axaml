@@ -3,6 +3,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ClientExplorer.Shared.ViewModels;assembly=ClientExplorer.Shared.ViewModels"
+        
+        xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+        xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+        
+        
         x:Class="ClientExplorer.AvaloniaUI.MainWindow"
 
         mc:Ignorable="d" d:DesignWidth="1325" d:DesignHeight="706"
@@ -39,97 +44,117 @@
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="Auto" />
           <ColumnDefinition Width="Auto" />
-          <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <!-- Панель - `Клиент` -->
+        <!-- Панель - `Клиенты` -->
         <Grid
           Grid.Column="0"
           Margin="6">
-          
+
           <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
           </Grid.RowDefinitions>
 
           <Label
             Grid.Row="0"
             x:Name="LabelClientName"
-            Content="Клиенты"/>
-          
-          <TextBox
-            Grid.Row="1"
-            x:Name="TextBoxSearchFilter"
-            Margin="0 6"/>
-          
+            Content="Клиенты" />
+
+          <Grid
+            Grid.Row="1">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox
+              Grid.Column="0"
+              x:Name="TextBoxSearchFilter"
+              Margin="0 6" />
+
+            <Button
+              Grid.Column="1"
+              Content="X" />
+
+          </Grid>
+
           <ListBox
             Grid.Row="2"
             Height="560"
             Width="460"
-            Items="{Binding Clients}">
+            Items="{Binding SortedClients}"
+            SelectedItem="{Binding SelectedClient}">
+            
+            <i:Interaction.Behaviors>
+              <ia:EventTriggerBehavior EventName="Click">
+                <ia:InvokeCommandAction
+                  Command="{Binding OpenClient}"
+                  CommandParameter="{Binding SelectedClient}" />
+              </ia:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+
             <ListBox.ItemTemplate>
               <DataTemplate>
-                <TextBlock Text="{Binding  Name}"/>
+
+                <Grid>
+
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+
+                  <Image
+                    Grid.Column="0"
+                    Height="50"
+
+                    Source="{Binding IconPath}"
+                    Stretch="Uniform" />
+
+                  <TextBlock
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Margin="6 0 0 0"
+                    Text="{Binding  Name}" />
+
+                </Grid>
+
               </DataTemplate>
             </ListBox.ItemTemplate>
+            
+            
+            
           </ListBox>
         </Grid>
 
-        <!-- Группа - `Существующий объект` -->
-        <Grid
+        <WrapPanel
           Grid.Column="1"
+          Orientation="Vertical"
           Margin="6">
 
-          <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-          </Grid.RowDefinitions>
-
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-          </Grid.ColumnDefinitions>
-
-          <!-- Заголовок группы - `Существующий объект` -->
           <Border
-            Grid.Row="0" Grid.Column="0"
-            ZIndex="1"
-            Padding="0,0"
-            Margin="6,0,0,0"
-            BorderBrush="white"
-            BorderThickness="1"
-            CornerRadius="6">
-
-            <Label>Существующий объект</Label>
+            Height="100"
+            BorderBrush="Blue"
+            BorderThickness="2">
+            
+            <StackPanel>
+              <TextBlock
+                Text="{Binding SelectedClient.Name}" />
+              <TextBlock
+                Text="{Binding SelectedClient.ClientPath}" />
+            </StackPanel>
 
           </Border>
 
-          <!-- Контент группы - `Существующий объект` -->
-          <Border
-            Grid.Row="0" Grid.Column="0"
-            Grid.RowSpan="2" Grid.ColumnSpan="2"
-            Margin="0,12,0,0"
-            Padding="6,12,6,6"
-            BorderThickness="1"
-            BorderBrush="White"
-            CornerRadius="6">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-            <ListBox x:Name="ListBoxClientObjects"></ListBox>
-
-          </Border>
-
-        </Grid>
-
-        <!-- Панель - `Действий - настроек` -->
-        <StackPanel
-          Grid.Column="2"
-          Margin="6"
-          Orientation="Horizontal">
-
-          <StackPanel>
-            <!-- Групп - `Новый объект` -->
-            <Grid>
+            <!-- Группа - `Существующий объект` -->
+            <Grid
+              Grid.Column="0">
 
               <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -138,76 +163,10 @@
 
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-              </Grid.ColumnDefinitions>
-
-              <!-- Заголоквок группы - `Новый объект` -->
-              <Border
-                ZIndex="1"
-                Padding="0,0"
-                Margin="6,0,0,0"
-                BorderBrush="white"
-                BorderThickness="1"
-                CornerRadius="6">
-
-                <Label>Новый объект</Label>
-
-              </Border>
-
-              <!-- Контент группы - `Новый объект` -->
-              <Border
-
-                Grid.Row="0" Grid.Column="0"
-                Grid.RowSpan="2" Grid.ColumnSpan="2"
-                Margin="0,12,0,0"
-                Padding="6,12,6,6"
-                BorderThickness="1"
-                BorderBrush="White"
-                CornerRadius="6">
-
-                <StackPanel>
-
-                  <StackPanel>
-                    <Label x:Name="LabelCityName">Населённый пункт (НП)</Label>
-                    <ComboBox x:Name="ComboBoxCityName"></ComboBox>
-                  </StackPanel>
-
-                  <StackPanel>
-                    <Label x:Name="LabelStreetName">Улица</Label>
-                    <ComboBox x:Name="ComboBoxStreetName"></ComboBox>
-                  </StackPanel>
-
-                  <StackPanel>
-                    <Label x:Name="LabelHouseNumber">Номер дома</Label>
-                    <ComboBox x:Name="ComboBoxHouseNumber"></ComboBox>
-                  </StackPanel>
-
-                  <StackPanel>
-                    <Label x:Name="LabelAdditionalParametr">Дополнительные параметры</Label>
-                    <TextBox x:Name="TextBoxAdditionalParametr"></TextBox>
-                  </StackPanel>
-                  <CheckBox x:Name="CheckBoxLocationAsFolder" Content="НП - как папка, например у МОНЕТКИ"></CheckBox>
-
-                </StackPanel>
-
-              </Border>
-
-            </Grid>
-
-            <!-- Группа - `Создать папки` -->
-            <Grid>
-
-              <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-              </Grid.RowDefinitions>
-
-              <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
               </Grid.ColumnDefinitions>
 
-              <!-- Заголовок группы - `Создать папки` -->
+              <!-- Заголовок группы - `Существующий объект` -->
               <Border
                 Grid.Row="0" Grid.Column="0"
                 ZIndex="1"
@@ -217,13 +176,12 @@
                 BorderThickness="1"
                 CornerRadius="6">
 
-                <Label>Создать папки</Label>
+                <Label>Существующий объект</Label>
 
               </Border>
 
-              <!-- Контент группы - `Создать папки` -->
+              <!-- Контент группы - `Существующий объект` -->
               <Border
-
                 Grid.Row="0" Grid.Column="0"
                 Grid.RowSpan="2" Grid.ColumnSpan="2"
                 Margin="0,12,0,0"
@@ -232,27 +190,156 @@
                 BorderBrush="White"
                 CornerRadius="6">
 
-                <StackPanel>
-                  <CheckBox x:Name="CheckBoxDocument" Content="01 Документы"></CheckBox>
-                  <CheckBox x:Name="CheckBoxPhoto" Content="02 Фото"></CheckBox>
-                  <CheckBox x:Name="CheckBoxDesign" Content="03 Дизайн"></CheckBox>
-                  <CheckBox x:Name="CheckBoxProject" Content="04 Проект"></CheckBox>
-                  <CheckBox x:Name="CheckBoxApprovalInAdministration" Content="05 Согласование в администрации"></CheckBox>
-                  <StackPanel Orientation="Horizontal">
-                    <CheckBox x:Name="CheckBoxUserVersionFolderName"></CheckBox>
-                    <TextBox x:Name="TextBoxUserVersionFolderName"></TextBox>
-                  </StackPanel>
-                </StackPanel>
+                <ListBox
+                  x:Name="ListBoxClientObjects"
+                  Items="{Binding SortedLocation}">
+                  
+                  <!-- <ListBox.ItemTemplate> -->
+                  <!--   <DataTemplate> -->
+                  <!--     <TextBox></TextBox> -->
+                  <!--   </DataTemplate> -->
+                  <!-- </ListBox.ItemTemplate> -->
+                  
+                </ListBox>
 
               </Border>
 
             </Grid>
 
-          </StackPanel>
+            <!-- Панель - `Действий - настроек` -->
+            <StackPanel
+              Grid.Column="1"
+              Orientation="Horizontal">
+
+              <StackPanel>
+                <!-- Групп - `Новый объект` -->
+                <Grid>
+
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                  </Grid.RowDefinitions>
+
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+
+                  <!-- Заголоквок группы - `Новый объект` -->
+                  <Border
+                    ZIndex="1"
+                    Padding="0,0"
+                    Margin="6,0,0,0"
+                    BorderBrush="white"
+                    BorderThickness="1"
+                    CornerRadius="6">
+
+                    <Label>Новый объект</Label>
+
+                  </Border>
+
+                  <!-- Контент группы - `Новый объект` -->
+                  <Border
+
+                    Grid.Row="0" Grid.Column="0"
+                    Grid.RowSpan="2" Grid.ColumnSpan="2"
+                    Margin="0,12,0,0"
+                    Padding="6,12,6,6"
+                    BorderThickness="1"
+                    BorderBrush="White"
+                    CornerRadius="6">
+
+                    <StackPanel>
+
+                      <StackPanel>
+                        <Label x:Name="LabelCityName">Населённый пункт (НП)</Label>
+                        <ComboBox x:Name="ComboBoxCityName"></ComboBox>
+                      </StackPanel>
+
+                      <StackPanel>
+                        <Label x:Name="LabelStreetName">Улица</Label>
+                        <ComboBox x:Name="ComboBoxStreetName"></ComboBox>
+                      </StackPanel>
+
+                      <StackPanel>
+                        <Label x:Name="LabelHouseNumber">Номер дома</Label>
+                        <ComboBox x:Name="ComboBoxHouseNumber"></ComboBox>
+                      </StackPanel>
+
+                      <StackPanel>
+                        <Label x:Name="LabelAdditionalParametr">Дополнительные параметры</Label>
+                        <TextBox x:Name="TextBoxAdditionalParametr"></TextBox>
+                      </StackPanel>
+                      <CheckBox x:Name="CheckBoxLocationAsFolder" Content="НП - как папка, например у МОНЕТКИ"></CheckBox>
+
+                    </StackPanel>
+
+                  </Border>
+
+                </Grid>
+
+                <!-- Группа - `Создать папки` -->
+                <Grid>
+
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                  </Grid.RowDefinitions>
+
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+
+                  <!-- Заголовок группы - `Создать папки` -->
+                  <Border
+                    Grid.Row="0" Grid.Column="0"
+                    ZIndex="1"
+                    Padding="0,0"
+                    Margin="6,0,0,0"
+                    BorderBrush="white"
+                    BorderThickness="1"
+                    CornerRadius="6">
+
+                    <Label>Создать папки</Label>
+
+                  </Border>
+
+                  <!-- Контент группы - `Создать папки` -->
+                  <Border
+
+                    Grid.Row="0" Grid.Column="0"
+                    Grid.RowSpan="2" Grid.ColumnSpan="2"
+                    Margin="0,12,0,0"
+                    Padding="6,12,6,6"
+                    BorderThickness="1"
+                    BorderBrush="White"
+                    CornerRadius="6">
+
+                    <StackPanel>
+                      <CheckBox x:Name="CheckBoxDocument" Content="01 Документы"></CheckBox>
+                      <CheckBox x:Name="CheckBoxPhoto" Content="02 Фото"></CheckBox>
+                      <CheckBox x:Name="CheckBoxDesign" Content="03 Дизайн"></CheckBox>
+                      <CheckBox x:Name="CheckBoxProject" Content="04 Проект"></CheckBox>
+                      <CheckBox x:Name="CheckBoxApprovalInAdministration" Content="05 Согласование в администрации"></CheckBox>
+                      <StackPanel Orientation="Horizontal">
+                        <CheckBox x:Name="CheckBoxUserVersionFolderName"></CheckBox>
+                        <TextBox x:Name="TextBoxUserVersionFolderName"></TextBox>
+                      </StackPanel>
+                    </StackPanel>
+
+                  </Border>
+
+                </Grid>
+
+              </StackPanel>
 
 
-        </StackPanel>
+            </StackPanel>
 
+          </Grid>
+
+        </WrapPanel>
       </Grid>
 
       <!-- Панель - `Кнопок` -->

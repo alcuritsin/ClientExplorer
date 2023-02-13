@@ -29,6 +29,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include=".ClientExplorer.Assets\.ObjectLocations.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <AvaloniaResource Include="Assets\**" />
     <None Remove=".gitignore" />
   </ItemGroup>
@@ -43,14 +46,13 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.18" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.18" />
+    <PackageReference Include="Avalonia.Xaml.Interactions" Version="0.10.18" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="0.10.18" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\ClientExplorer.Shared.ViewModels\ClientExplorer.Shared.ViewModels.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models" />
   </ItemGroup>
 </Project>
