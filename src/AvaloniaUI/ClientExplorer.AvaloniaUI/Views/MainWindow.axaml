@@ -87,7 +87,7 @@
             SelectedItem="{Binding SelectedClient}">
             
             <i:Interaction.Behaviors>
-              <ia:EventTriggerBehavior EventName="Click">
+              <ia:EventTriggerBehavior EventName="Tapped">
                 <ia:InvokeCommandAction
                   Command="{Binding OpenClient}"
                   CommandParameter="{Binding SelectedClient}" />
@@ -154,16 +154,17 @@
 
             <!-- Группа - `Существующий объект` -->
             <Grid
+              Margin="6"
               Grid.Column="0">
 
               <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
+               <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
               </Grid.RowDefinitions>
 
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
               </Grid.ColumnDefinitions>
 
               <!-- Заголовок группы - `Существующий объект` -->
@@ -191,6 +192,8 @@
                 CornerRadius="6">
 
                 <ListBox
+                  Width="450"
+                  Height="500"
                   x:Name="ListBoxClientObjects"
                   Items="{Binding SortedLocation}">
                   
