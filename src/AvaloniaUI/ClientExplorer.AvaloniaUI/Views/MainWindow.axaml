@@ -3,11 +3,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ClientExplorer.Shared.ViewModels;assembly=ClientExplorer.Shared.ViewModels"
-        
+
         xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
         xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
-        
-        
+
+
         x:Class="ClientExplorer.AvaloniaUI.MainWindow"
 
         mc:Ignorable="d" d:DesignWidth="1325" d:DesignHeight="706"
@@ -24,6 +24,7 @@
     <vm:MainViewModel />
   </Design.DataContext>
 
+
   <Border
     Padding="10"
     CornerRadius="5">
@@ -37,10 +38,17 @@
     <!--   </ExperimentalAcrylicBorder.Material> -->
     <!-- </ExperimentalAcrylicBorder> -->
 
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
 
-    <StackPanel>
       <!-- Панель - 'Основная' -->
-      <Grid>
+      <Grid
+        Grid.Row="0">
+
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="Auto" />
           <ColumnDefinition Width="Auto" />
@@ -52,9 +60,9 @@
           Margin="6">
 
           <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
           </Grid.RowDefinitions>
 
           <Label
@@ -67,25 +75,33 @@
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="*" />
               <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+
+            <!-- Фильтр для клиентов -->
             <TextBox
               Grid.Column="0"
               x:Name="TextBoxSearchFilter"
               Margin="0 6" />
 
+            <!-- Сбросить фильтр -->
             <Button
               Grid.Column="1"
               Content="X" />
+
+            <!-- Новый клиент. Создать нового клиента -->
+            <Button
+              Grid.Column="2"
+              Content="N" />
 
           </Grid>
 
           <ListBox
             Grid.Row="2"
-            Height="560"
             Width="460"
             Items="{Binding SortedClients}"
             SelectedItem="{Binding SelectedClient}">
-            
+
             <i:Interaction.Behaviors>
               <ia:EventTriggerBehavior EventName="Tapped">
                 <ia:InvokeCommandAction
@@ -121,9 +137,8 @@
 
               </DataTemplate>
             </ListBox.ItemTemplate>
-            
-            
-            
+
+
           </ListBox>
         </Grid>
 
@@ -136,20 +151,23 @@
             Height="100"
             BorderBrush="Blue"
             BorderThickness="2">
-            
+
             <StackPanel>
               <TextBlock
                 Text="{Binding SelectedClient.Name}" />
               <TextBlock
                 Text="{Binding SelectedClient.ClientPath}" />
+
+              <Button Content="Init client folder" />
             </StackPanel>
+
 
           </Border>
 
           <Grid>
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" />
-              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <!-- Группа - `Существующий объект` -->
@@ -158,13 +176,13 @@
               Grid.Column="0">
 
               <Grid.RowDefinitions>
-               <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
               </Grid.RowDefinitions>
 
               <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
               </Grid.ColumnDefinitions>
 
               <!-- Заголовок группы - `Существующий объект` -->
@@ -186,24 +204,46 @@
                 Grid.Row="0" Grid.Column="0"
                 Grid.RowSpan="2" Grid.ColumnSpan="2"
                 Margin="0,12,0,0"
-                Padding="6,12,6,6"
+                Padding="6,12,6,0"
                 BorderThickness="1"
                 BorderBrush="White"
                 CornerRadius="6">
 
-                <ListBox
-                  Width="450"
-                  Height="500"
-                  x:Name="ListBoxClientObjects"
-                  Items="{Binding SortedLocation}">
-                  
-                  <!-- <ListBox.ItemTemplate> -->
-                  <!--   <DataTemplate> -->
-                  <!--     <TextBox></TextBox> -->
-                  <!--   </DataTemplate> -->
-                  <!-- </ListBox.ItemTemplate> -->
-                  
-                </ListBox>
+                <StackPanel>
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox
+                      Grid.Column="0" />
+
+                    <Button
+                      Grid.Column="1"
+                      Content="X" />
+
+                    <Button
+                      Grid.Column="2"
+                      Content="N" />
+
+                  </Grid>
+
+                  <ListBox
+                    Width="450"
+                    x:Name="ListBoxClientObjects"
+                    Items="{Binding SortedLocation}">
+
+                    <!-- <ListBox.ItemTemplate> -->
+                    <!--   <DataTemplate> -->
+                    <!--     <TextBox></TextBox> -->
+                    <!--   </DataTemplate> -->
+                    <!-- </ListBox.ItemTemplate> -->
+
+                  </ListBox>
+
+                </StackPanel>
 
               </Border>
 
@@ -256,7 +296,20 @@
 
                       <StackPanel>
                         <Label x:Name="LabelCityName">Населённый пункт (НП)</Label>
-                        <ComboBox x:Name="ComboBoxCityName"></ComboBox>
+
+                        <!-- <ComboBox -->
+                        <!--   x:Name="ComboBoxCityName"> -->
+                        <!--   <ComboBoxItem>City_0</ComboBoxItem> -->
+                        <!--   <ComboBoxItem>City_1</ComboBoxItem> -->
+                        <!--   <ComboBoxItem>City_2</ComboBoxItem> -->
+                        <!--   <ComboBoxItem>City_3</ComboBoxItem> -->
+                        <!--   <ComboBoxItem>City_4</ComboBoxItem> -->
+                        <!--   <ComboBoxItem>Aity_0</ComboBoxItem> -->
+                        <!--   <ComboBoxItem>Bity_1</ComboBoxItem> -->
+                        <!--   <ComboBoxItem>Dity_2</ComboBoxItem> -->
+                        <!--   <ComboBoxItem>Fity_3</ComboBoxItem> -->
+                        <!--   <ComboBoxItem>Gity_4</ComboBoxItem> -->
+                        <!-- </ComboBox> -->
                       </StackPanel>
 
                       <StackPanel>
@@ -347,6 +400,7 @@
 
       <!-- Панель - `Кнопок` -->
       <StackPanel
+        Grid.Row="1"
         Orientation="Horizontal"
         HorizontalAlignment="Right">
 
@@ -356,11 +410,12 @@
       </StackPanel>
 
       <!-- Панель - `Информации` -->
-      <StackPanel>
+      <StackPanel
+        Grid.Row="2">
         <Label x:Name="LabelInfo"
                Content="{Binding StatusInfo}" />
       </StackPanel>
 
-    </StackPanel>
+    </Grid>
   </Border>
 </Window>
