@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ClientExplorer.Application\ClientExplorer.Application.csproj" />
   </ItemGroup>
 
@@ -21,6 +17,10 @@
     <Reference Include="Avalonia.Visuals">
       <HintPath>..\..\..\..\..\..\..\..\home\kuricyn\.nuget\packages\avalonia\0.10.18\lib\netcoreapp2.0\Avalonia.Visuals.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
   </ItemGroup>
 
 </Project>

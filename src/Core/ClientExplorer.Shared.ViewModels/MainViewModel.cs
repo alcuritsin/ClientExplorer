@@ -17,7 +17,9 @@ public class MainViewModel : BaseViewModel
 
   public ObservableCollection<string> SortedLocation { get; set; }
 
+  public bool IsCityFocus { get; set; }
 
+  
   public ICommand OpenClient { get; }
 
   #endregion

@@ -44,6 +44,20 @@
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
+      
+      <Border
+        Height="100"
+        Width="100"
+        Background="orange"
+        ZIndex="1"
+        IsVisible="{Binding IsCityFocus }">
+        <StackPanel>
+          <Label>City_1</Label>
+          <Label>City_2</Label>
+          <Label>City_3</Label>
+          <Label>City_4</Label>
+        </StackPanel>
+      </Border>
 
       <!-- Панель - 'Основная' -->
       <Grid
@@ -142,12 +156,17 @@
           </ListBox>
         </Grid>
 
-        <WrapPanel
-          Grid.Column="1"
-          Orientation="Vertical"
-          Margin="6">
+        <Grid
+          Grid.Column="1">
 
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+          </Grid.RowDefinitions>
+
+          <!-- Выделенный клиент -->
           <Border
+            Grid.Row="0"
             Height="100"
             BorderBrush="Blue"
             BorderThickness="2">
@@ -164,7 +183,8 @@
 
           </Border>
 
-          <Grid>
+          <Grid
+            Grid.Row="1">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" />
               <ColumnDefinition Width="*" />
@@ -209,8 +229,15 @@
                 BorderBrush="White"
                 CornerRadius="6">
 
-                <StackPanel>
-                  <Grid>
+                <Grid>
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                  </Grid.RowDefinitions>
+
+                  <Grid
+                    Grid.Row="0">
+
                     <Grid.ColumnDefinitions>
                       <ColumnDefinition Width="*" />
                       <ColumnDefinition Width="Auto" />
@@ -231,6 +258,7 @@
                   </Grid>
 
                   <ListBox
+                    Grid.Row="1"
                     Width="450"
                     x:Name="ListBoxClientObjects"
                     Items="{Binding SortedLocation}">
@@ -243,7 +271,7 @@
 
                   </ListBox>
 
-                </StackPanel>
+                </Grid>
 
               </Border>
 
@@ -296,6 +324,10 @@
 
                       <StackPanel>
                         <Label x:Name="LabelCityName">Населённый пункт (НП)</Label>
+                        <TextBox x:Name="TextBoxCityName"
+                          IsFocused="{Binding IsCityFocus, Mode=OneWayToSource}"
+                          />
+
 
                         <!-- <ComboBox -->
                         <!--   x:Name="ComboBoxCityName"> -->
@@ -395,7 +427,7 @@
 
           </Grid>
 
-        </WrapPanel>
+        </Grid>
       </Grid>
 
       <!-- Панель - `Кнопок` -->
