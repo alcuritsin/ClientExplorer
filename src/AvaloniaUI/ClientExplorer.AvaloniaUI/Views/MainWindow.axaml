@@ -11,10 +11,11 @@
         x:Class="ClientExplorer.AvaloniaUI.MainWindow"
 
         mc:Ignorable="d" d:DesignWidth="1325" d:DesignHeight="706"
+        
+        Width="1325" Height="706"
 
         Icon="/Assets/avalonia-logo.ico"
         Title="ClientExplorer"
-        WindowState="Maximized"
         WindowStartupLocation="CenterScreen">
 
 
@@ -38,12 +39,8 @@
     <!--   </ExperimentalAcrylicBorder.Material> -->
     <!-- </ExperimentalAcrylicBorder> -->
 
-    <Grid>
-      <Grid.RowDefinitions>
-        <RowDefinition Height="*" />
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
-      </Grid.RowDefinitions>
+    <Grid
+      RowDefinitions="*, Auto, Auto">
       
       <Border
         Height="100"
@@ -61,23 +58,14 @@
 
       <!-- Панель - 'Основная' -->
       <Grid
-        Grid.Row="0">
-
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+        Grid.Row="0"
+        ColumnDefinitions="Auto, Auto">
 
         <!-- Панель - `Клиенты` -->
         <Grid
           Grid.Column="0"
+          RowDefinitions="Auto, Auto, *"
           Margin="6">
-
-          <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-          </Grid.RowDefinitions>
 
           <Label
             Grid.Row="0"
@@ -85,12 +73,8 @@
             Content="Клиенты" />
 
           <Grid
-            Grid.Row="1">
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="Auto" />
-              <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            Grid.Row="1"
+            ColumnDefinitions="*, Auto, Auto">
 
             <!-- Фильтр для клиентов -->
             <TextBox
@@ -127,12 +111,8 @@
             <ListBox.ItemTemplate>
               <DataTemplate>
 
-                <Grid>
-
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                  </Grid.ColumnDefinitions>
+                <Grid
+                  ColumnDefinitions="Auto, *">
 
                   <Image
                     Grid.Column="0"
@@ -157,12 +137,8 @@
         </Grid>
 
         <Grid
-          Grid.Column="1">
-
-          <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-          </Grid.RowDefinitions>
+          Grid.Column="1"
+          RowDefinitions="Auto, *">
 
           <!-- Выделенный клиент -->
           <Border
@@ -184,26 +160,16 @@
           </Border>
 
           <Grid
-            Grid.Row="1">
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="Auto" />
-              <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+            Grid.Row="1"
+            ColumnDefinitions="Auto, *">
 
             <!-- Группа - `Существующий объект` -->
             <Grid
+              Grid.Column="0"
+              RowDefinitions="Auto, *"
+              ColumnDefinitions="*, Auto"
               Margin="6"
-              Grid.Column="0">
-
-              <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-              </Grid.RowDefinitions>
-
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-              </Grid.ColumnDefinitions>
+              >
 
               <!-- Заголовок группы - `Существующий объект` -->
               <Border
@@ -229,20 +195,12 @@
                 BorderBrush="White"
                 CornerRadius="6">
 
-                <Grid>
-                  <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                  </Grid.RowDefinitions>
+                <Grid
+                  RowDefinitions="Auto, *">
 
                   <Grid
-                    Grid.Row="0">
-
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="*" />
-                      <ColumnDefinition Width="Auto" />
-                      <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                    Grid.Row="0"
+                    ColumnDefinitions="*, Auto, Auto">
 
                     <TextBox
                       Grid.Column="0" />
@@ -284,17 +242,9 @@
 
               <StackPanel>
                 <!-- Групп - `Новый объект` -->
-                <Grid>
-
-                  <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                  </Grid.RowDefinitions>
-
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                  </Grid.ColumnDefinitions>
+                <Grid
+                  RowDefinitions="Auto, *"
+                  ColumnDefinitions="Auto, *">
 
                   <!-- Заголоквок группы - `Новый объект` -->
                   <Border
@@ -367,17 +317,9 @@
                 </Grid>
 
                 <!-- Группа - `Создать папки` -->
-                <Grid>
-
-                  <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                  </Grid.RowDefinitions>
-
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                  </Grid.ColumnDefinitions>
+                <Grid
+                  RowDefinitions="Auto, *"
+                  ColumnDefinitions="Auto, *">
 
                   <!-- Заголовок группы - `Создать папки` -->
                   <Border
