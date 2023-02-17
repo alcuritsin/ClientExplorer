@@ -11,7 +11,7 @@
         x:Class="ClientExplorer.AvaloniaUI.MainWindow"
 
         mc:Ignorable="d" d:DesignWidth="1325" d:DesignHeight="706"
-        
+
         Width="1325" Height="706"
 
         Icon="/Assets/avalonia-logo.ico"
@@ -25,7 +25,7 @@
     <vm:MainViewModel />
   </Design.DataContext>
 
-
+  <!-- Главное окно -->
   <Border
     Padding="10"
     CornerRadius="5">
@@ -40,14 +40,23 @@
     <!-- </ExperimentalAcrylicBorder> -->
 
     <Grid
-      RowDefinitions="*, Auto, Auto">
-      
+      x:Name="MainGrid"
+      RowDefinitions="*, Auto, Auto"
+      Background="red">
+
+      <!-- Населённый пункт помогатор поиска значений 'Popop' -->
       <Border
-        Height="100"
-        Width="100"
+        x:Name="CityListPopup"
+        Grid.RowSpan="3"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top"
+        IsVisible="{Binding  #CityName.IsFocused, Mode=OneWay}"
+        Width="{Binding #CityName.Bounds.Width, Mode=OneWay}"
+        MaxHeight="200"
         Background="orange"
-        ZIndex="1"
-        IsVisible="{Binding IsCityFocus }">
+        Opacity="0.9"
+        ZIndex="1">
+        
         <StackPanel>
           <Label>City_1</Label>
           <Label>City_2</Label>
@@ -79,8 +88,19 @@
             <!-- Фильтр для клиентов -->
             <TextBox
               Grid.Column="0"
-              x:Name="TextBoxSearchFilter"
-              Margin="0 6" />
+              x:Name="ClientFilter"
+              Text="{Binding ClientFilter}"
+              Margin="0 6">
+              
+              <i:Interaction.Behaviors>
+                <ia:EventTriggerBehavior EventName="KeyUp">
+                  <ia:InvokeCommandAction
+                    Command="{Binding InputClientFilter}"
+                    CommandParameter="{Binding ClientFilter}"/>
+                </ia:EventTriggerBehavior>
+              </i:Interaction.Behaviors>
+              
+            </TextBox>
 
             <!-- Сбросить фильтр -->
             <Button
@@ -168,8 +188,7 @@
               Grid.Column="0"
               RowDefinitions="Auto, *"
               ColumnDefinitions="*, Auto"
-              Margin="6"
-              >
+              Margin="6">
 
               <!-- Заголовок группы - `Существующий объект` -->
               <Border
@@ -274,9 +293,8 @@
 
                       <StackPanel>
                         <Label x:Name="LabelCityName">Населённый пункт (НП)</Label>
-                        <TextBox x:Name="TextBoxCityName"
-                          IsFocused="{Binding IsCityFocus, Mode=OneWayToSource}"
-                          />
+                        <TextBox x:Name="CityName"
+                                 IsFocused="{Binding IsCityFocus, Mode=OneWayToSource}" />
 
 
                         <!-- <ComboBox -->
@@ -346,6 +364,7 @@
                     BorderBrush="White"
                     CornerRadius="6">
 
+                    <!-- Отметить папки для создания -->
                     <StackPanel>
                       <CheckBox x:Name="CheckBoxDocument" Content="01 Документы"></CheckBox>
                       <CheckBox x:Name="CheckBoxPhoto" Content="02 Фото"></CheckBox>
@@ -375,6 +394,7 @@
       <!-- Панель - `Кнопок` -->
       <StackPanel
         Grid.Row="1"
+        Background="Orange"
         Orientation="Horizontal"
         HorizontalAlignment="Right">
 
@@ -385,7 +405,8 @@
 
       <!-- Панель - `Информации` -->
       <StackPanel
-        Grid.Row="2">
+        Grid.Row="2"
+        Background="Gray">
         <Label x:Name="LabelInfo"
                Content="{Binding StatusInfo}" />
       </StackPanel>
