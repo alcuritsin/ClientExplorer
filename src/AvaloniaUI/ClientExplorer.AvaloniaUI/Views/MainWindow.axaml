@@ -58,10 +58,14 @@
         ZIndex="1">
         
         <StackPanel>
-          <Label>City_1</Label>
-          <Label>City_2</Label>
-          <Label>City_3</Label>
-          <Label>City_4</Label>
+          
+          <ListBox
+            Items="{Binding SortedAddressLocationByCity}">
+          </ListBox>
+          <!-- <Label>City_1</Label> -->
+          <!-- <Label>City_2</Label> -->
+          <!-- <Label>City_3</Label> -->
+          <!-- <Label>City_4</Label> -->
         </StackPanel>
       </Border>
 
@@ -293,23 +297,20 @@
 
                       <StackPanel>
                         <Label x:Name="LabelCityName">Населённый пункт (НП)</Label>
-                        <TextBox x:Name="CityName"
-                                 IsFocused="{Binding IsCityFocus, Mode=OneWayToSource}" />
+                        <TextBox
+                          x:Name="CityName"
+                          Text="{Binding AddressLocationCityFilter}">
+                          
+                          <i:Interaction.Behaviors>
+                            <ia:EventTriggerBehavior EventName="KeyUp">
+                              <ia:InvokeCommandAction
+                                Command="{Binding InputCityFilter}"
+                                CommandParameter="{Binding AddressLocationCityFilter}"/>
+                            </ia:EventTriggerBehavior>
+                          </i:Interaction.Behaviors>
+                          
+                        </TextBox>
 
-
-                        <!-- <ComboBox -->
-                        <!--   x:Name="ComboBoxCityName"> -->
-                        <!--   <ComboBoxItem>City_0</ComboBoxItem> -->
-                        <!--   <ComboBoxItem>City_1</ComboBoxItem> -->
-                        <!--   <ComboBoxItem>City_2</ComboBoxItem> -->
-                        <!--   <ComboBoxItem>City_3</ComboBoxItem> -->
-                        <!--   <ComboBoxItem>City_4</ComboBoxItem> -->
-                        <!--   <ComboBoxItem>Aity_0</ComboBoxItem> -->
-                        <!--   <ComboBoxItem>Bity_1</ComboBoxItem> -->
-                        <!--   <ComboBoxItem>Dity_2</ComboBoxItem> -->
-                        <!--   <ComboBoxItem>Fity_3</ComboBoxItem> -->
-                        <!--   <ComboBoxItem>Gity_4</ComboBoxItem> -->
-                        <!-- </ComboBox> -->
                       </StackPanel>
 
                       <StackPanel>
@@ -323,8 +324,8 @@
                       </StackPanel>
 
                       <StackPanel>
-                        <Label x:Name="LabelAdditionalParametr">Дополнительные параметры</Label>
-                        <TextBox x:Name="TextBoxAdditionalParametr"></TextBox>
+                        <Label x:Name="LabelAdditionalParam">Дополнительные параметры</Label>
+                        <TextBox x:Name="TextBoxAdditionalParam"></TextBox>
                       </StackPanel>
                       <CheckBox x:Name="CheckBoxLocationAsFolder" Content="НП - как папка, например у МОНЕТКИ"></CheckBox>
 

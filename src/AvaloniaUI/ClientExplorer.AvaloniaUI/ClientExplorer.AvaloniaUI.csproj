@@ -29,9 +29,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include=".ClientExplorer.Assets\.ObjectLocations.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <AvaloniaResource Include="Assets\**" />
     <None Remove=".gitignore" />
   </ItemGroup>
@@ -54,5 +51,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\ClientExplorer.Shared.ViewModels\ClientExplorer.Shared.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include=".ClientExplorer.Assets\.AddressLocations.json" />
   </ItemGroup>
 </Project>
