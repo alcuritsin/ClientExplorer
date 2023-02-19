@@ -7,7 +7,7 @@ namespace ClientExplorer.Application;
 public static class ClientEr
 {
     public static string DefaultDataResourcePath = ".ClientExplorer.Assets";
-    public static string LocationsSourceFileName = ".ObjectLocations.json";
+    public static string LocationsSourceFileName = ".AddressLocations.json";
     public static string? CurrentPath { get; set; }
 
     /*
