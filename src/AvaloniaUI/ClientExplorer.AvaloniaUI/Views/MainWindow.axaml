@@ -53,22 +53,50 @@
         IsVisible="{Binding  #CityName.IsFocused, Mode=OneWay}"
         Width="{Binding #CityName.Bounds.Width, Mode=OneWay}"
         MaxHeight="200"
-        Background="orange"
         Opacity="0.9"
         ZIndex="1">
-        
+
         <StackPanel>
-          
           <ListBox
-            Items="{Binding SortedAddressLocationByCity}">
+            Items="{Binding CitiesFiltered}"
+            SelectedItem="{Binding SelectedCity}"
+            Height="{Binding $parent[Border].Height}"
+            MaxHeight="{Binding $parent[Border].MaxHeight}">
+            
+            <i:Interaction.Behaviors>
+              <ia:EventTriggerBehavior EventName="Tapped">
+                <ia:InvokeCommandAction
+                  Command="{Binding TappedSelectedCity}"
+                  CommandParameter="{Binding SelectedCity}" />
+              </ia:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+            
           </ListBox>
-          <!-- <Label>City_1</Label> -->
-          <!-- <Label>City_2</Label> -->
-          <!-- <Label>City_3</Label> -->
-          <!-- <Label>City_4</Label> -->
         </StackPanel>
       </Border>
 
+      <!-- Населённый пункт помогатор поиска значений 'Popop' -->
+      <Border
+        x:Name="StreetListPopup"
+        Grid.RowSpan="3"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top"
+        IsVisible="{Binding  #StreetName.IsFocused, Mode=OneWay}"
+        Width="{Binding #StreetName.Bounds.Width, Mode=OneWay}"
+        MaxHeight="200"
+        Opacity="0.9"
+        ZIndex="1">
+
+        <StackPanel>
+          <ListBox
+            Items="{Binding StreetsFiltered}"
+            SelectedItem="{Binding StreetName}"
+            Height="{Binding $parent[Border].Height}"
+            MaxHeight="{Binding $parent[Border].MaxHeight}">
+          </ListBox>
+        </StackPanel>
+      </Border>
+      
       <!-- Панель - 'Основная' -->
       <Grid
         Grid.Row="0"
@@ -95,15 +123,15 @@
               x:Name="ClientFilter"
               Text="{Binding ClientFilter}"
               Margin="0 6">
-              
+
               <i:Interaction.Behaviors>
                 <ia:EventTriggerBehavior EventName="KeyUp">
                   <ia:InvokeCommandAction
-                    Command="{Binding InputClientFilter}"
-                    CommandParameter="{Binding ClientFilter}"/>
+                    Command="{Binding KeyUpClientName}"
+                    CommandParameter="{Binding ClientFilter}" />
                 </ia:EventTriggerBehavior>
               </i:Interaction.Behaviors>
-              
+
             </TextBox>
 
             <!-- Сбросить фильтр -->
@@ -296,26 +324,52 @@
                     <StackPanel>
 
                       <StackPanel>
-                        <Label x:Name="LabelCityName">Населённый пункт (НП)</Label>
+                        <Label
+                          x:Name="LabelCityName"
+                          Content="Населённый пункт (НП)"/>
                         <TextBox
                           x:Name="CityName"
-                          Text="{Binding AddressLocationCityFilter}">
-                          
+                          Text="{Binding CityName}">
+
                           <i:Interaction.Behaviors>
+                            
                             <ia:EventTriggerBehavior EventName="KeyUp">
                               <ia:InvokeCommandAction
-                                Command="{Binding InputCityFilter}"
-                                CommandParameter="{Binding AddressLocationCityFilter}"/>
+                                Command="{Binding KeyUpCityName}"
+                                CommandParameter="{Binding CityName}" />
                             </ia:EventTriggerBehavior>
+                            
+                            <ia:EventTriggerBehavior EventName="LostFocus">
+                              <ia:InvokeCommandAction
+                                Command="{Binding LostFocusCityName}"
+                                CommandParameter="{Binding CityName}" />
+                            </ia:EventTriggerBehavior>
+                            
                           </i:Interaction.Behaviors>
-                          
+
                         </TextBox>
 
                       </StackPanel>
 
                       <StackPanel>
-                        <Label x:Name="LabelStreetName">Улица</Label>
-                        <ComboBox x:Name="ComboBoxStreetName"></ComboBox>
+                        <Label
+                          x:Name="LabelStreetName"
+                          Content="Улица"/>
+                        <TextBox
+                          x:Name="StreetName"
+                          Text="{Binding StreetName}">
+
+                          <i:Interaction.Behaviors>
+                            <ia:EventTriggerBehavior EventName="KeyUp">
+                              <ia:InvokeCommandAction
+                                Command="{Binding KeyUpStreetName}"
+                                CommandParameter="{Binding StreetName}" />
+                            </ia:EventTriggerBehavior>
+                          </i:Interaction.Behaviors>
+
+                        </TextBox>
+
+                        <!-- <ComboBox x:Name="ComboBoxStreetName"></ComboBox> -->
                       </StackPanel>
 
                       <StackPanel>
