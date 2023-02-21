@@ -402,9 +402,11 @@ public class MainViewModel : BaseViewModel
     }
   }
 
+  
   private void FillStreetsName()
   {
     StreetsFiltered.Clear();
+    _streetsName.Clear();
     
     foreach (var addressLocation in _addressLocationViewModel.AddressLocations)
     {
@@ -430,7 +432,7 @@ public class MainViewModel : BaseViewModel
 
         if (isNewStreet)
         {
-          _citiesName.Add(addressLocation.StreetName);
+          _streetsName.Add(addressLocation.StreetName);
           StreetsFiltered.Add(addressLocation.StreetName);
         }
       }
