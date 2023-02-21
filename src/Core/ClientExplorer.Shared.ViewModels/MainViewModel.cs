@@ -65,7 +65,7 @@ public class MainViewModel : BaseViewModel
 
   #region Commands
 
-  private void Open(object param)
+  private void SelectClient(object param)
   {
     LoadClientLocation();
   }
@@ -160,18 +160,21 @@ public class MainViewModel : BaseViewModel
     StatusInfo += " CitiesFiltered.Count: " + CitiesFiltered.Count;
   }
 
-
+/// <summary>
+/// Выбор города при помощи 'tapped'. 
+/// </summary>
+/// <param name="param"></param>
   private void SelectCity(object param)
   {
     CityName = SelectedCity;
-    ApplyFilterToCitiesName(null);
-    FillStreetsName();
-    ApplyFilterToStreetsName(null);
+    ApplyFilterToCitiesName(param);
+    FillStreetsName(param);
+    ApplyFilterToStreetsName(param);
   }
   
   private void FillStreetsName(object param)
   {
-    FillStreetsName();
+    InitStreetsName();
   }
   
   /// <summary>
@@ -231,7 +234,7 @@ public class MainViewModel : BaseViewModel
     //TODO: Хардкодим путь до папок с клиентами на время разработки и тестирования. В будущем значение будет вынесено в файл настроек "*.ini". 
     ClientEr.CurrentPath = "/mnt/share/Clients";
 
-    OpenClient = new DelegateCommand(Open);
+    OpenClient = new DelegateCommand(SelectClient);
     KeyUpClientName = new DelegateCommand(ApplyFilterToClientsList);
     LostFocusCityName = new DelegateCommand(FillStreetsName);
     TappedSelectedCity = new DelegateCommand(SelectCity);
@@ -249,8 +252,8 @@ public class MainViewModel : BaseViewModel
 
     StatusInfo = ClientEr.CurrentPath;
 
-    GetClientList();
-    FillCitiesName();
+    InitClientList();
+    InitCitiesName();
   }
 
   /// <summary>
@@ -346,7 +349,7 @@ public class MainViewModel : BaseViewModel
 
   #region Private Methods
 
-  private void GetClientList()
+  private void InitClientList()
   {
     if (ClientEr.CurrentPath == null)
     {
@@ -372,10 +375,18 @@ public class MainViewModel : BaseViewModel
     _clientsList = SortedClients.ToList();
   }
 
-  private void FillCitiesName()
+  /// <summary>
+  /// Первичное заполнение списка городов элементами.
+  /// </summary>
+  private void InitCitiesName()
   {
+    if (_addressLocationViewModel.AddressLocations == null)
+      throw new Exception("Err: " + nameof(InitCitiesName) + ". AddressLocations = null");
+    
     foreach (var addressLocation in _addressLocationViewModel.AddressLocations)
     {
+      if (addressLocation.CityName == null) throw new Exception("Err: " + nameof(InitCitiesName) + ". CityName = null");
+      
       if (CitiesFiltered.Count == 0)
       {
         _citiesName.Add(addressLocation.CityName);
@@ -402,17 +413,23 @@ public class MainViewModel : BaseViewModel
     }
   }
 
-  
-  private void FillStreetsName()
+  /// <summary>
+  /// Первичное заполнение списка улиц. Список улиц зависит от выбранного города.
+  /// </summary>
+  private void InitStreetsName()
   {
-    StreetsFiltered.Clear();
+    if (_addressLocationViewModel.AddressLocations == null) throw new Exception("Err: " + nameof(InitStreetsName) + ". AddressLocations = null");
+    
     _streetsName.Clear();
+    StreetsFiltered.Clear();
     
     foreach (var addressLocation in _addressLocationViewModel.AddressLocations)
     {
       if (Equals(addressLocation.CityName, CityName))
       {
-        if (StreetsFiltered.Count == 0)
+        if (addressLocation.StreetName == null) throw new Exception("Err: " + nameof(InitStreetsName) + ". StreetName = null");
+        
+        if (_streetsName.Count == 0)
         {
           _streetsName.Add(addressLocation.StreetName);
           StreetsFiltered.Add(addressLocation.StreetName);
@@ -434,6 +451,50 @@ public class MainViewModel : BaseViewModel
         {
           _streetsName.Add(addressLocation.StreetName);
           StreetsFiltered.Add(addressLocation.StreetName);
+        }
+      }
+    }
+  }
+
+  /// <summary>
+  /// Первичное заполнение списка номеров домов. Зависит от выбранного города и улицы. 
+  /// </summary>
+  private void InitHouseNumbers()
+  {
+    if (_addressLocationViewModel.AddressLocations == null)
+      throw new Exception("Err: " + nameof(InitHouseNumbers) + ". AddressLocations = null");
+    
+    _houseNumbers.Clear();
+    HouseNumbersFiltered.Clear();
+    
+    foreach (var addressLocation in _addressLocationViewModel.AddressLocations)
+    {
+      if (Equals(addressLocation.CityName, CityName) && Equals(addressLocation.StreetName, StreetName))
+      {
+        if (addressLocation.HouseNumber == null)
+          throw new Exception("Err: " + nameof(InitHouseNumbers) + ". HouseNumber = null");
+        if (_houseNumbers.Count == 0)
+        {
+          _houseNumbers.Add(addressLocation.HouseNumber);
+          HouseNumbersFiltered.Add(addressLocation.HouseNumber);
+          continue;
+        }
+
+        var isNewHouseNumber = true;
+
+        foreach (var houseNumber in _houseNumbers)
+        {
+          if (houseNumber == addressLocation.HouseNumber)
+          {
+            isNewHouseNumber = false;
+            break;
+          }
+        }
+
+        if (isNewHouseNumber)
+        {
+          _houseNumbers.Add(addressLocation.HouseNumber);
+          HouseNumbersFiltered.Add(addressLocation.HouseNumber);
         }
       }
     }
