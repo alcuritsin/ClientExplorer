@@ -29,13 +29,13 @@ public partial class MainWindow : Window
     this.AttachDevTools();
 #endif
 
-    _mCityListPopup = this.FindControl<Control>(nameof(CityListPopup));
+    _mCityListPopup = this.FindControl<Control>(nameof(CitiesListPopup));
     _mCityName = this.FindControl<Control>(nameof(CityName));
 
-    _mStreetListPopup = this.FindControl<Control>(nameof(StreetListPopup));
+    _mStreetListPopup = this.FindControl<Control>(nameof(StreetsListPopup));
     _mStreetName = this.FindControl<Control>(nameof(StreetName));
 
-    _mHouseNumberPopup = this.FindControl<Control>(nameof(HouseNumberListPopup));
+    _mHouseNumberPopup = this.FindControl<Control>(nameof(HouseNumbersListPopup));
     _mHouseNumber = this.FindControl<Control>(nameof(HouseNumber));
 
     _mMainGrid = this.FindControl<Control>(nameof(MainGrid));

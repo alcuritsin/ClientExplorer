@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Reflection.Metadata.Ecma335;
 using System.Windows.Input;
 using ClientExplorer.Application;
 
@@ -76,6 +77,9 @@ public class MainViewModel : BaseViewModel
 
     foreach (var client in _clientsList)
     {
+      if (client.Name == null)
+        throw new Exception("Err: " + nameof(ApplyFilterToClientsList) + ". " + nameof(client.Name) + " = null");
+      
       if (client.Name.ToUpper().Contains(clientFilter.ToUpper()))
       {
         SortedClients.Add(client);
@@ -194,6 +198,7 @@ public class MainViewModel : BaseViewModel
   public string SelectedStreet { get; set; } = string.Empty;
 
   public string HouseNumber { get; set; } = string.Empty;
+  public string SelectedHouseNumber { get; set; } = string.Empty;
 
   public string AdditionalParam { get; set; } = string.Empty;
 
@@ -212,28 +217,18 @@ public class MainViewModel : BaseViewModel
 
   public ICommand KeyUpCityName { get; }
   public ICommand LostFocusCityName { get; }
-  public ICommand TappedSelectedCity { get; }
-
+  public ICommand TappedOnCityItem { get; }
 
   public ICommand KeyUpStreetName { get; }
   public ICommand LostFocusStreetName { get; }
-  public ICommand TappedSelectedStreet { get; }
+  public ICommand TappedOnStreetItem { get; }
+
+  public ICommand KeyUpHouseNumber { get; }
+  public ICommand TappedOnHouseNumberItem { get; }
 
   #endregion
 
   #region Commands Methods
-
-  /// <summary>
-  /// Выбор города при помощи 'tapped'. 
-  /// </summary>
-  /// <param name="param"></param>
-  private void SelectCity(object param)
-  {
-    CityName = SelectedCity;
-    ApplyFilterToCitiesName(param);
-    InitStreetsName();
-    ApplyFilterToStreetsName(param);
-  }
 
   /// <summary>
   /// Применение фильтра к 'Списку Населённых пунктов' (CitiesFiltered). На основании (CityName).
@@ -279,17 +274,22 @@ public class MainViewModel : BaseViewModel
   }
 
   /// <summary>
-  /// Выбор улицы при помощи 'tapped'
+  /// Выбор города из списка в Popup. 
   /// </summary>
   /// <param name="param"></param>
-  private void SelectStreet(object param)
+  private void SelectCity(object param)
   {
-    StreetName = SelectedStreet;
-    ApplyFilterToStreetsName(null);
-    InitHouseNumbers();
+    CityName = SelectedCity;
+    // _lastSelectCityName = SelectedCity;
+    ApplyFilterToCitiesName(param);
+    InitStreetsName();
     ApplyFilterToStreetsName(null);
   }
 
+  /// <summary>
+  /// Заполнение списка улиц
+  /// </summary>
+  /// <param name="param"></param>
   private void FillStreetsName(object param)
   {
     InitStreetsName();
@@ -299,7 +299,7 @@ public class MainViewModel : BaseViewModel
   /// Применение фильтра к 'Списку Улиц' (StreetsFiltered). На основании (CityName).
   /// </summary>
   /// <param name="param"></param>
-  private void ApplyFilterToStreetsName(object param)
+  private void ApplyFilterToStreetsName(object? param)
   {
     var streetFilter = StreetName;
 
@@ -338,6 +338,80 @@ public class MainViewModel : BaseViewModel
     StatusInfo += " StreetsFiltered.Count: " + StreetsFiltered.Count;
   }
 
+  /// <summary>
+  /// Выбор улицы из списка в Popup
+  /// </summary>
+  /// <param name="param"></param>
+  private void SelectStreet(object param)
+  {
+    StreetName = SelectedStreet;
+    ApplyFilterToStreetsName(param);
+    InitHouseNumbers();
+    ApplyFilterToHouseNumbers(null);
+  }
+
+  /// <summary>
+  /// Заполнение списка номеров домов
+  /// </summary>
+  /// <param name="param"></param>
+  private void FillHouseNumbers(object param)
+  {
+    InitHouseNumbers();
+  }
+
+  /// <summary>
+  /// Применение фильтра к 'Списку номеров домов' (HouseNumbersFiltered). На основании (HouseNumber).
+  /// </summary>
+  /// <param name="param"></param>
+  private void ApplyFilterToHouseNumbers(object? param)
+  {
+    var houseNumberFilter = HouseNumber;
+
+    StatusInfo = "HouseNumberFilter: " + houseNumberFilter;
+
+    if (Equals(houseNumberFilter, string.Empty))
+    {
+      HouseNumbersFiltered.Clear();
+
+      foreach (var houseNumber in _houseNumbers)
+      {
+        HouseNumbersFiltered.Add(houseNumber);
+      }
+
+      StatusInfo += " HouseNumbersFiltered.Count: " + HouseNumbersFiltered.Count;
+
+      return;
+    }
+
+    if (IsNameHaveInvalidCharacter(ref houseNumberFilter))
+    {
+      HouseNumber = houseNumberFilter;
+      return;
+    }
+
+    HouseNumbersFiltered.Clear();
+
+    foreach (var houseNumber in _houseNumbers)
+    {
+      if (houseNumber.ToUpper().Contains(houseNumberFilter.ToUpper()))
+      {
+        HouseNumbersFiltered.Add(houseNumber);
+      }
+    }
+
+    StatusInfo += " HouseNumbersFiltered.Count: " + HouseNumbersFiltered.Count;
+  }
+
+  /// <summary>
+  /// Выбор номера дома из списка Popup.
+  /// </summary>
+  /// <param name="param"></param>
+  private void SelectHouseNumber(object param)
+  {
+    HouseNumber = SelectedHouseNumber;
+    ApplyFilterToHouseNumbers(param);
+  }
+
   #endregion
 
   #region Private Properties
@@ -346,6 +420,8 @@ public class MainViewModel : BaseViewModel
   private List<string> _streetsName = new List<string>();
   private List<string> _houseNumbers = new List<string>();
 
+  // private string _lastSelectCityName = string.Empty;
+  
   #endregion
 
   #region Private Methods
@@ -394,11 +470,21 @@ public class MainViewModel : BaseViewModel
   /// </summary>
   private void InitStreetsName()
   {
+
     if (_addressLocationViewModel.AddressLocations == null)
       throw new Exception("Err: " + nameof(InitStreetsName) + ". AddressLocations = null");
 
     _streetsName.Clear();
     StreetsFiltered.Clear();
+
+    StreetName = string.Empty;
+    SelectedStreet = string.Empty;
+
+    _houseNumbers.Clear();
+    HouseNumbersFiltered.Clear();
+
+    HouseNumber = string.Empty;
+    SelectedHouseNumber = string.Empty;
 
     foreach (var addressLocation in _addressLocationViewModel.AddressLocations)
     {
@@ -444,6 +530,9 @@ public class MainViewModel : BaseViewModel
 
     _houseNumbers.Clear();
     HouseNumbersFiltered.Clear();
+
+    HouseNumber = string.Empty;
+    SelectedHouseNumber = string.Empty;
 
     foreach (var addressLocation in _addressLocationViewModel.AddressLocations)
     {
@@ -496,13 +585,15 @@ public class MainViewModel : BaseViewModel
 
     KeyUpCityName = new DelegateCommand(ApplyFilterToCitiesName);
     LostFocusCityName = new DelegateCommand(FillStreetsName);
-    TappedSelectedCity = new DelegateCommand(SelectCity);
-
-
+    TappedOnCityItem = new DelegateCommand(SelectCity);
+    
     KeyUpStreetName = new DelegateCommand(ApplyFilterToStreetsName);
-    // LostFocusStreetName = new DelegateCommand(FillHouseNumbers);
-    TappedSelectedStreet = new DelegateCommand(SelectStreet);
+    LostFocusStreetName = new DelegateCommand(FillHouseNumbers);
+    TappedOnStreetItem = new DelegateCommand(SelectStreet);
 
+    KeyUpHouseNumber = new DelegateCommand(ApplyFilterToHouseNumbers);
+    TappedOnHouseNumberItem = new DelegateCommand(SelectHouseNumber);
+    
     _addressLocationViewModel = new AddressLocationViewModel();
 
     SortedClients = new ObservableCollection<ClientEntityViewModel>();

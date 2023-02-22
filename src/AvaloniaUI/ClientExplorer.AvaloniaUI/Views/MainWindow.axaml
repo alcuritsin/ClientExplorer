@@ -46,7 +46,7 @@
 
       <!-- Список городов 'Popup' -->
       <Border
-        x:Name="CityListPopup"
+        x:Name="CitiesListPopup"
         Grid.RowSpan="3"
         HorizontalAlignment="Left"
         VerticalAlignment="Top"
@@ -58,6 +58,7 @@
 
         <StackPanel>
           <ListBox
+            x:Name="CitiesList"
             Items="{Binding CitiesFiltered}"
             SelectedItem="{Binding SelectedCity}"
             Height="{Binding $parent[Border].Height}"
@@ -66,7 +67,7 @@
             <i:Interaction.Behaviors>
               <ia:EventTriggerBehavior EventName="Tapped">
                 <ia:InvokeCommandAction
-                  Command="{Binding TappedSelectedCity}"
+                  Command="{Binding TappedOnCityItem}"
                   CommandParameter="{Binding SelectedCity}" />
               </ia:EventTriggerBehavior>
             </i:Interaction.Behaviors>
@@ -77,7 +78,7 @@
 
       <!-- Список улиц 'Popup' -->
       <Border
-        x:Name="StreetListPopup"
+        x:Name="StreetsListPopup"
         Grid.RowSpan="3"
         HorizontalAlignment="Left"
         VerticalAlignment="Top"
@@ -89,6 +90,7 @@
 
         <StackPanel>
           <ListBox
+            x:Name="StreetsList"
             Items="{Binding StreetsFiltered}"
             SelectedItem="{Binding SelectedStreet}"
             Height="{Binding $parent[Border].Height}"
@@ -97,7 +99,7 @@
             <i:Interaction.Behaviors>
               <ia:EventTriggerBehavior EventName="Tapped">
                 <ia:InvokeCommandAction
-                  Command="{Binding TappedSelectedStreet}"
+                  Command="{Binding TappedOnStreetItem}"
                   CommandParameter="{Binding SelectedStreet}" />
               </ia:EventTriggerBehavior>
             </i:Interaction.Behaviors>
@@ -108,7 +110,7 @@
       
       <!-- Список номеров домов 'Popup' -->
       <Border
-        x:Name="HouseNumberListPopup"
+        x:Name="HouseNumbersListPopup"
         Grid.RowSpan="3"
         HorizontalAlignment="Left"
         VerticalAlignment="Top"
@@ -120,10 +122,20 @@
 
         <StackPanel>
           <ListBox
+            x:Name="HouseNumbersList"
             Items="{Binding HouseNumbersFiltered}"
-            SelectedItem="{Binding HouseNumber}"
+            SelectedItem="{Binding SelectedHouseNumber}"
             Height="{Binding $parent[Border].Height}"
             MaxHeight="{Binding $parent[Border].MaxHeight}">
+            
+            <i:Interaction.Behaviors>
+              <ia:EventTriggerBehavior EventName="Tapped">
+                <ia:InvokeCommandAction
+                  Command="{Binding TappedOnHouseNumberItem}"
+                  CommandParameter="{Binding SelectedHouseNumber}" />
+              </ia:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+            
           </ListBox>
         </StackPanel>
       </Border>
@@ -375,7 +387,7 @@
                             <ia:EventTriggerBehavior EventName="LostFocus">
                               <ia:InvokeCommandAction
                                 Command="{Binding LostFocusCityName}"
-                                CommandParameter="{Binding CityName}" />
+                                CommandParameter="{Binding SelectedCity}" />
                             </ia:EventTriggerBehavior>
                             
                           </i:Interaction.Behaviors>
@@ -410,8 +422,7 @@
                           </i:Interaction.Behaviors>
 
                         </TextBox>
-
-                        <!-- <ComboBox x:Name="ComboBoxStreetName"></ComboBox> -->
+                        
                       </StackPanel>
 
                       <StackPanel>
@@ -423,13 +434,15 @@
                           x:Name="HouseNumber"
                           Text="{Binding HouseNumber}">
                           
-                          <!-- <i:Interaction.Behaviors> -->
-                          <!--   <ia:EventTriggerBehavior EventName="KeyUp"> -->
-                          <!--     <ia:InvokeCommandAction -->
-                          <!--       Command="{Binding KeyUpStreetName}" -->
-                          <!--       CommandParameter="{Binding StreetName}" /> -->
-                          <!--   </ia:EventTriggerBehavior> -->
-                          <!-- </i:Interaction.Behaviors> -->
+                          <i:Interaction.Behaviors>
+                            
+                            <ia:EventTriggerBehavior EventName="KeyUp">
+                              <ia:InvokeCommandAction
+                                Command="{Binding KeyUpHouseNumber}"
+                                CommandParameter="{Binding HouseNumber}" />
+                            </ia:EventTriggerBehavior>
+                            
+                          </i:Interaction.Behaviors>
 
                           
                         </TextBox>

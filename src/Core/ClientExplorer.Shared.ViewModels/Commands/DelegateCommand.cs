@@ -13,19 +13,19 @@ public class DelegateCommand : ICommand
     _canExecute = canExecute;
   }
 
-  public bool CanExecute(object? parameter)
+  public bool CanExecute(object? param)
   {
     if (_canExecute != null)
     {
-      return _canExecute.Invoke(parameter);
+      return _canExecute.Invoke(param);
     }
 
     return true;
   }
 
-  public void Execute(object? parameter)
+  public void Execute(object? param)
   {
-    _execute?.Invoke(parameter);
+    _execute?.Invoke(param);
   }
 
   public event EventHandler? CanExecuteChanged;
