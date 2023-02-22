@@ -1,48 +1,44 @@
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
-using System.Threading.Tasks;
 using ClientExplorer.Application;
 
 namespace ClientExplorer.Shared.ViewModels;
 
 public class AddressLocationViewModel : BaseViewModel
 {
-  private class AddressLocForOrdered
-  {
-    public AddressLocationEntityViewModel Loc { get; }
-    public string OrderProp { get; }
+  #region Public Properties
 
-    public AddressLocForOrdered(AddressLocationEntityViewModel _loc)
-    {
-      Loc = _loc;
-      OrderProp = _loc.CityName.ToUpper() + "~" + _loc.StreetName.ToUpper() + "~" + _loc.HouseNumber.ToUpper();
-    }
-  }
+  public ObservableCollection<AddressLocationEntityViewModel>? AddressLocations { get; private set; } =
+    new ObservableCollection<AddressLocationEntityViewModel>();
+
+  #endregion
+
+  #region Constructor
 
   public AddressLocationViewModel()
   {
     _directoryDataResourcePath =
       ClientEr.CurrentPath + Path.DirectorySeparatorChar + ClientEr.DefaultDataResourcePath;
+    
     _locationsFilePath = _directoryDataResourcePath + Path.DirectorySeparatorChar + ClientEr.LocationsSourceFileName;
-    FillAddressLocations();
+    
+    LoadAddressLocations();
 
     // Упорядочить список по Алфавиту. Город+Улица+НомерДома.
-    List<AddressLocForOrdered> addressLocsForOrdered = new System.Collections.Generic.List<AddressLocForOrdered>();
+    List<AddressLocForOrdered> addressLocs = new System.Collections.Generic.List<AddressLocForOrdered>();
 
     foreach (var addressLocation in AddressLocations)
     {
-      addressLocsForOrdered.Add(new AddressLocForOrdered(addressLocation));
+      addressLocs.Add(new AddressLocForOrdered(addressLocation));
     }
 
-    addressLocsForOrdered.OrderBy(i => i.OrderProp);
+    var addressLocsOrdered = addressLocs.OrderBy(i => i.OrderProp);
 
     AddressLocations.Clear();
 
-    foreach (var addressLoc in addressLocsForOrdered)
+    foreach (var addressLoc in addressLocsOrdered)
     {
       AddressLocations.Add(new AddressLocationEntityViewModel()
       {
@@ -53,17 +49,45 @@ public class AddressLocationViewModel : BaseViewModel
     }
   }
 
-  public ObservableCollection<AddressLocationEntityViewModel>? AddressLocations { get; private set; } =
-    new ObservableCollection<AddressLocationEntityViewModel>();
+  #endregion
+
+  #region Private Clases
+
+  /// <summary>
+  /// Приватный класс для возможности упорядочить список объектов (локаций) клиента 
+  /// </summary>
+  private class AddressLocForOrdered
+  {
+    public AddressLocationEntityViewModel Loc { get; }
+    public string OrderProp { get; }
+
+    public AddressLocForOrdered(AddressLocationEntityViewModel loc)
+    {
+      Loc = loc;
+      OrderProp = loc.CityName.ToUpper() + "~" + loc.StreetName.ToUpper() + "~" + loc.HouseNumber.ToUpper();
+    }
+  }
+
+  #endregion
+
+  #region Private Properties
 
   private readonly string _locationsFilePath;
   private readonly string _directoryDataResourcePath;
 
-  private void FillAddressLocations()
+  #endregion
+
+  #region Private Methods
+
+  /// <summary>
+  /// Загрузка базы адресов из файла
+  /// </summary>
+  private void LoadAddressLocations()
   {
     using FileStream fs = new FileStream(_locationsFilePath, FileMode.OpenOrCreate, FileAccess.Read);
     AddressLocations = JsonSerializer.Deserialize<ObservableCollection<AddressLocationEntityViewModel>>(fs);
   }
+
   // private async Task FillAddressLocations()
   // {
   //     using (FileStream fs = new FileStream(_locationsFilePath, FileMode.OpenOrCreate, FileAccess.Read))
@@ -77,6 +101,9 @@ public class AddressLocationViewModel : BaseViewModel
   //     }
   // }
 
+  /// <summary>
+  /// Выгрузка текущего списка адресов в файл  
+  /// </summary>
   private async Task UploadAddressLocations()
   {
     if (!Directory.Exists(_directoryDataResourcePath))
@@ -90,11 +117,11 @@ public class AddressLocationViewModel : BaseViewModel
       WriteIndented = true
     };
 
-    using (FileStream fs = new FileStream(_locationsFilePath, FileMode.OpenOrCreate))
-    {
-      if (AddressLocations != null)
-        await JsonSerializer.SerializeAsync<ObservableCollection<AddressLocationEntityViewModel>>(fs, AddressLocations,
-          options);
-    }
+    await using FileStream fs = new FileStream(_locationsFilePath, FileMode.OpenOrCreate);
+    if (AddressLocations != null)
+      await JsonSerializer.SerializeAsync<ObservableCollection<AddressLocationEntityViewModel>>(fs, AddressLocations,
+        options);
   }
+
+  #endregion
 }

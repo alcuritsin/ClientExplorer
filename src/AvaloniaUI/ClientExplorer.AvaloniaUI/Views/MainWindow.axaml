@@ -44,7 +44,7 @@
       RowDefinitions="*, Auto, Auto"
       Background="red">
 
-      <!-- Населённый пункт помогатор поиска значений 'Popop' -->
+      <!-- Список городов 'Popup' -->
       <Border
         x:Name="CityListPopup"
         Grid.RowSpan="3"
@@ -75,7 +75,7 @@
         </StackPanel>
       </Border>
 
-      <!-- Населённый пункт помогатор поиска значений 'Popop' -->
+      <!-- Список улиц 'Popup' -->
       <Border
         x:Name="StreetListPopup"
         Grid.RowSpan="3"
@@ -90,12 +90,44 @@
         <StackPanel>
           <ListBox
             Items="{Binding StreetsFiltered}"
-            SelectedItem="{Binding StreetName}"
+            SelectedItem="{Binding SelectedStreet}"
+            Height="{Binding $parent[Border].Height}"
+            MaxHeight="{Binding $parent[Border].MaxHeight}">
+            
+            <i:Interaction.Behaviors>
+              <ia:EventTriggerBehavior EventName="Tapped">
+                <ia:InvokeCommandAction
+                  Command="{Binding TappedSelectedStreet}"
+                  CommandParameter="{Binding SelectedStreet}" />
+              </ia:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+
+          </ListBox>
+        </StackPanel>
+      </Border>
+      
+      <!-- Список номеров домов 'Popup' -->
+      <Border
+        x:Name="HouseNumberListPopup"
+        Grid.RowSpan="3"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top"
+        IsVisible="{Binding  #HouseNumber.IsFocused, Mode=OneWay}"
+        Width="{Binding #HouseNumber.Bounds.Width, Mode=OneWay}"
+        MaxHeight="200"
+        Opacity="0.9"
+        ZIndex="1">
+
+        <StackPanel>
+          <ListBox
+            Items="{Binding HouseNumbersFiltered}"
+            SelectedItem="{Binding HouseNumber}"
             Height="{Binding $parent[Border].Height}"
             MaxHeight="{Binding $parent[Border].MaxHeight}">
           </ListBox>
         </StackPanel>
       </Border>
+
       
       <!-- Панель - 'Основная' -->
       <Grid
@@ -326,6 +358,7 @@
                       <StackPanel>
                         <Label
                           x:Name="LabelCityName"
+                          Target="CityName"
                           Content="Населённый пункт (НП)"/>
                         <TextBox
                           x:Name="CityName"
@@ -354,17 +387,26 @@
                       <StackPanel>
                         <Label
                           x:Name="LabelStreetName"
+                          Target="StreetName"
                           Content="Улица"/>
                         <TextBox
                           x:Name="StreetName"
                           Text="{Binding StreetName}">
 
                           <i:Interaction.Behaviors>
+                            
                             <ia:EventTriggerBehavior EventName="KeyUp">
                               <ia:InvokeCommandAction
                                 Command="{Binding KeyUpStreetName}"
                                 CommandParameter="{Binding StreetName}" />
                             </ia:EventTriggerBehavior>
+                            
+                            <ia:EventTriggerBehavior EventName="LostFocus">
+                              <ia:InvokeCommandAction
+                                Command="{Binding LostFocusStreetName}"
+                                CommandParameter="{Binding StreetName}" />
+                            </ia:EventTriggerBehavior>
+
                           </i:Interaction.Behaviors>
 
                         </TextBox>
@@ -373,8 +415,26 @@
                       </StackPanel>
 
                       <StackPanel>
-                        <Label x:Name="LabelHouseNumber">Номер дома</Label>
-                        <ComboBox x:Name="ComboBoxHouseNumber"></ComboBox>
+                        <Label
+                          x:Name="LabelHouseNumber"
+                          Target="HouseNumber"
+                          Content="Номер дома"/>
+                        <TextBox
+                          x:Name="HouseNumber"
+                          Text="{Binding HouseNumber}">
+                          
+                          <!-- <i:Interaction.Behaviors> -->
+                          <!--   <ia:EventTriggerBehavior EventName="KeyUp"> -->
+                          <!--     <ia:InvokeCommandAction -->
+                          <!--       Command="{Binding KeyUpStreetName}" -->
+                          <!--       CommandParameter="{Binding StreetName}" /> -->
+                          <!--   </ia:EventTriggerBehavior> -->
+                          <!-- </i:Interaction.Behaviors> -->
+
+                          
+                        </TextBox>
+                        
+                        
                       </StackPanel>
 
                       <StackPanel>

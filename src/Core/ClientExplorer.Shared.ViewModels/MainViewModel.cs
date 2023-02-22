@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using ClientExplorer.Application;
 
@@ -14,56 +11,28 @@ public class MainViewModel : BaseViewModel
   //Info панель
   public string StatusInfo { get; set; }
 
-  #region Client
+  #endregion
 
   //Клиент
 
-  public string ClientFilter { get; set; }
+  #region Client
 
+  #region Public Properties
+
+  public string ClientFilter { get; set; }
   public ObservableCollection<ClientEntityViewModel> SortedClients { get; set; }
   public ClientEntityViewModel SelectedClient { get; set; }
 
   #endregion
 
-  #region Location of Client
-
-  //Существующие объекты клиента
-  public ObservableCollection<string> SortedLocation { get; set; }
-
-  #endregion
-
-  #region Address Location
-
-  public string CityName { get; set; } = string.Empty;
-  public string SelectedCity { get; set; } = string.Empty;
-  public string StreetName { get; set; } = string.Empty;
-  public string HouseNumber { get; set; } = string.Empty;
-  public string AdditionalParam { get; set; } = string.Empty;
-
-  public ObservableCollection<string> CitiesFiltered { get; set; } = new ObservableCollection<string>();
-
-  public ObservableCollection<string> StreetsFiltered { get; set; } =
-    new ObservableCollection<string>();
-
-  public ObservableCollection<string> HouseNumbersFiltered { get; set; } =
-    new ObservableCollection<string>();
-
-  #endregion
-
-  public bool IsCityFocus { get; set; }
-
+  #region Events
 
   public ICommand OpenClient { get; }
   public ICommand KeyUpClientName { get; }
-  public ICommand KeyUpCityName { get; }
-  public ICommand LostFocusCityName { get; }
-  public ICommand TappedSelectedCity { get; }
-  public ICommand KeyUpStreetName { get; }
-  
 
   #endregion
 
-  #region Commands
+  #region Commands Methods
 
   private void SelectClient(object param)
   {
@@ -116,6 +85,155 @@ public class MainViewModel : BaseViewModel
     StatusInfo += " SortedClients.Count: " + SortedClients.Count;
   }
 
+  #endregion
+
+  #region Private Properties
+
+  private List<ClientEntityViewModel> _clientsList = new List<ClientEntityViewModel>();
+
+  #endregion
+
+  #region Private Methods
+
+  /// <summary>
+  /// Первичное заполнение списка клиентов
+  /// </summary>
+  private void InitClientList()
+  {
+    if (ClientEr.CurrentPath == null)
+      throw new Exception("Err: " + nameof(InitClientList) + ". " + nameof(ClientEr.CurrentPath) + " = null");
+
+    SortedClients.Clear();
+
+    var directoryInfo = new DirectoryInfo(ClientEr.CurrentPath);
+
+    foreach (var directory in directoryInfo.GetDirectories())
+    {
+      //  Точка вначале - символ скрытости. Такие директории пропускать. 
+      if (directory.Name.First() != '.')
+      {
+        SortedClients.Add(new ClientEntityViewModel(directory.Name, new DirectoryInfo(directory.FullName)));
+      }
+    }
+
+    SortedClients = new ObservableCollection<ClientEntityViewModel>(SortedClients.OrderBy(i => i.Name));
+
+    _clientsList = SortedClients.ToList();
+  }
+
+  #endregion
+
+  #endregion
+
+  //Существующие объекты клиента
+
+  #region Location of Client
+
+  #region Public Properties
+
+  public ObservableCollection<string> SortedLocation { get; set; }
+
+  #endregion
+
+  #region Private Properties
+
+  private AddressLocationViewModel _addressLocationViewModel;
+
+  #endregion
+
+  #region Private Methods
+
+  /// <summary>
+  /// Загружает существующие объекты у клиента из директории 'Объекты'
+  /// </summary>
+  private void LoadClientLocation()
+  {
+    SortedLocation.Clear();
+
+    if (SelectedClient.ClientPath == null)
+    {
+      StatusInfo = "Err: SelectedClient.ClientPath == null";
+      return;
+    }
+
+    //TODO Имя папки "объекты" нужно вывести в свойство!
+    var directoryPath = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar + "Объекты";
+
+    if (!Directory.Exists(directoryPath))
+    {
+      StatusInfo = "Err: 'Объекты' не обнаружены";
+      return;
+    }
+
+    var directoryInfo = new DirectoryInfo(directoryPath);
+
+    foreach (var directory in directoryInfo.GetDirectories())
+    {
+      SortedLocation.Add(directory.Name);
+    }
+
+    SortedLocation = new ObservableCollection<string>(SortedLocation.OrderBy(i => i));
+
+    StatusInfo = SelectedClient.ClientPath.FullName;
+  }
+
+  #endregion
+
+  #endregion
+
+  // Адреса объектов (локации)
+
+  #region Address Location
+
+  #region Public Properties
+
+  public string CityName { get; set; } = string.Empty;
+  public string SelectedCity { get; set; } = string.Empty;
+
+  public string StreetName { get; set; } = string.Empty;
+  public string SelectedStreet { get; set; } = string.Empty;
+
+  public string HouseNumber { get; set; } = string.Empty;
+
+  public string AdditionalParam { get; set; } = string.Empty;
+
+  public ObservableCollection<string> CitiesFiltered { get; set; } =
+    new ObservableCollection<string>();
+
+  public ObservableCollection<string> StreetsFiltered { get; set; } =
+    new ObservableCollection<string>();
+
+  public ObservableCollection<string> HouseNumbersFiltered { get; set; } =
+    new ObservableCollection<string>();
+
+  #endregion
+
+  #region Events
+
+  public ICommand KeyUpCityName { get; }
+  public ICommand LostFocusCityName { get; }
+  public ICommand TappedSelectedCity { get; }
+
+
+  public ICommand KeyUpStreetName { get; }
+  public ICommand LostFocusStreetName { get; }
+  public ICommand TappedSelectedStreet { get; }
+
+  #endregion
+
+  #region Commands Methods
+
+  /// <summary>
+  /// Выбор города при помощи 'tapped'. 
+  /// </summary>
+  /// <param name="param"></param>
+  private void SelectCity(object param)
+  {
+    CityName = SelectedCity;
+    ApplyFilterToCitiesName(param);
+    InitStreetsName();
+    ApplyFilterToStreetsName(param);
+  }
 
   /// <summary>
   /// Применение фильтра к 'Списку Населённых пунктов' (CitiesFiltered). На основании (CityName).
@@ -160,23 +278,23 @@ public class MainViewModel : BaseViewModel
     StatusInfo += " CitiesFiltered.Count: " + CitiesFiltered.Count;
   }
 
-/// <summary>
-/// Выбор города при помощи 'tapped'. 
-/// </summary>
-/// <param name="param"></param>
-  private void SelectCity(object param)
+  /// <summary>
+  /// Выбор улицы при помощи 'tapped'
+  /// </summary>
+  /// <param name="param"></param>
+  private void SelectStreet(object param)
   {
-    CityName = SelectedCity;
-    ApplyFilterToCitiesName(param);
-    FillStreetsName(param);
-    ApplyFilterToStreetsName(param);
+    StreetName = SelectedStreet;
+    ApplyFilterToStreetsName(null);
+    InitHouseNumbers();
+    ApplyFilterToStreetsName(null);
   }
-  
+
   private void FillStreetsName(object param)
   {
     InitStreetsName();
   }
-  
+
   /// <summary>
   /// Применение фильтра к 'Списку Улиц' (StreetsFiltered). На основании (CityName).
   /// </summary>
@@ -184,7 +302,7 @@ public class MainViewModel : BaseViewModel
   private void ApplyFilterToStreetsName(object param)
   {
     var streetFilter = StreetName;
-    
+
     StatusInfo = "StreetsFiltered: " + streetFilter;
 
     if (Equals(streetFilter, string.Empty))
@@ -195,20 +313,20 @@ public class MainViewModel : BaseViewModel
       {
         StreetsFiltered.Add(streetName);
       }
-      
+
       StatusInfo += " StreetsFiltered.Count: " + StreetsFiltered.Count;
-      
+
       return;
     }
-    
+
     if (IsNameHaveInvalidCharacter(ref streetFilter))
     {
       StreetName = streetFilter;
       return;
     }
-    
+
     StreetsFiltered.Clear();
-    
+
     foreach (var streetName in _streetsName)
     {
       if (streetName.ToUpper().Contains(streetFilter.ToUpper()))
@@ -216,13 +334,152 @@ public class MainViewModel : BaseViewModel
         StreetsFiltered.Add(streetName);
       }
     }
-    
-    StatusInfo += " CitiesFiltered.Count: " + CitiesFiltered.Count;
+
+    StatusInfo += " StreetsFiltered.Count: " + StreetsFiltered.Count;
   }
 
   #endregion
 
-  #region Events
+  #region Private Properties
+
+  private List<string> _citiesName = new List<string>();
+  private List<string> _streetsName = new List<string>();
+  private List<string> _houseNumbers = new List<string>();
+
+  #endregion
+
+  #region Private Methods
+
+  /// <summary>
+  /// Первичное заполнение списка городов элементами.
+  /// </summary>
+  private void InitCitiesName()
+  {
+    if (_addressLocationViewModel.AddressLocations == null)
+      throw new Exception("Err: " + nameof(InitCitiesName) + ". AddressLocations = null");
+
+    foreach (var addressLocation in _addressLocationViewModel.AddressLocations)
+    {
+      if (addressLocation.CityName == null)
+        throw new Exception("Err: " + nameof(InitCitiesName) + ". CityName = null");
+
+      if (CitiesFiltered.Count == 0)
+      {
+        _citiesName.Add(addressLocation.CityName);
+        CitiesFiltered.Add(addressLocation.CityName);
+        continue;
+      }
+
+      var isNewCity = true;
+
+      foreach (var cityName in _citiesName)
+      {
+        if (cityName == addressLocation.CityName)
+        {
+          isNewCity = false;
+          break;
+        }
+      }
+
+      if (isNewCity)
+      {
+        _citiesName.Add(addressLocation.CityName);
+        CitiesFiltered.Add(addressLocation.CityName);
+      }
+    }
+  }
+
+  /// <summary>
+  /// Первичное заполнение списка улиц. Список улиц зависит от выбранного города.
+  /// </summary>
+  private void InitStreetsName()
+  {
+    if (_addressLocationViewModel.AddressLocations == null)
+      throw new Exception("Err: " + nameof(InitStreetsName) + ". AddressLocations = null");
+
+    _streetsName.Clear();
+    StreetsFiltered.Clear();
+
+    foreach (var addressLocation in _addressLocationViewModel.AddressLocations)
+    {
+      if (Equals(addressLocation.CityName, CityName))
+      {
+        if (addressLocation.StreetName == null)
+          throw new Exception("Err: " + nameof(InitStreetsName) + ". StreetName = null");
+
+        if (_streetsName.Count == 0)
+        {
+          _streetsName.Add(addressLocation.StreetName);
+          StreetsFiltered.Add(addressLocation.StreetName);
+          continue;
+        }
+
+        var isNewStreet = true;
+
+        foreach (var streetName in _streetsName)
+        {
+          if (streetName == addressLocation.StreetName)
+          {
+            isNewStreet = false;
+            break;
+          }
+        }
+
+        if (isNewStreet)
+        {
+          _streetsName.Add(addressLocation.StreetName);
+          StreetsFiltered.Add(addressLocation.StreetName);
+        }
+      }
+    }
+  }
+
+  /// <summary>
+  /// Первичное заполнение списка номеров домов. Зависит от выбранного города и улицы. 
+  /// </summary>
+  private void InitHouseNumbers()
+  {
+    if (_addressLocationViewModel.AddressLocations == null)
+      throw new Exception("Err: " + nameof(InitHouseNumbers) + ". AddressLocations = null");
+
+    _houseNumbers.Clear();
+    HouseNumbersFiltered.Clear();
+
+    foreach (var addressLocation in _addressLocationViewModel.AddressLocations)
+    {
+      if (Equals(addressLocation.CityName, CityName) && Equals(addressLocation.StreetName, StreetName))
+      {
+        if (addressLocation.HouseNumber == null)
+          throw new Exception("Err: " + nameof(InitHouseNumbers) + ". HouseNumber = null");
+
+        if (_houseNumbers.Count == 0)
+        {
+          _houseNumbers.Add(addressLocation.HouseNumber);
+          HouseNumbersFiltered.Add(addressLocation.HouseNumber);
+          continue;
+        }
+
+        var isNewHouseNumber = true;
+
+        foreach (var houseNumber in _houseNumbers)
+        {
+          if (houseNumber == addressLocation.HouseNumber)
+          {
+            isNewHouseNumber = false;
+            break;
+          }
+        }
+
+        if (isNewHouseNumber)
+        {
+          _houseNumbers.Add(addressLocation.HouseNumber);
+          HouseNumbersFiltered.Add(addressLocation.HouseNumber);
+        }
+      }
+    }
+  }
+
+  #endregion
 
   #endregion
 
@@ -236,12 +493,15 @@ public class MainViewModel : BaseViewModel
 
     OpenClient = new DelegateCommand(SelectClient);
     KeyUpClientName = new DelegateCommand(ApplyFilterToClientsList);
+
+    KeyUpCityName = new DelegateCommand(ApplyFilterToCitiesName);
     LostFocusCityName = new DelegateCommand(FillStreetsName);
     TappedSelectedCity = new DelegateCommand(SelectCity);
-    
-    KeyUpCityName = new DelegateCommand(ApplyFilterToCitiesName);
+
 
     KeyUpStreetName = new DelegateCommand(ApplyFilterToStreetsName);
+    // LostFocusStreetName = new DelegateCommand(FillHouseNumbers);
+    TappedSelectedStreet = new DelegateCommand(SelectStreet);
 
     _addressLocationViewModel = new AddressLocationViewModel();
 
@@ -249,12 +509,15 @@ public class MainViewModel : BaseViewModel
 
     SortedLocation = new ObservableCollection<string>();
 
-
     StatusInfo = ClientEr.CurrentPath;
 
     InitClientList();
     InitCitiesName();
   }
+
+  #endregion
+
+  #region Private Methods
 
   /// <summary>
   /// Проверяет и удаляет из имени по ссылке, запрещённые символы для именования папок в операцинной системе. 
@@ -306,210 +569,6 @@ public class MainViewModel : BaseViewModel
 
     return false;
   }
-
-  /// <summary>
-  /// Загружает существующие объекты у клиента из директории 'Объекты'
-  /// </summary>
-  private void LoadClientLocation()
-  {
-    SortedLocation.Clear();
-
-    if (SelectedClient.ClientPath == null)
-    {
-      StatusInfo = "Err: SelectedClient.ClientPath == null";
-      return;
-    }
-
-    //TODO Имя папки "объекты" нужно вывести в свойство!
-    var directoryPath = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar + "Объекты";
-
-    if (!Directory.Exists(directoryPath))
-    {
-      StatusInfo = "Err: 'Объекты' не обнаружены";
-      return;
-    }
-
-    var directoryInfo = new DirectoryInfo(directoryPath);
-
-    foreach (var directory in directoryInfo.GetDirectories())
-    {
-      SortedLocation.Add(directory.Name);
-    }
-
-    SortedLocation = new ObservableCollection<string>(SortedLocation.OrderBy(i => i));
-
-    StatusInfo = SelectedClient.ClientPath.FullName;
-  }
-
-  #endregion
-
-  #region Commands Methods
-
-  #endregion
-
-  #region Private Methods
-
-  private void InitClientList()
-  {
-    if (ClientEr.CurrentPath == null)
-    {
-      StatusInfo = "Err: ClientEr.CurrentPath == null";
-      return;
-    }
-
-    SortedClients.Clear();
-
-    var directoryInfo = new DirectoryInfo(ClientEr.CurrentPath);
-
-    foreach (var directory in directoryInfo.GetDirectories())
-    {
-      //  Точка вначале - символ скрытости. Такие директории пропускать. 
-      if (directory.Name.First() != '.')
-      {
-        SortedClients.Add(new ClientEntityViewModel(directory.Name, new DirectoryInfo(directory.FullName)));
-      }
-    }
-
-    SortedClients = new ObservableCollection<ClientEntityViewModel>(SortedClients.OrderBy(i => i.Name));
-
-    _clientsList = SortedClients.ToList();
-  }
-
-  /// <summary>
-  /// Первичное заполнение списка городов элементами.
-  /// </summary>
-  private void InitCitiesName()
-  {
-    if (_addressLocationViewModel.AddressLocations == null)
-      throw new Exception("Err: " + nameof(InitCitiesName) + ". AddressLocations = null");
-    
-    foreach (var addressLocation in _addressLocationViewModel.AddressLocations)
-    {
-      if (addressLocation.CityName == null) throw new Exception("Err: " + nameof(InitCitiesName) + ". CityName = null");
-      
-      if (CitiesFiltered.Count == 0)
-      {
-        _citiesName.Add(addressLocation.CityName);
-        CitiesFiltered.Add(addressLocation.CityName);
-        continue;
-      }
-
-      var isNewCity = true;
-
-      foreach (var cityName in _citiesName)
-      {
-        if (cityName == addressLocation.CityName)
-        {
-          isNewCity = false;
-          break;
-        }
-      }
-
-      if (isNewCity)
-      {
-        _citiesName.Add(addressLocation.CityName);
-        CitiesFiltered.Add(addressLocation.CityName);
-      }
-    }
-  }
-
-  /// <summary>
-  /// Первичное заполнение списка улиц. Список улиц зависит от выбранного города.
-  /// </summary>
-  private void InitStreetsName()
-  {
-    if (_addressLocationViewModel.AddressLocations == null) throw new Exception("Err: " + nameof(InitStreetsName) + ". AddressLocations = null");
-    
-    _streetsName.Clear();
-    StreetsFiltered.Clear();
-    
-    foreach (var addressLocation in _addressLocationViewModel.AddressLocations)
-    {
-      if (Equals(addressLocation.CityName, CityName))
-      {
-        if (addressLocation.StreetName == null) throw new Exception("Err: " + nameof(InitStreetsName) + ". StreetName = null");
-        
-        if (_streetsName.Count == 0)
-        {
-          _streetsName.Add(addressLocation.StreetName);
-          StreetsFiltered.Add(addressLocation.StreetName);
-          continue;
-        }
-
-        var isNewStreet = true;
-
-        foreach (var streetName in _streetsName)
-        {
-          if (streetName == addressLocation.StreetName)
-          {
-            isNewStreet = false;
-            break;
-          }
-        }
-
-        if (isNewStreet)
-        {
-          _streetsName.Add(addressLocation.StreetName);
-          StreetsFiltered.Add(addressLocation.StreetName);
-        }
-      }
-    }
-  }
-
-  /// <summary>
-  /// Первичное заполнение списка номеров домов. Зависит от выбранного города и улицы. 
-  /// </summary>
-  private void InitHouseNumbers()
-  {
-    if (_addressLocationViewModel.AddressLocations == null)
-      throw new Exception("Err: " + nameof(InitHouseNumbers) + ". AddressLocations = null");
-    
-    _houseNumbers.Clear();
-    HouseNumbersFiltered.Clear();
-    
-    foreach (var addressLocation in _addressLocationViewModel.AddressLocations)
-    {
-      if (Equals(addressLocation.CityName, CityName) && Equals(addressLocation.StreetName, StreetName))
-      {
-        if (addressLocation.HouseNumber == null)
-          throw new Exception("Err: " + nameof(InitHouseNumbers) + ". HouseNumber = null");
-        if (_houseNumbers.Count == 0)
-        {
-          _houseNumbers.Add(addressLocation.HouseNumber);
-          HouseNumbersFiltered.Add(addressLocation.HouseNumber);
-          continue;
-        }
-
-        var isNewHouseNumber = true;
-
-        foreach (var houseNumber in _houseNumbers)
-        {
-          if (houseNumber == addressLocation.HouseNumber)
-          {
-            isNewHouseNumber = false;
-            break;
-          }
-        }
-
-        if (isNewHouseNumber)
-        {
-          _houseNumbers.Add(addressLocation.HouseNumber);
-          HouseNumbersFiltered.Add(addressLocation.HouseNumber);
-        }
-      }
-    }
-  }
-
-  #endregion
-
-  #region Private Properties
-
-  private List<ClientEntityViewModel> _clientsList = new List<ClientEntityViewModel>();
-  private AddressLocationViewModel _addressLocationViewModel;
-
-  private List<string> _citiesName = new List<string>();
-  private List<string> _streetsName = new List<string>();
-  private List<string> _houseNumbers = new List<string>();
 
   #endregion
 }
