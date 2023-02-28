@@ -24,6 +24,8 @@ public class MainViewModel : BaseViewModel
   public ObservableCollection<ClientEntityViewModel> SortedClients { get; set; }
   public ClientEntityViewModel SelectedClient { get; set; }
 
+  public bool IsInitClient { get; set; } = false;
+
   #endregion
 
   #region Events
@@ -37,6 +39,8 @@ public class MainViewModel : BaseViewModel
 
   private void SelectClient(object param)
   {
+    IsInitClient = CheckClientToInit();
+
     LoadClientLocation();
   }
 
@@ -125,6 +129,26 @@ public class MainViewModel : BaseViewModel
     _clientsList = SortedClients.ToList();
   }
 
+  /// <summary>
+  /// Проверяет директорию клиента на наличие стандартных папок
+  /// </summary>
+  /// <returns>
+  /// true - Директория клиента содержит все необходимые папки
+  /// false - В директории клиента не хватает как минимум одной папки стандартной папки
+  /// </returns>
+  private bool CheckClientToInit()
+  {
+    foreach (DirectoryEntity directory in ClientEr.ClientDirectories.ClientFolders)
+    {
+      var clientDirectory = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar +
+                            ClientEr.GetPathDirectoryEntity(directory);
+
+      if (!Directory.Exists(clientDirectory)) return false;
+    }
+
+    return true;
+  }
+
   #endregion
 
   #endregion
@@ -136,6 +160,7 @@ public class MainViewModel : BaseViewModel
   #region Public Properties
 
   public ObservableCollection<string> SortedLocation { get; set; }
+  public string SelectedLocation { get; set; }
 
   #endregion
 
@@ -572,6 +597,9 @@ public class MainViewModel : BaseViewModel
 
   #endregion
 
+  
+  
+  
   #region Constructor
 
   public MainViewModel()

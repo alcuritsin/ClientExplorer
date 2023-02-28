@@ -10,6 +10,15 @@ public static class ClientEr
     public static string LocationsSourceFileName = ".AddressLocations.json";
     public static string? CurrentPath { get; set; }
 
+    public static ClientDirectories ClientDirectories = new ClientDirectories();
+    public static LocationDirectories LocationDirectories = new LocationDirectories();
+
+    public static string GetPathDirectoryEntity(DirectoryEntity dir)
+    {
+        if (dir.ParentDir == null) return Path.DirectorySeparatorChar + dir.DirName;
+
+        return GetPathDirectoryEntity(dir.ParentDir);
+    }
     /*
      public  static async Task<ObservableCollection<LocationViewModel>?> GetLocations()
     {

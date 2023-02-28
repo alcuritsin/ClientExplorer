@@ -249,7 +249,12 @@
               <TextBlock
                 Text="{Binding SelectedClient.ClientPath}" />
 
-              <Button Content="Init client folder" />
+              <Button Content="Init client folder"
+                      IsVisible="{Binding !IsInitClient}"/>
+              
+              <TextBlock
+                Text="{Binding SelectedLocation}"/>
+              
             </StackPanel>
 
 
@@ -314,7 +319,8 @@
                     Grid.Row="1"
                     Width="450"
                     x:Name="ListBoxClientObjects"
-                    Items="{Binding SortedLocation}">
+                    Items="{Binding SortedLocation}"
+                    SelectedItem="{Binding SelectedLocation}">
 
                     <!-- <ListBox.ItemTemplate> -->
                     <!--   <DataTemplate> -->
@@ -454,7 +460,10 @@
                         <Label x:Name="LabelAdditionalParam">Дополнительные параметры</Label>
                         <TextBox x:Name="TextBoxAdditionalParam"></TextBox>
                       </StackPanel>
-                      <CheckBox x:Name="CheckBoxLocationAsFolder" Content="НП - как папка, например у МОНЕТКИ"></CheckBox>
+                      <CheckBox 
+                        x:Name="CheckBoxLocationAsFolder"
+                        Content="НП - как папка, например у МОНЕТКИ"
+                        IsEnabled="False"/>
 
                     </StackPanel>
 
