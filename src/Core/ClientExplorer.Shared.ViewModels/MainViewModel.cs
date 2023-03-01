@@ -20,10 +20,11 @@ public class MainViewModel : BaseViewModel
 
   #region Public Properties
 
-  public string ClientFilter { get; set; }
+  public string ClientFilter { get; set; } = string.Empty;
 
   public ObservableCollection<ClientEntityViewModel> SortedClients { get; set; } =
     new ObservableCollection<ClientEntityViewModel>();
+
   public ClientEntityViewModel SelectedClient { get; set; }
 
   public bool IsInitClient { get; private set; } = false;
@@ -140,10 +141,10 @@ public class MainViewModel : BaseViewModel
   /// </returns>
   private bool CheckClientToInit()
   {
-    foreach (DirectoryEntity directory in ClientEr.ClientDirectories.ClientFolders)
+    foreach (DirectoryEntity directoryEntity in ClientEr.ClientDirectories.ClientFolders)
     {
       var clientDirectory = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar +
-                            ClientEr.GetPathDirectoryEntity(directory);
+                            ClientEr.GetPathDirectoryEntity(directoryEntity);
 
       if (!Directory.Exists(clientDirectory)) return false;
     }
@@ -162,7 +163,7 @@ public class MainViewModel : BaseViewModel
   #region Public Properties
 
   public ObservableCollection<string> SortedLocation { get; set; } = new ObservableCollection<string>();
-  public string SelectedLocation { get; set; }
+  public string SelectedLocation { get; set; } = string.Empty;
 
   #endregion
 
@@ -171,16 +172,14 @@ public class MainViewModel : BaseViewModel
   public ICommand TappedOnLocationClientItem { get; }
 
   #endregion
-  
+
   #region Command Methods
 
   private void SelectLocation(object param)
   {
-    
-    
-    
+    CheckLocationForFolders();
   }
-  
+
   #endregion
 
   #region Private Properties
@@ -204,12 +203,11 @@ public class MainViewModel : BaseViewModel
       return;
     }
 
-    //TODO Имя папки "объекты" нужно вывести в свойство!
-    var directoryPath = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar + "Объекты";
+    var directoryPath = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar + ClientEr.FolderObjectsName;
 
     if (!Directory.Exists(directoryPath))
     {
-      StatusInfo = "Err: 'Объекты' не обнаружены";
+      StatusInfo = "Err: '" + directoryPath + "' не обнаружены";
       return;
     }
 
@@ -619,17 +617,91 @@ public class MainViewModel : BaseViewModel
 
   #region Public Properties
 
-  public bool FolderDocumentIsCreate { get; set; }
-  public bool FolderPhotoIsCreate { get; set; }
-  public bool FolderDesignIsCreate { get; set; }
-  public bool FolderProjectIsCreate { get; set; }
-  public bool FolderApprovalInAdministrationIsCreate { get; set; }
-  public bool FolderNameUserVersionIsCreate { get; set; }
-  
-  public string FolderNameUserVersion { get; set; }
+  public string CheckBoxDocumentContent { get; init; } = ClientEr.FolderDocumentName;
+  public string CheckBoxPhotoContent { get; init; } = ClientEr.FolderPhotoName;
+  public string CheckBoxDesignContent { get; init; } = ClientEr.FolderDesignName;
+  public string CheckBoxProjectContent { get; init; } = ClientEr.FolderProjectName;
+  public string CheckBoxApprovalInAdministrationContent { get; init; } = ClientEr.FolderApprovalInAdministrationName;
+
+  public bool FolderDocumentIsCheck { get; set; } = false;
+  public bool FolderDocumentIsEnable { get; set; } = true;
+
+  public bool FolderPhotoIsCheck { get; set; } = false;
+  public bool FolderPhotoIsEnable { get; set; } = true;
+
+  public bool FolderDesignIsCheck { get; set; } = false;
+  public bool FolderDesignIsEnable { get; set; } = true;
+
+  public bool FolderProjectIsCheck { get; set; } = false;
+  public bool FolderProjectIsEnable { get; set; } = true;
+
+  public bool FolderApprovalInAdministrationIsCheck { get; set; } = false;
+  public bool FolderApprovalInAdministrationIsEnable { get; set; } = true;
+
+  public bool FolderNameUserVersionIsCheck { get; set; } = false;
+  public string FolderNameUserVersion { get; set; } = string.Empty;
 
   #endregion
-  
+
+  private void CheckLocationForFolders()
+  {
+    if (SelectedClient.ClientPath == null)
+      throw new Exception("Err: " + nameof(CheckLocationForFolders) + " " + nameof(SelectedClient.ClientPath) +
+                          "=null");
+
+    FolderDocumentIsCheck = false;
+    FolderDocumentIsEnable = true;
+
+    FolderPhotoIsCheck = false;
+    FolderPhotoIsEnable = true;
+
+    FolderDesignIsCheck = false;
+    FolderDesignIsEnable = true;
+
+    FolderProjectIsCheck = false;
+    FolderProjectIsEnable = true;
+
+    FolderApprovalInAdministrationIsCheck = false;
+    FolderApprovalInAdministrationIsEnable = true;
+
+    var pathForObject = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar + ClientEr.FolderObjectsName;
+
+    foreach (var directoryEntity in ClientEr.LocationDirectories.LocationFolders)
+    {
+      // Только папки верхнего уровня
+      if (directoryEntity.ParentDir != null) continue;
+
+      var dir = pathForObject + Path.DirectorySeparatorChar + SelectedLocation +
+                ClientEr.GetPathDirectoryEntity(directoryEntity);
+
+      if (Directory.Exists(dir))
+      {
+        switch (directoryEntity.DirName)
+        {
+          case ClientEr.FolderDocumentName:
+            FolderDocumentIsCheck = true;
+            FolderDocumentIsEnable = false;
+            break;
+          case ClientEr.FolderPhotoName:
+            FolderPhotoIsCheck = true;
+            FolderPhotoIsEnable = false;
+            break;
+          case ClientEr.FolderDesignName:
+            FolderDesignIsCheck = true;
+            FolderDesignIsEnable = false;
+            break;
+          case ClientEr.FolderProjectName:
+            FolderProjectIsCheck = true;
+            FolderProjectIsEnable = false;
+            break;
+          case ClientEr.FolderApprovalInAdministrationName:
+            FolderApprovalInAdministrationIsCheck = true;
+            FolderApprovalInAdministrationIsEnable = false;
+            break;
+        }
+      }
+    }
+  }
 
   #endregion
 
@@ -645,7 +717,7 @@ public class MainViewModel : BaseViewModel
     ClientEr.CurrentPath = "/mnt/share/Clients";
 
     #region Client
-    
+
     OpenClient = new DelegateCommand(SelectClient);
     KeyUpClientName = new DelegateCommand(ApplyFilterToClientsList);
 

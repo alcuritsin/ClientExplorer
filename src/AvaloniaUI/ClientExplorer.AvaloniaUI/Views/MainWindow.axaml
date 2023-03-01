@@ -515,46 +515,55 @@
                       RowDefinitions="*, *, *, *, *, *"
                       ColumnDefinitions="Auto, *">
 
+                      <!-- 01 Документы -->
                       <CheckBox
                         Grid.Row="0" Grid.Column="0"
                         Grid.ColumnSpan="2"
                         x:Name="CheckBoxDocument"
-                        Content="01 Документы"
-                        IsChecked="{Binding FolderDocumentIsCreate}"/>
+                        Content="{Binding CheckBoxDocumentContent}"
+                        IsChecked="{Binding FolderDocumentIsCheck}"
+                        IsEnabled="{Binding FolderDocumentIsEnable}"/>
 
+                      <!-- 02 Фото -->
                       <CheckBox
                         Grid.Row="1" Grid.Column="0"
                         Grid.ColumnSpan="2"
                         x:Name="CheckBoxPhoto"
-                        Content="02 Фото" 
-                        IsChecked="{Binding FolderPhotoIsCreate}"/>
+                        Content="{Binding CheckBoxPhotoContent}" 
+                        IsChecked="{Binding FolderPhotoIsCheck}"
+                        IsEnabled="{Binding FolderPhotoIsEnable}"/>
 
+                      <!-- 03 Дизайн -->
                       <CheckBox
                         Grid.Row="2" Grid.Column="0"
                         Grid.ColumnSpan="2"
                         x:Name="CheckBoxDesign"
-                        Content="03 Дизайн"
-                        IsChecked="{Binding FolderDesignIsCreate}"/>
+                        Content="{Binding CheckBoxDesignContent}"
+                        IsChecked="{Binding FolderDesignIsCheck}"
+                        IsEnabled="{Binding FolderDesignIsEnable}"/>
 
+                      <!-- 04 Проект -->
                       <CheckBox
                         Grid.Row="3" Grid.Column="0"
                         Grid.ColumnSpan="2"
                         x:Name="CheckBoxProject"
-                        Content="04 Проект"
-                        IsChecked="{Binding FolderProjectIsCreate}"/>
+                        Content="{Binding CheckBoxProjectContent}"
+                        IsChecked="{Binding FolderProjectIsCheck}"
+                        IsEnabled="{Binding FolderProjectIsEnable}"/>
 
+                      <!-- 05 Согласование в администрации -->
                       <CheckBox
                         Grid.Row="4" Grid.Column="0"
                         Grid.ColumnSpan="2"
                         x:Name="CheckBoxApprovalInAdministration"
-                        Content="05 Согласование в администрации"
-                        IsChecked="{Binding FolderApprovalInAdministrationIsCreate}"/>
-
+                        Content="{Binding CheckBoxApprovalInAdministrationContent}"
+                        IsChecked="{Binding FolderApprovalInAdministrationIsCheck}"
+                        IsEnabled="{Binding FolderApprovalInAdministrationIsEnable}"/>
 
                       <CheckBox
                         Grid.Row="5" Grid.Column="0"
                         x:Name="CheckBoxFolderNameUserVersion"
-                        IsChecked="{Binding FolderNameUserVersionIsCreate}"/>
+                        IsChecked="{Binding FolderNameUserVersionIsCheck}"/>
                       <TextBox
                         Grid.Row="5" Grid.Column="1"
                         x:Name="TextBoxFolderNameUserVersion"
