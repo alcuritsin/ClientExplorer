@@ -4,10 +4,10 @@ namespace ClientExplorer.Shared.ViewModels;
 
 public class DelegateCommand : ICommand
 {
-  private readonly Action<object?> _execute;
+  private readonly Action<object> _execute;
   private readonly Predicate<object>? _canExecute;
 
-  public DelegateCommand(Action<object?> execute, Predicate<object>? canExecute = null)
+  public DelegateCommand(Action<object> execute, Predicate<object>? canExecute = null)
   {
     _execute = execute;
     _canExecute = canExecute;
@@ -17,7 +17,7 @@ public class DelegateCommand : ICommand
   {
     if (_canExecute != null)
     {
-      return _canExecute.Invoke(param);
+      return param != null && _canExecute.Invoke(param);
     }
 
     return true;
@@ -25,7 +25,7 @@ public class DelegateCommand : ICommand
 
   public void Execute(object? param)
   {
-    _execute?.Invoke(param);
+    if (param != null) _execute.Invoke(param);
   }
 
   public event EventHandler? CanExecuteChanged;
