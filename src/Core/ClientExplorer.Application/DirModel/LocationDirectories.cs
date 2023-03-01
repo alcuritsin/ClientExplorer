@@ -24,11 +24,11 @@ public class LocationDirectories
       ./05 Согласование в администрации
       */
 
-    LocationFolders.Add(new DirectoryEntity("01 Документы"));
-    LocationFolders.Add(new DirectoryEntity("02 Фото"));
-    LocationFolders.Add(new DirectoryEntity("03 Дизайн"));
-    LocationFolders.Add(new DirectoryEntity("04 Проект"));
-    LocationFolders.Add(new DirectoryEntity("05 Согласование в администрации"));
+    LocationFolders.Add(new DirectoryEntity(dirName: ClientEr.FolderDocumentName));
+    LocationFolders.Add(new DirectoryEntity(dirName: ClientEr.FolderPhotoName));
+    LocationFolders.Add(new DirectoryEntity(dirName: ClientEr.FolderDesignName));
+    LocationFolders.Add(new DirectoryEntity(dirName: ClientEr.FolderProjectName));
+    LocationFolders.Add(new DirectoryEntity(dirName: ClientEr.FolderApprovalInAdministrationName));
 
     #region ./02 Фото
 
@@ -37,7 +37,7 @@ public class LocationDirectories
       */
     var directoryWithParent = new DirectoryEntity(
       "01 Замеры",
-      LocationFolders.Find(item => item.DirName == "02 Фото")
+      LocationFolders.Find(item => item.DirName == ClientEr.FolderPhotoName)
     );
     LocationFolders.Add(directoryWithParent);
 
@@ -53,17 +53,17 @@ public class LocationDirectories
 
     directoryWithParent = new DirectoryEntity(
       "01 Входящие документы",
-      LocationFolders.Find(item => item.DirName == "04 Проект"));
+      LocationFolders.Find(item => item.DirName == ClientEr.FolderProjectName));
     LocationFolders.Add(directoryWithParent);
 
     directoryWithParent = new DirectoryEntity(
       "02 Проект на согласование",
-      LocationFolders.Find(item => item.DirName == "04 Проект"));
+      LocationFolders.Find(item => item.DirName == ClientEr.FolderProjectName));
     LocationFolders.Add(directoryWithParent);
 
     directoryWithParent = new DirectoryEntity(
       "03 Проект рабочий",
-      LocationFolders.Find(item => item.DirName == "04 Проект"));
+      LocationFolders.Find(item => item.DirName == ClientEr.FolderProjectName));
     LocationFolders.Add(directoryWithParent);
 
     #region ./04 Проект/01 Входящие документы
