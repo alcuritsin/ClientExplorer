@@ -21,10 +21,12 @@ public class MainViewModel : BaseViewModel
   #region Public Properties
 
   public string ClientFilter { get; set; }
-  public ObservableCollection<ClientEntityViewModel> SortedClients { get; set; }
+
+  public ObservableCollection<ClientEntityViewModel> SortedClients { get; set; } =
+    new ObservableCollection<ClientEntityViewModel>();
   public ClientEntityViewModel SelectedClient { get; set; }
 
-  public bool IsInitClient { get; set; } = false;
+  public bool IsInitClient { get; private set; } = false;
 
   #endregion
 
@@ -83,7 +85,7 @@ public class MainViewModel : BaseViewModel
     {
       if (client.Name == null)
         throw new Exception("Err: " + nameof(ApplyFilterToClientsList) + ". " + nameof(client.Name) + " = null");
-      
+
       if (client.Name.ToUpper().Contains(clientFilter.ToUpper()))
       {
         SortedClients.Add(client);
@@ -117,7 +119,7 @@ public class MainViewModel : BaseViewModel
 
     foreach (var directory in directoryInfo.GetDirectories())
     {
-      //  Точка вначале - символ скрытости. Такие директории пропускать. 
+      //  Точка вначале - символ скрытности. Такие директории пропускать. 
       if (directory.Name.First() != '.')
       {
         SortedClients.Add(new ClientEntityViewModel(directory.Name, new DirectoryInfo(directory.FullName)));
@@ -159,14 +161,31 @@ public class MainViewModel : BaseViewModel
 
   #region Public Properties
 
-  public ObservableCollection<string> SortedLocation { get; set; }
+  public ObservableCollection<string> SortedLocation { get; set; } = new ObservableCollection<string>();
   public string SelectedLocation { get; set; }
 
   #endregion
 
+  #region Events
+
+  public ICommand TappedOnLocationClientItem { get; }
+
+  #endregion
+  
+  #region Command Methods
+
+  private void SelectLocation(object param)
+  {
+    
+    
+    
+  }
+  
+  #endregion
+
   #region Private Properties
 
-  private AddressLocationViewModel _addressLocationViewModel;
+  private readonly AddressLocationViewModel _addressLocationViewModel;
 
   #endregion
 
@@ -446,7 +465,7 @@ public class MainViewModel : BaseViewModel
   private List<string> _houseNumbers = new List<string>();
 
   // private string _lastSelectCityName = string.Empty;
-  
+
   #endregion
 
   #region Private Methods
@@ -495,7 +514,6 @@ public class MainViewModel : BaseViewModel
   /// </summary>
   private void InitStreetsName()
   {
-
     if (_addressLocationViewModel.AddressLocations == null)
       throw new Exception("Err: " + nameof(InitStreetsName) + ". AddressLocations = null");
 
@@ -597,41 +615,71 @@ public class MainViewModel : BaseViewModel
 
   #endregion
 
+  #region Folders
+
+  #region Public Properties
+
+  public bool FolderDocumentIsCreate { get; set; }
+  public bool FolderPhotoIsCreate { get; set; }
+  public bool FolderDesignIsCreate { get; set; }
+  public bool FolderProjectIsCreate { get; set; }
+  public bool FolderApprovalInAdministrationIsCreate { get; set; }
+  public bool FolderNameUserVersionIsCreate { get; set; }
   
+  public string FolderNameUserVersion { get; set; }
+
+  #endregion
   
-  
+
+  #endregion
+
   #region Constructor
 
   public MainViewModel()
   {
     //ClientEr.CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
-    //TODO: Хардкодим путь до папок с клиентами на время разработки и тестирования. В будущем значение будет вынесено в файл настроек "*.ini". 
+    //TODO: Вынести в настройки CurrentPath (расположение папок клиентов)
+    //Хардкодим путь до папок с клиентами на время разработки и тестирования.
+    //В будущем значение будет вынесено в файл настроек "*.ini".
+    //Или будем использовать путь расположения программы, т.к. программа рассчитана и на Windows и на Linux.
     ClientEr.CurrentPath = "/mnt/share/Clients";
 
+    #region Client
+    
     OpenClient = new DelegateCommand(SelectClient);
     KeyUpClientName = new DelegateCommand(ApplyFilterToClientsList);
+
+    InitClientList();
+
+    #endregion
+
+    #region Location of Client
+
+    TappedOnLocationClientItem = new DelegateCommand(SelectLocation);
+
+    #endregion
+
+    #region Address Location
+
+    _addressLocationViewModel = new AddressLocationViewModel();
 
     KeyUpCityName = new DelegateCommand(ApplyFilterToCitiesName);
     LostFocusCityName = new DelegateCommand(FillStreetsName);
     TappedOnCityItem = new DelegateCommand(SelectCity);
-    
+
     KeyUpStreetName = new DelegateCommand(ApplyFilterToStreetsName);
     LostFocusStreetName = new DelegateCommand(FillHouseNumbers);
     TappedOnStreetItem = new DelegateCommand(SelectStreet);
 
     KeyUpHouseNumber = new DelegateCommand(ApplyFilterToHouseNumbers);
     TappedOnHouseNumberItem = new DelegateCommand(SelectHouseNumber);
-    
-    _addressLocationViewModel = new AddressLocationViewModel();
 
-    SortedClients = new ObservableCollection<ClientEntityViewModel>();
+    InitCitiesName();
 
-    SortedLocation = new ObservableCollection<string>();
+    #endregion
+
 
     StatusInfo = ClientEr.CurrentPath;
-
-    InitClientList();
-    InitCitiesName();
   }
 
   #endregion

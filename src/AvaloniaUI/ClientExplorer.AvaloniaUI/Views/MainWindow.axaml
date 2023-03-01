@@ -63,7 +63,7 @@
             SelectedItem="{Binding SelectedCity}"
             Height="{Binding $parent[Border].Height}"
             MaxHeight="{Binding $parent[Border].MaxHeight}">
-            
+
             <i:Interaction.Behaviors>
               <ia:EventTriggerBehavior EventName="Tapped">
                 <ia:InvokeCommandAction
@@ -71,7 +71,7 @@
                   CommandParameter="{Binding SelectedCity}" />
               </ia:EventTriggerBehavior>
             </i:Interaction.Behaviors>
-            
+
           </ListBox>
         </StackPanel>
       </Border>
@@ -95,7 +95,7 @@
             SelectedItem="{Binding SelectedStreet}"
             Height="{Binding $parent[Border].Height}"
             MaxHeight="{Binding $parent[Border].MaxHeight}">
-            
+
             <i:Interaction.Behaviors>
               <ia:EventTriggerBehavior EventName="Tapped">
                 <ia:InvokeCommandAction
@@ -107,7 +107,7 @@
           </ListBox>
         </StackPanel>
       </Border>
-      
+
       <!-- Список номеров домов 'Popup' -->
       <Border
         x:Name="HouseNumbersListPopup"
@@ -127,7 +127,7 @@
             SelectedItem="{Binding SelectedHouseNumber}"
             Height="{Binding $parent[Border].Height}"
             MaxHeight="{Binding $parent[Border].MaxHeight}">
-            
+
             <i:Interaction.Behaviors>
               <ia:EventTriggerBehavior EventName="Tapped">
                 <ia:InvokeCommandAction
@@ -135,12 +135,12 @@
                   CommandParameter="{Binding SelectedHouseNumber}" />
               </ia:EventTriggerBehavior>
             </i:Interaction.Behaviors>
-            
+
           </ListBox>
         </StackPanel>
       </Border>
 
-      
+
       <!-- Панель - 'Основная' -->
       <Grid
         Grid.Row="0"
@@ -250,11 +250,11 @@
                 Text="{Binding SelectedClient.ClientPath}" />
 
               <Button Content="Init client folder"
-                      IsVisible="{Binding !IsInitClient}"/>
-              
+                      IsVisible="{Binding !IsInitClient}" />
+
               <TextBlock
-                Text="{Binding SelectedLocation}"/>
-              
+                Text="{Binding SelectedLocation}" />
+
             </StackPanel>
 
 
@@ -328,6 +328,15 @@
                     <!--   </DataTemplate> -->
                     <!-- </ListBox.ItemTemplate> -->
 
+                    <i:Interaction.Behaviors>
+                      <ia:EventTriggerBehavior EventName="Tapped">
+                        <ia:InvokeCommandAction
+                          Command="{Binding TappedOnLocationClientItem}"
+                          CommandParameter="{Binding SelectedLocation}" />
+                      </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+
+
                   </ListBox>
 
                 </Grid>
@@ -377,25 +386,25 @@
                         <Label
                           x:Name="LabelCityName"
                           Target="CityName"
-                          Content="Населённый пункт (НП)"/>
+                          Content="Населённый пункт (НП)" />
                         <TextBox
                           x:Name="CityName"
                           Text="{Binding CityName}">
 
                           <i:Interaction.Behaviors>
-                            
+
                             <ia:EventTriggerBehavior EventName="KeyUp">
                               <ia:InvokeCommandAction
                                 Command="{Binding KeyUpCityName}"
                                 CommandParameter="{Binding CityName}" />
                             </ia:EventTriggerBehavior>
-                            
+
                             <ia:EventTriggerBehavior EventName="LostFocus">
                               <ia:InvokeCommandAction
                                 Command="{Binding LostFocusCityName}"
                                 CommandParameter="{Binding SelectedCity}" />
                             </ia:EventTriggerBehavior>
-                            
+
                           </i:Interaction.Behaviors>
 
                         </TextBox>
@@ -406,19 +415,19 @@
                         <Label
                           x:Name="LabelStreetName"
                           Target="StreetName"
-                          Content="Улица"/>
+                          Content="Улица" />
                         <TextBox
                           x:Name="StreetName"
                           Text="{Binding StreetName}">
 
                           <i:Interaction.Behaviors>
-                            
+
                             <ia:EventTriggerBehavior EventName="KeyUp">
                               <ia:InvokeCommandAction
                                 Command="{Binding KeyUpStreetName}"
                                 CommandParameter="{Binding StreetName}" />
                             </ia:EventTriggerBehavior>
-                            
+
                             <ia:EventTriggerBehavior EventName="LostFocus">
                               <ia:InvokeCommandAction
                                 Command="{Binding LostFocusStreetName}"
@@ -428,42 +437,42 @@
                           </i:Interaction.Behaviors>
 
                         </TextBox>
-                        
+
                       </StackPanel>
 
                       <StackPanel>
                         <Label
                           x:Name="LabelHouseNumber"
                           Target="HouseNumber"
-                          Content="Номер дома"/>
+                          Content="Номер дома" />
                         <TextBox
                           x:Name="HouseNumber"
                           Text="{Binding HouseNumber}">
-                          
+
                           <i:Interaction.Behaviors>
-                            
+
                             <ia:EventTriggerBehavior EventName="KeyUp">
                               <ia:InvokeCommandAction
                                 Command="{Binding KeyUpHouseNumber}"
                                 CommandParameter="{Binding HouseNumber}" />
                             </ia:EventTriggerBehavior>
-                            
+
                           </i:Interaction.Behaviors>
 
-                          
+
                         </TextBox>
-                        
-                        
+
+
                       </StackPanel>
 
                       <StackPanel>
                         <Label x:Name="LabelAdditionalParam">Дополнительные параметры</Label>
                         <TextBox x:Name="TextBoxAdditionalParam"></TextBox>
                       </StackPanel>
-                      <CheckBox 
+                      <CheckBox
                         x:Name="CheckBoxLocationAsFolder"
                         Content="НП - как папка, например у МОНЕТКИ"
-                        IsEnabled="False"/>
+                        IsEnabled="False" />
 
                     </StackPanel>
 
@@ -502,17 +511,58 @@
                     CornerRadius="6">
 
                     <!-- Отметить папки для создания -->
-                    <StackPanel>
-                      <CheckBox x:Name="CheckBoxDocument" Content="01 Документы"></CheckBox>
-                      <CheckBox x:Name="CheckBoxPhoto" Content="02 Фото"></CheckBox>
-                      <CheckBox x:Name="CheckBoxDesign" Content="03 Дизайн"></CheckBox>
-                      <CheckBox x:Name="CheckBoxProject" Content="04 Проект"></CheckBox>
-                      <CheckBox x:Name="CheckBoxApprovalInAdministration" Content="05 Согласование в администрации"></CheckBox>
-                      <StackPanel Orientation="Horizontal">
-                        <CheckBox x:Name="CheckBoxUserVersionFolderName"></CheckBox>
-                        <TextBox x:Name="TextBoxUserVersionFolderName"></TextBox>
-                      </StackPanel>
-                    </StackPanel>
+                    <Grid
+                      RowDefinitions="*, *, *, *, *, *"
+                      ColumnDefinitions="Auto, *">
+
+                      <CheckBox
+                        Grid.Row="0" Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        x:Name="CheckBoxDocument"
+                        Content="01 Документы"
+                        IsChecked="{Binding FolderDocumentIsCreate}"/>
+
+                      <CheckBox
+                        Grid.Row="1" Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        x:Name="CheckBoxPhoto"
+                        Content="02 Фото" 
+                        IsChecked="{Binding FolderPhotoIsCreate}"/>
+
+                      <CheckBox
+                        Grid.Row="2" Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        x:Name="CheckBoxDesign"
+                        Content="03 Дизайн"
+                        IsChecked="{Binding FolderDesignIsCreate}"/>
+
+                      <CheckBox
+                        Grid.Row="3" Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        x:Name="CheckBoxProject"
+                        Content="04 Проект"
+                        IsChecked="{Binding FolderProjectIsCreate}"/>
+
+                      <CheckBox
+                        Grid.Row="4" Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        x:Name="CheckBoxApprovalInAdministration"
+                        Content="05 Согласование в администрации"
+                        IsChecked="{Binding FolderApprovalInAdministrationIsCreate}"/>
+
+
+                      <CheckBox
+                        Grid.Row="5" Grid.Column="0"
+                        x:Name="CheckBoxFolderNameUserVersion"
+                        IsChecked="{Binding FolderNameUserVersionIsCreate}"/>
+                      <TextBox
+                        Grid.Row="5" Grid.Column="1"
+                        x:Name="TextBoxFolderNameUserVersion"
+                        Text="{Binding FolderNameUserVersion}">
+                      </TextBox>
+
+
+                    </Grid>
 
                   </Border>
 
