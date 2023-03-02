@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Reflection.Metadata.Ecma335;
 using System.Windows.Input;
 using ClientExplorer.Application;
 
@@ -7,10 +6,126 @@ namespace ClientExplorer.Shared.ViewModels;
 
 public class MainViewModel : BaseViewModel
 {
+  #region For Windows
+
   #region Public Properties
 
   //Info панель
   public string StatusInfo { get; set; }
+
+  #endregion
+
+  #region Constructor
+
+  public MainViewModel()
+  {
+    //ClientEr.CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
+    //TODO: Вынести в настройки CurrentPath (расположение папок клиентов)
+    //Хардкодим путь до папок с клиентами на время разработки и тестирования.
+    //В будущем значение будет вынесено в файл настроек "*.ini".
+    //Или будем использовать путь расположения программы, т.к. программа рассчитана и на Windows и на Linux.
+    ClientEr.CurrentPath = "/mnt/share/Clients";
+
+    #region Client
+
+    OpenClient = new DelegateCommand(SelectClient);
+    KeyUpClientName = new DelegateCommand(ApplyFilterToClientsList);
+
+    InitClientList();
+
+    #endregion
+
+    #region Location of Client
+
+    TappedOnLocationClientItem = new DelegateCommand(SelectLocation);
+
+    #endregion
+
+    #region Address Location
+
+    _addressLocationViewModel = new AddressLocationViewModel();
+
+    KeyUpCityName = new DelegateCommand(ApplyFilterToCitiesName);
+    LostFocusCityName = new DelegateCommand(FillStreetsName);
+    TappedOnCityItem = new DelegateCommand(SelectCity);
+
+    KeyUpStreetName = new DelegateCommand(ApplyFilterToStreetsName);
+    LostFocusStreetName = new DelegateCommand(FillHouseNumbers);
+    TappedOnStreetItem = new DelegateCommand(SelectStreet);
+
+    KeyUpHouseNumber = new DelegateCommand(ApplyFilterToHouseNumbers);
+    TappedOnHouseNumberItem = new DelegateCommand(SelectHouseNumber);
+
+    InitCitiesName();
+
+    #endregion
+
+
+    FoldersForCreate.Add(new FolderLocationEntityViewModel("01 Документы"));
+    FoldersForCreate.Add(new FolderLocationEntityViewModel("02 Фото"));
+    FoldersForCreate.Add(new FolderLocationEntityViewModel("03 Дизайн"));
+    FoldersForCreate.Add(new FolderLocationEntityViewModel("04 Проект"));
+    FoldersForCreate.Add(new FolderLocationEntityViewModel("05 Согласование в администрации"));
+
+    StatusInfo = ClientEr.CurrentPath;
+  }
+
+  #endregion
+
+  #region Private Methods
+
+  /// <summary>
+  /// Проверяет и удаляет из имени по ссылке, запрещённые символы для именования папок в операцинной системе. 
+  /// </summary>
+  /// <param name="name">
+  /// Ссылка на имя.
+  /// </param>
+  /// <returns>
+  /// true - был найден запрещённый символ.
+  /// false - запрещённых символов не обнаружено.
+  /// </returns>
+  private bool IsNameHaveInvalidCharacter(ref string name)
+  {
+    // Следующие зарезервированные символы:
+    //  < - (меньше чем);
+    //  > - (больше чем);
+    //  : - (двоеточие)
+    //  " - (двойная кавычка)
+    //  / - (косая черта)
+    //  \ - (обратная косая черта)
+    //  | - (вертикальная полоса или канал)
+    //  ? - (вопросительный знак)
+    //  * - (звёздочка)
+
+    if (name.Equals(string.Empty)) return false;
+
+    switch (name.Last())
+    {
+      case '<':
+      case '>':
+      case ':':
+      case '"':
+      case '/':
+      case '\\':
+      case '|':
+      case '?':
+      case '*':
+        if (name.Length != 1)
+        {
+          name = name.Substring(0, name.Length - 1);
+        }
+        else
+        {
+          name = String.Empty;
+        }
+
+        return true;
+    }
+
+    return false;
+  }
+
+  #endregion
 
   #endregion
 
@@ -42,6 +157,8 @@ public class MainViewModel : BaseViewModel
 
   private void SelectClient(object param)
   {
+    if (SelectedClient.Name != null) ClientFilter = SelectedClient.Name;
+
     IsInitClient = CheckClientToInit();
 
     LoadClientLocation();
@@ -55,6 +172,9 @@ public class MainViewModel : BaseViewModel
   /// </param>
   private void ApplyFilterToClientsList(object param)
   {
+    // Сброс листа объектов клиента.
+    SortedLocation.Clear();
+
     var clientFilter = ClientFilter;
 
     StatusInfo = "ClientFilter: " + clientFilter;
@@ -92,6 +212,8 @@ public class MainViewModel : BaseViewModel
         SortedClients.Add(client);
       }
     }
+
+    //TODO Выделить клиента если он остался один в списке... 
 
     StatusInfo += " SortedClients.Count: " + SortedClients.Count;
   }
@@ -219,8 +341,6 @@ public class MainViewModel : BaseViewModel
     }
 
     SortedLocation = new ObservableCollection<string>(SortedLocation.OrderBy(i => i));
-
-    StatusInfo = SelectedClient.ClientPath.FullName;
   }
 
   #endregion
@@ -233,25 +353,25 @@ public class MainViewModel : BaseViewModel
 
   #region Public Properties
 
+  public ObservableCollection<string> CitiesFiltered { get; set; } =
+    new ObservableCollection<string>();
+
   public string CityName { get; set; } = string.Empty;
   public string SelectedCity { get; set; } = string.Empty;
 
+  public ObservableCollection<string> StreetsFiltered { get; set; } =
+    new ObservableCollection<string>();
+
   public string StreetName { get; set; } = string.Empty;
   public string SelectedStreet { get; set; } = string.Empty;
+
+  public ObservableCollection<string> HouseNumbersFiltered { get; set; } =
+    new ObservableCollection<string>();
 
   public string HouseNumber { get; set; } = string.Empty;
   public string SelectedHouseNumber { get; set; } = string.Empty;
 
   public string AdditionalParam { get; set; } = string.Empty;
-
-  public ObservableCollection<string> CitiesFiltered { get; set; } =
-    new ObservableCollection<string>();
-
-  public ObservableCollection<string> StreetsFiltered { get; set; } =
-    new ObservableCollection<string>();
-
-  public ObservableCollection<string> HouseNumbersFiltered { get; set; } =
-    new ObservableCollection<string>();
 
   #endregion
 
@@ -613,9 +733,14 @@ public class MainViewModel : BaseViewModel
 
   #endregion
 
+  //Папки
+
   #region Folders
 
   #region Public Properties
+
+  public ObservableCollection<FolderLocationEntityViewModel> FoldersForCreate { get; set; } =
+    new ObservableCollection<FolderLocationEntityViewModel>();
 
   public string CheckBoxDocumentContent { get; init; } = ClientEr.FolderDocumentName;
   public string CheckBoxPhotoContent { get; init; } = ClientEr.FolderPhotoName;
@@ -705,109 +830,70 @@ public class MainViewModel : BaseViewModel
 
   #endregion
 
-  #region Constructor
+  #region Buttons
 
-  public MainViewModel()
+  #region Commands Methods
+
+  public async Task OnClickButtonCreateDirectory()
   {
-    //ClientEr.CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
-    //TODO: Вынести в настройки CurrentPath (расположение папок клиентов)
-    //Хардкодим путь до папок с клиентами на время разработки и тестирования.
-    //В будущем значение будет вынесено в файл настроек "*.ini".
-    //Или будем использовать путь расположения программы, т.к. программа рассчитана и на Windows и на Linux.
-    ClientEr.CurrentPath = "/mnt/share/Clients";
+    StatusInfo = "Click";
 
-    #region Client
+    string clientPath = string.Empty;
 
-    OpenClient = new DelegateCommand(SelectClient);
-    KeyUpClientName = new DelegateCommand(ApplyFilterToClientsList);
+    if (SelectedClient == null)
+    {
+      clientPath = ClientEr.CurrentPath + Path.DirectorySeparatorChar + ClientFilter;
+    }
+    else
+    {
+      if (SelectedClient.ClientPath != null) clientPath = SelectedClient.ClientPath.FullName;
+    }
 
-    InitClientList();
+    string locationPath = clientPath + Path.DirectorySeparatorChar + ClientEr.FolderObjectsName;
 
-    #endregion
+    if (CityName != string.Empty)
+    {
+      locationPath += Path.DirectorySeparatorChar + CityName;
+    }
 
-    #region Location of Client
+    if (StreetName != string.Empty)
+    {
+      locationPath += ", " + StreetName;
+    }
 
-    TappedOnLocationClientItem = new DelegateCommand(SelectLocation);
+    if (HouseNumber != string.Empty)
+    {
+      locationPath += ", " + HouseNumber;
+    }
 
-    #endregion
+    if (AdditionalParam != string.Empty)
+    {
+      if (CityName != string.Empty)
+      {
+        locationPath += " - ";
+      }
+      else
+      {
+        locationPath += Path.DirectorySeparatorChar;
+      }
 
-    #region Address Location
+      locationPath += AdditionalParam;
+    }
 
-    _addressLocationViewModel = new AddressLocationViewModel();
-
-    KeyUpCityName = new DelegateCommand(ApplyFilterToCitiesName);
-    LostFocusCityName = new DelegateCommand(FillStreetsName);
-    TappedOnCityItem = new DelegateCommand(SelectCity);
-
-    KeyUpStreetName = new DelegateCommand(ApplyFilterToStreetsName);
-    LostFocusStreetName = new DelegateCommand(FillHouseNumbers);
-    TappedOnStreetItem = new DelegateCommand(SelectStreet);
-
-    KeyUpHouseNumber = new DelegateCommand(ApplyFilterToHouseNumbers);
-    TappedOnHouseNumberItem = new DelegateCommand(SelectHouseNumber);
-
-    InitCitiesName();
-
-    #endregion
+    StatusInfo = locationPath;
 
 
-    StatusInfo = ClientEr.CurrentPath;
+    foreach (var folderForCreate in FoldersForCreate)
+    {
+      if (folderForCreate.IsCheck)
+      {
+        StatusInfo = folderForCreate.FolderName + " +";
+        await Task.Delay(350);
+      }
+    }
   }
 
   #endregion
-
-  #region Private Methods
-
-  /// <summary>
-  /// Проверяет и удаляет из имени по ссылке, запрещённые символы для именования папок в операцинной системе. 
-  /// </summary>
-  /// <param name="name">
-  /// Ссылка на имя.
-  /// </param>
-  /// <returns>
-  /// true - был найден запрещённый символ.
-  /// false - запрещённых символов не обнаружено.
-  /// </returns>
-  private bool IsNameHaveInvalidCharacter(ref string name)
-  {
-    // Следующие зарезервированные символы:
-    //  < - (меньше чем);
-    //  > - (больше чем);
-    //  : - (двоеточие)
-    //  " - (двойная кавычка)
-    //  / - (косая черта)
-    //  \ - (обратная косая черта)
-    //  | - (вертикальная полоса или канал)
-    //  ? - (вопросительный знак)
-    //  * - (звёздочка)
-
-    if (name.Equals(string.Empty)) return false;
-
-    switch (name.Last())
-    {
-      case '<':
-      case '>':
-      case ':':
-      case '"':
-      case '/':
-      case '\\':
-      case '|':
-      case '?':
-      case '*':
-        if (name.Length != 1)
-        {
-          name = name.Substring(0, name.Length - 1);
-        }
-        else
-        {
-          name = String.Empty;
-        }
-
-        return true;
-    }
-
-    return false;
-  }
 
   #endregion
 }

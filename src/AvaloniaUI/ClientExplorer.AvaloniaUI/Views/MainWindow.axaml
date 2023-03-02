@@ -467,7 +467,9 @@
 
                       <StackPanel>
                         <Label x:Name="LabelAdditionalParam">Дополнительные параметры</Label>
-                        <TextBox x:Name="TextBoxAdditionalParam"></TextBox>
+                        <TextBox
+                          x:Name="TextBoxAdditionalParam"
+                          Text="{Binding AdditionalParam}" />
                       </StackPanel>
                       <CheckBox
                         x:Name="CheckBoxLocationAsFolder"
@@ -510,69 +512,122 @@
                     BorderBrush="White"
                     CornerRadius="6">
 
-                    <!-- Отметить папки для создания -->
-                    <Grid
-                      RowDefinitions="*, *, *, *, *, *"
-                      ColumnDefinitions="Auto, *">
+                    <StackPanel>
 
-                      <!-- 01 Документы -->
-                      <CheckBox
-                        Grid.Row="0" Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        x:Name="CheckBoxDocument"
-                        Content="{Binding CheckBoxDocumentContent}"
-                        IsChecked="{Binding FolderDocumentIsCheck}"
-                        IsEnabled="{Binding FolderDocumentIsEnable}"/>
+                      <!-- Отметить папки для создания -->
+                      <Grid
+                        IsVisible="True"
+                        RowDefinitions="*, *"
+                        ColumnDefinitions="Auto, *">
 
-                      <!-- 02 Фото -->
-                      <CheckBox
-                        Grid.Row="1" Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        x:Name="CheckBoxPhoto"
-                        Content="{Binding CheckBoxPhotoContent}" 
-                        IsChecked="{Binding FolderPhotoIsCheck}"
-                        IsEnabled="{Binding FolderPhotoIsEnable}"/>
+                        <ListBox
+                          Grid.Row="0" Grid.Column="0"
+                          Grid.ColumnSpan="2"
+                          Items="{Binding FoldersForCreate}"
+                          Background="Transparent">
+                          <ListBox.Styles>
 
-                      <!-- 03 Дизайн -->
-                      <CheckBox
-                        Grid.Row="2" Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        x:Name="CheckBoxDesign"
-                        Content="{Binding CheckBoxDesignContent}"
-                        IsChecked="{Binding FolderDesignIsCheck}"
-                        IsEnabled="{Binding FolderDesignIsEnable}"/>
+                            <Style Selector="ListBoxItem">
+                              <Setter Property="Background" Value="Transparent" />
+                              <Setter Property="BorderBrush" Value="Transparent" />
+                              <Setter Property="BorderThickness" Value="0" />
+                              <Setter Property="Padding" Value="0 0" />
+                              <Setter Property="Template">
+                                <ControlTemplate>
+                                  <ContentPresenter Name="PART_ContentPresenter"
+                                                    Padding="{TemplateBinding Padding}"
+                                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                    Background="Transparent"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    Content="{TemplateBinding Content}"
+                                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                    CornerRadius="{TemplateBinding CornerRadius}">
 
-                      <!-- 04 Проект -->
-                      <CheckBox
-                        Grid.Row="3" Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        x:Name="CheckBoxProject"
-                        Content="{Binding CheckBoxProjectContent}"
-                        IsChecked="{Binding FolderProjectIsCheck}"
-                        IsEnabled="{Binding FolderProjectIsEnable}"/>
+                                  </ContentPresenter>
+                                </ControlTemplate>
+                              </Setter>
+                            </Style>
+                          </ListBox.Styles>
 
-                      <!-- 05 Согласование в администрации -->
-                      <CheckBox
-                        Grid.Row="4" Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        x:Name="CheckBoxApprovalInAdministration"
-                        Content="{Binding CheckBoxApprovalInAdministrationContent}"
-                        IsChecked="{Binding FolderApprovalInAdministrationIsCheck}"
-                        IsEnabled="{Binding FolderApprovalInAdministrationIsEnable}"/>
+                          <ListBox.ItemTemplate>
+                            <DataTemplate>
+                              <StackPanel>
+                                <CheckBox
+                                  Content="{Binding FolderName}"
+                                  IsChecked="{Binding IsCheck}"
+                                  IsEnabled="{Binding IsEnable}" />
+                              </StackPanel>
+                            </DataTemplate>
+                          </ListBox.ItemTemplate>
 
-                      <CheckBox
-                        Grid.Row="5" Grid.Column="0"
-                        x:Name="CheckBoxFolderNameUserVersion"
-                        IsChecked="{Binding FolderNameUserVersionIsCheck}"/>
-                      <TextBox
-                        Grid.Row="5" Grid.Column="1"
-                        x:Name="TextBoxFolderNameUserVersion"
-                        Text="{Binding FolderNameUserVersion}">
-                      </TextBox>
+                        </ListBox>
 
 
-                    </Grid>
+                        <!-- -->
+                        <!-- ~1~ 01 Документы @1@ -->
+                        <!-- <CheckBox -->
+                        <!--   Grid.Row="0" Grid.Column="0" -->
+                        <!--   Grid.ColumnSpan="2" -->
+                        <!--   x:Name="CheckBoxDocument" -->
+                        <!--   Content="{Binding CheckBoxDocumentContent}" -->
+                        <!--   IsChecked="{Binding FolderDocumentIsCheck}" -->
+                        <!--   IsEnabled="{Binding FolderDocumentIsEnable}" /> -->
+                        <!-- -->
+                        <!-- ~1~ 02 Фото @1@ -->
+                        <!-- <CheckBox -->
+                        <!--   Grid.Row="1" Grid.Column="0" -->
+                        <!--   Grid.ColumnSpan="2" -->
+                        <!--   x:Name="CheckBoxPhoto" -->
+                        <!--   Content="{Binding CheckBoxPhotoContent}" -->
+                        <!--   IsChecked="{Binding FolderPhotoIsCheck}" -->
+                        <!--   IsEnabled="{Binding FolderPhotoIsEnable}" /> -->
+                        <!-- -->
+                        <!-- ~1~ 03 Дизайн @1@ -->
+                        <!-- <CheckBox -->
+                        <!--   Grid.Row="2" Grid.Column="0" -->
+                        <!--   Grid.ColumnSpan="2" -->
+                        <!--   x:Name="CheckBoxDesign" -->
+                        <!--   Content="{Binding CheckBoxDesignContent}" -->
+                        <!--   IsChecked="{Binding FolderDesignIsCheck}" -->
+                        <!--   IsEnabled="{Binding FolderDesignIsEnable}" /> -->
+                        <!-- -->
+                        <!-- ~1~ 04 Проект @1@ -->
+                        <!-- <CheckBox -->
+                        <!--   Grid.Row="3" Grid.Column="0" -->
+                        <!--   Grid.ColumnSpan="2" -->
+                        <!--   x:Name="CheckBoxProject" -->
+                        <!--   Content="{Binding CheckBoxProjectContent}" -->
+                        <!--   IsChecked="{Binding FolderProjectIsCheck}" -->
+                        <!--   IsEnabled="{Binding FolderProjectIsEnable}" /> -->
+                        <!-- -->
+                        <!-- ~1~ 05 Согласование в администрации @1@ -->
+                        <!-- <CheckBox -->
+                        <!--   Grid.Row="4" Grid.Column="0" -->
+                        <!--   Grid.ColumnSpan="2" -->
+                        <!--   x:Name="CheckBoxApprovalInAdministration" -->
+                        <!--   Content="{Binding CheckBoxApprovalInAdministrationContent}" -->
+                        <!--   IsChecked="{Binding FolderApprovalInAdministrationIsCheck}" -->
+                        <!--   IsEnabled="{Binding FolderApprovalInAdministrationIsEnable}" /> -->
+                        
+                        <!--TODO Добавить кнопку или чекбокс 'Все стандартные" --> 
+                        
+                        <CheckBox
+                          Grid.Row="1" Grid.Column="0"
+                          x:Name="CheckBoxFolderNameUserVersion"
+                          IsChecked="{Binding FolderNameUserVersionIsCheck}" />
+                        <TextBox
+                          Grid.Row="1" Grid.Column="1"
+                          x:Name="TextBoxFolderNameUserVersion"
+                          Text="{Binding FolderNameUserVersion}">
+                        </TextBox>
 
+
+                      </Grid>
+
+
+                    </StackPanel>
                   </Border>
 
                 </Grid>
@@ -594,7 +649,10 @@
         Orientation="Horizontal"
         HorizontalAlignment="Right">
 
-        <Button x:Name="ButtonCreateDirectory" Content="Создать каталоги"></Button>
+        <Button
+          x:Name="ButtonCreateDirectory"
+          Content="Создать каталоги"
+          Command="{Binding OnClickButtonCreateDirectory}" />
         <Button x:Name="ButtonCancel" Content="Отмена"></Button>
 
       </StackPanel>

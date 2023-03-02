@@ -14,6 +14,10 @@ public class LocationDirectories
   {
     //TODO Вынести список папок в какой-то файл настроек. Для возможности редактирования. Пока список папок хардкодим. 
 
+    List<DirectoryEntity> newCollection = new List<DirectoryEntity>();
+    
+    
+    
     #region ./Клиент/Объекты/Город/Адрес, Дом, ТЦ/
 
     /*  
@@ -24,22 +28,32 @@ public class LocationDirectories
       ./05 Согласование в администрации
       */
 
-    LocationFolders.Add(new DirectoryEntity(dirName: ClientEr.FolderDocumentName));
-    LocationFolders.Add(new DirectoryEntity(dirName: ClientEr.FolderPhotoName));
-    LocationFolders.Add(new DirectoryEntity(dirName: ClientEr.FolderDesignName));
-    LocationFolders.Add(new DirectoryEntity(dirName: ClientEr.FolderProjectName));
-    LocationFolders.Add(new DirectoryEntity(dirName: ClientEr.FolderApprovalInAdministrationName));
+    LocationFolders.Add(new DirectoryEntity("01 Документы"));
+
+    List<DirectoryEntity> photo = new List<DirectoryEntity>();
+    photo.Add(new DirectoryEntity("01 Замеры"));
+    LocationFolders.Add(new DirectoryEntity("02 Фото",null,photo));
+    
+    LocationFolders.Add(new DirectoryEntity("03 Дизайн"));
+    
+    //TODO доделать список папок...
+    LocationFolders.Add(new DirectoryEntity("04 Проект"));
+    LocationFolders.Add(new DirectoryEntity("05 Согласование в администрации"));
 
     #region ./02 Фото
 
     /*
       ./02 Фото/01 Замеры
       */
-    var directoryWithParent = new DirectoryEntity(
-      "01 Замеры",
-      LocationFolders.Find(item => item.DirName == ClientEr.FolderPhotoName)
-    );
-    LocationFolders.Add(directoryWithParent);
+
+    LocationFolders.Find(item => item.DirName == "02 Фото")
+      .ChildDirs.Add(new DirectoryEntity("01 Замеры"));
+    
+    // var directoryWithParent = new DirectoryEntity(
+    //   "01 Замеры",
+    //   LocationFolders.Find(item => item.DirName == ClientEr.FolderPhotoName)
+    // );
+    // LocationFolders.Add(directoryWithParent);
 
     #endregion
 
@@ -51,6 +65,7 @@ public class LocationDirectories
       ./04 Проект/03 Проект рабочий
       */
 
+    
     directoryWithParent = new DirectoryEntity(
       "01 Входящие документы",
       LocationFolders.Find(item => item.DirName == ClientEr.FolderProjectName));
