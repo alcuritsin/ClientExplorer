@@ -2,13 +2,13 @@ using System.Collections;
 
 namespace ClientExplorer.Application;
 
-public class ClientDirectories
+public class DirectoriesInClient
 {
-  public List<DirectoryEntity> ClientFolders { get; private set; }
+  public List<DirectoryEntity> Folders { get; private set; }
 
-  public ClientDirectories()
+  public DirectoriesInClient()
   {
-    ClientFolders = new List<DirectoryEntity>();
+    Folders = new List<DirectoryEntity>();
     /*
       ./Клиент/Документы общие
       ./Клиент/Каталог стандартных решений
@@ -16,9 +16,9 @@ public class ClientDirectories
     */
 
     //TODO Вынести список папок в какой-то файл настроек. Для возможности редактирования. Пока список папок хардкодим. 
-    ClientFolders.Add(new DirectoryEntity("Документы общие"));
-    ClientFolders.Add(new DirectoryEntity("Каталог стандартных решений"));
-    ClientFolders.Add(new DirectoryEntity("Объекты"));
+    Folders.Add(new DirectoryEntity("Документы общие"));
+    Folders.Add(new DirectoryEntity("Каталог стандартных решений"));
+    Folders.Add(new DirectoryEntity("Объекты"));
   }
   
 }

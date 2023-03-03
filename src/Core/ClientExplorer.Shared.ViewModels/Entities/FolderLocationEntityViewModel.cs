@@ -6,9 +6,8 @@ public class FolderLocationEntityViewModel : BaseViewModel
   public bool IsCheck { get; set; } = false;
   public bool IsEnable { get; set; } = true;
 
-  public FolderLocationEntityViewModel(string folderName, bool isCheck = false)
+  public FolderLocationEntityViewModel(string folderName)
   {
     FolderName = folderName;
-    IsCheck = isCheck;
   }
 }

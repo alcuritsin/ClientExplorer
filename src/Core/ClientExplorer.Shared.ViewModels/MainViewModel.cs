@@ -61,13 +61,23 @@ public class MainViewModel : BaseViewModel
     #endregion
 
 
-    FoldersForCreate.Add(new FolderLocationEntityViewModel("01 Документы"));
-    FoldersForCreate.Add(new FolderLocationEntityViewModel("02 Фото"));
-    FoldersForCreate.Add(new FolderLocationEntityViewModel("03 Дизайн"));
-    FoldersForCreate.Add(new FolderLocationEntityViewModel("04 Проект"));
-    FoldersForCreate.Add(new FolderLocationEntityViewModel("05 Согласование в администрации"));
+    foreach (var directory in ClientEr.DirectoriesInLocation.Folders)
+    {
+      FoldersForCreate.Add(new FolderLocationEntityViewModel(directory.Name));
+    }
 
-    StatusInfo = ClientEr.CurrentPath;
+    
+    //TODO if debug
+    var currDir = ClientEr.CurrentPath + Path.DirectorySeparatorChar + ClientEr.DefaultDataResourcePath;
+    if (Directory.Exists(currDir))
+    {
+      StatusInfo = "Ready";
+    }
+    else
+    {
+      StatusInfo = currDir +  " - not available...";
+    }
+    
   }
 
   #endregion
@@ -263,10 +273,9 @@ public class MainViewModel : BaseViewModel
   /// </returns>
   private bool CheckClientToInit()
   {
-    foreach (DirectoryEntity directoryEntity in ClientEr.ClientDirectories.ClientFolders)
+    foreach (DirectoryEntity folder in ClientEr.DirectoriesInClient.Folders)
     {
-      var clientDirectory = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar +
-                            ClientEr.GetPathDirectoryEntity(directoryEntity);
+      var clientDirectory = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar + folder.Name;
 
       if (!Directory.Exists(clientDirectory)) return false;
     }
@@ -742,27 +751,6 @@ public class MainViewModel : BaseViewModel
   public ObservableCollection<FolderLocationEntityViewModel> FoldersForCreate { get; set; } =
     new ObservableCollection<FolderLocationEntityViewModel>();
 
-  public string CheckBoxDocumentContent { get; init; } = ClientEr.FolderDocumentName;
-  public string CheckBoxPhotoContent { get; init; } = ClientEr.FolderPhotoName;
-  public string CheckBoxDesignContent { get; init; } = ClientEr.FolderDesignName;
-  public string CheckBoxProjectContent { get; init; } = ClientEr.FolderProjectName;
-  public string CheckBoxApprovalInAdministrationContent { get; init; } = ClientEr.FolderApprovalInAdministrationName;
-
-  public bool FolderDocumentIsCheck { get; set; } = false;
-  public bool FolderDocumentIsEnable { get; set; } = true;
-
-  public bool FolderPhotoIsCheck { get; set; } = false;
-  public bool FolderPhotoIsEnable { get; set; } = true;
-
-  public bool FolderDesignIsCheck { get; set; } = false;
-  public bool FolderDesignIsEnable { get; set; } = true;
-
-  public bool FolderProjectIsCheck { get; set; } = false;
-  public bool FolderProjectIsEnable { get; set; } = true;
-
-  public bool FolderApprovalInAdministrationIsCheck { get; set; } = false;
-  public bool FolderApprovalInAdministrationIsEnable { get; set; } = true;
-
   public bool FolderNameUserVersionIsCheck { get; set; } = false;
   public string FolderNameUserVersion { get; set; } = string.Empty;
 
@@ -774,55 +762,22 @@ public class MainViewModel : BaseViewModel
       throw new Exception("Err: " + nameof(CheckLocationForFolders) + " " + nameof(SelectedClient.ClientPath) +
                           "=null");
 
-    FolderDocumentIsCheck = false;
-    FolderDocumentIsEnable = true;
-
-    FolderPhotoIsCheck = false;
-    FolderPhotoIsEnable = true;
-
-    FolderDesignIsCheck = false;
-    FolderDesignIsEnable = true;
-
-    FolderProjectIsCheck = false;
-    FolderProjectIsEnable = true;
-
-    FolderApprovalInAdministrationIsCheck = false;
-    FolderApprovalInAdministrationIsEnable = true;
-
     var pathForObject = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar + ClientEr.FolderObjectsName;
 
-    foreach (var directoryEntity in ClientEr.LocationDirectories.LocationFolders)
+    foreach (var directoryEntity in ClientEr.DirectoriesInLocation.Folders)
     {
-      // Только папки верхнего уровня
-      if (directoryEntity.ParentDir != null) continue;
+      var dir = pathForObject + Path.DirectorySeparatorChar + SelectedLocation + Path.DirectorySeparatorChar +
+                directoryEntity.Name;
 
-      var dir = pathForObject + Path.DirectorySeparatorChar + SelectedLocation +
-                ClientEr.GetPathDirectoryEntity(directoryEntity);
-
-      if (Directory.Exists(dir))
+      foreach (var folderForCreate in FoldersForCreate)
       {
-        switch (directoryEntity.DirName)
+        folderForCreate.IsCheck = false;
+        folderForCreate.IsEnable = true;
+
+        if (Directory.Exists(dir))
         {
-          case ClientEr.FolderDocumentName:
-            FolderDocumentIsCheck = true;
-            FolderDocumentIsEnable = false;
-            break;
-          case ClientEr.FolderPhotoName:
-            FolderPhotoIsCheck = true;
-            FolderPhotoIsEnable = false;
-            break;
-          case ClientEr.FolderDesignName:
-            FolderDesignIsCheck = true;
-            FolderDesignIsEnable = false;
-            break;
-          case ClientEr.FolderProjectName:
-            FolderProjectIsCheck = true;
-            FolderProjectIsEnable = false;
-            break;
-          case ClientEr.FolderApprovalInAdministrationName:
-            FolderApprovalInAdministrationIsCheck = true;
-            FolderApprovalInAdministrationIsEnable = false;
-            break;
+          folderForCreate.IsCheck = true;
+          folderForCreate.IsEnable = false;
         }
       }
     }

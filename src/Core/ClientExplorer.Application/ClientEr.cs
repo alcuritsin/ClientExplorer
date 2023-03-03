@@ -11,23 +11,11 @@ public static class ClientEr
 
   public const string FolderObjectsName = "Объекты";
 
-  public const string FolderDocumentName = "01 Документы";
-  public const string FolderPhotoName = "02 Фото";
-  public const string FolderDesignName = "03 Дизайн";
-  public const string FolderProjectName = "04 Проект";
-  public const string FolderApprovalInAdministrationName = "05 Согласование в администрации";
-
   public static string? CurrentPath { get; set; }
 
-  public static readonly ClientDirectories ClientDirectories = new ClientDirectories();
-  public static readonly LocationDirectories LocationDirectories = new LocationDirectories();
+  public static readonly DirectoriesInClient DirectoriesInClient = new DirectoriesInClient();
+  public static readonly DirectoriesInLocation DirectoriesInLocation = new DirectoriesInLocation();
 
-  public static string GetPathDirectoryEntity(DirectoryEntity dir)
-  {
-    if (dir.ParentDir == null) return Path.DirectorySeparatorChar + dir.DirName;
-
-    return GetPathDirectoryEntity(dir.ParentDir);
-  }
   /*
    public  static async Task<ObservableCollection<LocationViewModel>?> GetLocations()
   {
