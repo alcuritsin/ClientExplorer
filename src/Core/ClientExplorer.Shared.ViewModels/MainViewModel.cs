@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Data;
 using System.Windows.Input;
 using ClientExplorer.Application;
 
@@ -56,6 +57,8 @@ public class MainViewModel : BaseViewModel
         KeyUpHouseNumber = new DelegateCommand(ApplyFilterToHouseNumbers);
         TappedOnHouseNumberItem = new DelegateCommand(SelectHouseNumber);
 
+        KeyUpAdditionalParam = new DelegateCommand(EnterAdditionalParam);
+
         InitCitiesName();
 
         #endregion
@@ -67,7 +70,7 @@ public class MainViewModel : BaseViewModel
         }
 
 
-        //TODO if debug
+        //TODO Publication. Debug
         var currDir = ClientEr.CurrentPath + Path.DirectorySeparatorChar + ClientEr.DefaultDataResourcePath;
         if (Directory.Exists(currDir))
         {
@@ -95,16 +98,18 @@ public class MainViewModel : BaseViewModel
     /// </returns>
     private bool IsNameHaveInvalidCharacter(ref string name)
     {
-        // Следующие зарезервированные символы:
-        //  < - (меньше чем);
-        //  > - (больше чем);
-        //  : - (двоеточие)
-        //  " - (двойная кавычка)
-        //  / - (косая черта)
-        //  \ - (обратная косая черта)
-        //  | - (вертикальная полоса или канал)
-        //  ? - (вопросительный знак)
-        //  * - (звёздочка)
+        /*
+        Следующие зарезервированные символы:
+         < - (меньше чем);
+         > - (больше чем);
+         : - (двоеточие)
+         " - (двойная кавычка)
+         / - (косая черта)
+         \ - (обратная косая черта)
+         | - (вертикальная полоса или канал)
+         ? - (вопросительный знак)
+         * - (звёздочка)
+         */
 
         if (name.Equals(string.Empty)) return false;
 
@@ -168,7 +173,7 @@ public class MainViewModel : BaseViewModel
     {
         if (SelectedClient.Name != null) ClientFilter = SelectedClient.Name;
 
-        IsInitClient = CheckClientToInit();
+        //IsInitClient = CheckClientToInit();
 
         LoadClientLocation();
     }
@@ -182,7 +187,7 @@ public class MainViewModel : BaseViewModel
     private void ApplyFilterToClientsList(object param)
     {
         // Сброс листа объектов клиента.
-        SortedLocation.Clear();
+        SortedLocationsOfClient.Clear();
 
         var clientFilter = ClientFilter;
 
@@ -273,6 +278,7 @@ public class MainViewModel : BaseViewModel
     /// </returns>
     private bool CheckClientToInit()
     {
+        //TODO Publication.Временный метод для тестирования. Удалить перед публикацией.
         foreach (DirectoryEntity folder in ClientEr.DirectoriesInClient.Folders)
         {
             var clientDirectory = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar + folder.Name;
@@ -293,7 +299,7 @@ public class MainViewModel : BaseViewModel
 
     #region Public Properties
 
-    public ObservableCollection<string> SortedLocation { get; set; } = new ObservableCollection<string>();
+    public ObservableCollection<string> SortedLocationsOfClient { get; set; } = new ObservableCollection<string>();
     public string SelectedLocation { get; set; } = string.Empty;
 
     #endregion
@@ -315,7 +321,7 @@ public class MainViewModel : BaseViewModel
 
     #region Private Properties
 
-    private readonly AddressLocationViewModel _addressLocationViewModel;
+    private List<string> _locationsOfClient { get; set; } = new List<string>();
 
     #endregion
 
@@ -326,7 +332,8 @@ public class MainViewModel : BaseViewModel
     /// </summary>
     private void LoadClientLocation()
     {
-        SortedLocation.Clear();
+        SortedLocationsOfClient.Clear();
+        _locationsOfClient.Clear();
 
         if (SelectedClient.ClientPath == null)
         {
@@ -347,10 +354,30 @@ public class MainViewModel : BaseViewModel
 
         foreach (var directory in directoryInfo.GetDirectories())
         {
-            SortedLocation.Add(directory.Name);
+            SortedLocationsOfClient.Add(directory.Name);
         }
 
-        SortedLocation = new ObservableCollection<string>(SortedLocation.OrderBy(i => i));
+        SortedLocationsOfClient = new ObservableCollection<string>(SortedLocationsOfClient.OrderBy(i => i));
+        _locationsOfClient = new List<string>(SortedLocationsOfClient.ToList());
+    }
+
+    private void ApplyFilterToLocationOfClient()
+    {
+        // TODO Проверить Исправить работу алгоритма...
+        if (_locationsOfClient.Count > 0)
+        {
+            SortedLocationsOfClient.Clear();
+            foreach (var locationOfClient in _locationsOfClient)
+            {
+                bool isSatisfy = false;
+                if (CityName != string.Empty) isSatisfy = Equals(locationOfClient, CityName);
+                if (AdditionalParam != string.Empty) isSatisfy = Equals(locationOfClient, AdditionalParam);
+                if (StreetName != string.Empty) isSatisfy = Equals(locationOfClient, StreetName);
+                if (HouseNumber != string.Empty) isSatisfy = Equals(locationOfClient, HouseNumber);
+
+                if (isSatisfy) SortedLocationsOfClient.Add(locationOfClient);
+            }
+        }
     }
 
     #endregion
@@ -397,6 +424,8 @@ public class MainViewModel : BaseViewModel
 
     public ICommand KeyUpHouseNumber { get; }
     public ICommand TappedOnHouseNumberItem { get; }
+    
+    public ICommand KeyUpAdditionalParam { get; }
 
     #endregion
 
@@ -442,6 +471,7 @@ public class MainViewModel : BaseViewModel
             }
         }
 
+        ApplyFilterToLocationOfClient();
         StatusInfo += " CitiesFiltered.Count: " + CitiesFiltered.Count;
     }
 
@@ -456,6 +486,7 @@ public class MainViewModel : BaseViewModel
         ApplyFilterToCitiesName(param);
         InitStreetsName();
         ApplyFilterToStreetsName(null);
+        ApplyFilterToLocationOfClient();
     }
 
     /// <summary>
@@ -507,6 +538,7 @@ public class MainViewModel : BaseViewModel
             }
         }
 
+        ApplyFilterToLocationOfClient();
         StatusInfo += " StreetsFiltered.Count: " + StreetsFiltered.Count;
     }
 
@@ -520,6 +552,7 @@ public class MainViewModel : BaseViewModel
         ApplyFilterToStreetsName(param);
         InitHouseNumbers();
         ApplyFilterToHouseNumbers(null);
+        ApplyFilterToLocationOfClient();
     }
 
     /// <summary>
@@ -571,6 +604,7 @@ public class MainViewModel : BaseViewModel
             }
         }
 
+        ApplyFilterToLocationOfClient();
         StatusInfo += " HouseNumbersFiltered.Count: " + HouseNumbersFiltered.Count;
     }
 
@@ -582,11 +616,26 @@ public class MainViewModel : BaseViewModel
     {
         HouseNumber = SelectedHouseNumber;
         ApplyFilterToHouseNumbers(param);
+        ApplyFilterToLocationOfClient();
     }
 
+    private void EnterAdditionalParam(object param)
+    {
+        var additionalParam = AdditionalParam;
+        
+        if (IsNameHaveInvalidCharacter(ref additionalParam))
+        {
+            AdditionalParam = additionalParam;
+            return;
+        }
+        
+        ApplyFilterToLocationOfClient();
+    }
     #endregion
 
     #region Private Properties
+
+    private readonly AddressLocationViewModel _addressLocationViewModel;
 
     private List<string> _citiesName = new List<string>();
     private List<string> _streetsName = new List<string>();

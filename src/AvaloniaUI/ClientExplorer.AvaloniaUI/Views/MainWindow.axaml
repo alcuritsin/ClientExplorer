@@ -319,7 +319,7 @@
                     Grid.Row="1"
                     Width="450"
                     x:Name="ListBoxClientObjects"
-                    Items="{Binding SortedLocation}"
+                    Items="{Binding SortedLocationsOfClient}"
                     SelectedItem="{Binding SelectedLocation}">
 
                     <!-- <ListBox.ItemTemplate> -->
