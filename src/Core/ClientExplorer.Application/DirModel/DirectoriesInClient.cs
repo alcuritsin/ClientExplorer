@@ -18,7 +18,9 @@ public class DirectoriesInClient
     //TODO Вынести список папок в какой-то файл настроек. Для возможности редактирования. Пока список папок хардкодим. 
     Folders.Add(new DirectoryEntity("Документы общие"));
     Folders.Add(new DirectoryEntity("Каталог стандартных решений"));
-    Folders.Add(new DirectoryEntity("Объекты"));
+    Folders.Add(new DirectoryEntity(ClientEr.FolderObjectsName));
+
+
   }
   
 }
