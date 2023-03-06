@@ -563,53 +563,6 @@
                           </ListBox.ItemTemplate>
 
                         </ListBox>
-
-
-                        <!-- -->
-                        <!-- ~1~ 01 Документы @1@ -->
-                        <!-- <CheckBox -->
-                        <!--   Grid.Row="0" Grid.Column="0" -->
-                        <!--   Grid.ColumnSpan="2" -->
-                        <!--   x:Name="CheckBoxDocument" -->
-                        <!--   Content="{Binding CheckBoxDocumentContent}" -->
-                        <!--   IsChecked="{Binding FolderDocumentIsCheck}" -->
-                        <!--   IsEnabled="{Binding FolderDocumentIsEnable}" /> -->
-                        <!-- -->
-                        <!-- ~1~ 02 Фото @1@ -->
-                        <!-- <CheckBox -->
-                        <!--   Grid.Row="1" Grid.Column="0" -->
-                        <!--   Grid.ColumnSpan="2" -->
-                        <!--   x:Name="CheckBoxPhoto" -->
-                        <!--   Content="{Binding CheckBoxPhotoContent}" -->
-                        <!--   IsChecked="{Binding FolderPhotoIsCheck}" -->
-                        <!--   IsEnabled="{Binding FolderPhotoIsEnable}" /> -->
-                        <!-- -->
-                        <!-- ~1~ 03 Дизайн @1@ -->
-                        <!-- <CheckBox -->
-                        <!--   Grid.Row="2" Grid.Column="0" -->
-                        <!--   Grid.ColumnSpan="2" -->
-                        <!--   x:Name="CheckBoxDesign" -->
-                        <!--   Content="{Binding CheckBoxDesignContent}" -->
-                        <!--   IsChecked="{Binding FolderDesignIsCheck}" -->
-                        <!--   IsEnabled="{Binding FolderDesignIsEnable}" /> -->
-                        <!-- -->
-                        <!-- ~1~ 04 Проект @1@ -->
-                        <!-- <CheckBox -->
-                        <!--   Grid.Row="3" Grid.Column="0" -->
-                        <!--   Grid.ColumnSpan="2" -->
-                        <!--   x:Name="CheckBoxProject" -->
-                        <!--   Content="{Binding CheckBoxProjectContent}" -->
-                        <!--   IsChecked="{Binding FolderProjectIsCheck}" -->
-                        <!--   IsEnabled="{Binding FolderProjectIsEnable}" /> -->
-                        <!-- -->
-                        <!-- ~1~ 05 Согласование в администрации @1@ -->
-                        <!-- <CheckBox -->
-                        <!--   Grid.Row="4" Grid.Column="0" -->
-                        <!--   Grid.ColumnSpan="2" -->
-                        <!--   x:Name="CheckBoxApprovalInAdministration" -->
-                        <!--   Content="{Binding CheckBoxApprovalInAdministrationContent}" -->
-                        <!--   IsChecked="{Binding FolderApprovalInAdministrationIsCheck}" -->
-                        <!--   IsEnabled="{Binding FolderApprovalInAdministrationIsEnable}" /> -->
                         
                         <!--TODO Добавить кнопку или чекбокс 'Все стандартные" --> 
                         
