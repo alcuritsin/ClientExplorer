@@ -63,7 +63,7 @@ public class MainViewModel : BaseViewModel
 
     foreach (var directory in ClientEr.DirectoriesInLocation.Folders)
     {
-      FoldersForCreate.Add(new FolderLocationEntityViewModel(directory.Name));
+      FoldersForCreate.Add(new FolderLocationEntityViewModel(directory.Name, directory));
     }
 
     
@@ -150,7 +150,7 @@ public class MainViewModel : BaseViewModel
   public ObservableCollection<ClientEntityViewModel> SortedClients { get; set; } =
     new ObservableCollection<ClientEntityViewModel>();
 
-  public ClientEntityViewModel SelectedClient { get; set; }
+  public ClientEntityViewModel? SelectedClient { get; set; }
 
   public bool IsInitClient { get; private set; } = false;
 
@@ -756,6 +756,12 @@ public class MainViewModel : BaseViewModel
 
   #endregion
 
+  /// <summary>
+  /// Проверить активированную локацию клиента на наличие стандартных папок 
+  /// </summary>
+  /// <exception cref="Exception">
+  /// Нет выделенного клиента. Или у выделенного клиента отсутствует путь.
+  /// </exception>
   private void CheckLocationForFolders()
   {
     if (SelectedClient.ClientPath == null)
@@ -842,8 +848,27 @@ public class MainViewModel : BaseViewModel
     {
       if (folderForCreate.IsCheck)
       {
+        
+        
+        CreateFolder(locationPath, folderForCreate.FolderDirectory);
         StatusInfo = folderForCreate.FolderName + " +";
+        
         await Task.Delay(350);
+      }
+    }
+  }
+
+  private void CreateFolder(string locationPath, DirectoryEntity directoryEntity)
+  {
+    var dir = locationPath + directoryEntity.GetDirectoryPath();
+    
+    // if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+
+    if (directoryEntity.ChildDirs != null)
+    {
+      foreach (var childDir in directoryEntity.ChildDirs)
+      {
+        CreateFolder(dir, childDir);
       }
     }
   }
