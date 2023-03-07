@@ -19,8 +19,5 @@ public class DirectoriesInClient
     Folders.Add(new DirectoryEntity("Документы общие"));
     Folders.Add(new DirectoryEntity("Каталог стандартных решений"));
     Folders.Add(new DirectoryEntity(ClientEr.FolderObjectsName));
-
-
   }
-  
 }
