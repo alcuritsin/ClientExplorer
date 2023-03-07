@@ -59,6 +59,8 @@ public class MainViewModel : BaseViewModel
 
     KeyUpAdditionalParam = new DelegateCommand(EnterAdditionalParam);
 
+    KeyUpFolderNameUserVersion = new DelegateCommand(EnterFolderNameUserVersion);
+
     InitCitiesName();
 
     #endregion
@@ -839,6 +841,29 @@ public class MainViewModel : BaseViewModel
 
   #endregion
 
+  #region Event
+
+  public ICommand KeyUpFolderNameUserVersion { get; }
+
+  #endregion
+
+  #region Command Methods
+
+  private void EnterFolderNameUserVersion(object param)
+  {
+    var folderNameUserVersion = FolderNameUserVersion;
+
+    if (IsNameHaveInvalidCharacter(ref folderNameUserVersion))
+    {
+      FolderNameUserVersion = folderNameUserVersion;
+      return;
+    }
+
+    FolderNameUserVersionIsCheck = FolderNameUserVersion.Length > 0;
+  }
+
+  #endregion
+  
   /// <summary>
   /// Проверить активированную локацию клиента на наличие стандартных папок 
   /// </summary>
@@ -879,7 +904,7 @@ public class MainViewModel : BaseViewModel
 
   #region Commands Methods
 
-  public async Task OnClickButtonCreateDirectory()
+  public void OnClickButtonCreateDirectory()
   {
     StatusInfo = "Click";
 
@@ -946,9 +971,12 @@ public class MainViewModel : BaseViewModel
         {
           CreateFolder(locationPath, folderForCreate.FolderDirectory);
           StatusInfo = folderForCreate.FolderName + " +";
-
-          await Task.Delay(350);
         }
+      }
+
+      if (FolderNameUserVersionIsCheck)
+      {
+        CreateFolder(locationPath, new DirectoryEntity(FolderNameUserVersion));
       }
     }
   }
