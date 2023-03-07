@@ -249,8 +249,8 @@
               <TextBlock
                 Text="{Binding SelectedClient.ClientPath}" />
 
-              <Button Content="Init client folder"
-                      IsVisible="{Binding !IsInitClient}" />
+              <!-- <Button Content="Init client folder" -->
+              <!--         IsVisible="{Binding !IsInitClient}" /> -->
 
               <TextBlock
                 Text="{Binding SelectedLocation}" />
@@ -268,7 +268,7 @@
             <Grid
               Grid.Column="0"
               RowDefinitions="Auto, *"
-              ColumnDefinitions="*, Auto"
+              ColumnDefinitions="Auto, *"
               Margin="6">
 
               <!-- Заголовок группы - `Существующий объект` -->
@@ -290,7 +290,7 @@
                 Grid.Row="0" Grid.Column="0"
                 Grid.RowSpan="2" Grid.ColumnSpan="2"
                 Margin="0,12,0,0"
-                Padding="6,12,6,0"
+                Padding="6,18,6,6"
                 BorderThickness="1"
                 BorderBrush="White"
                 CornerRadius="6">
@@ -298,22 +298,22 @@
                 <Grid
                   RowDefinitions="Auto, *">
 
-                  <Grid
-                    Grid.Row="0"
-                    ColumnDefinitions="*, Auto, Auto">
-
-                    <TextBox
-                      Grid.Column="0" />
-
-                    <Button
-                      Grid.Column="1"
-                      Content="X" />
-
-                    <Button
-                      Grid.Column="2"
-                      Content="N" />
-
-                  </Grid>
+                  <!-- <Grid -->
+                  <!--   Grid.Row="0" -->
+                  <!--   ColumnDefinitions="*, Auto, Auto"> -->
+                  <!-- -->
+                  <!--   <TextBox -->
+                  <!--     Grid.Column="0" /> -->
+                  <!-- -->
+                  <!--   <Button -->
+                  <!--     Grid.Column="1" -->
+                  <!--     Content="X" /> -->
+                  <!-- -->
+                  <!--   <Button -->
+                  <!--     Grid.Column="2" -->
+                  <!--     Content="N" /> -->
+                  <!-- -->
+                  <!-- </Grid> -->
 
                   <ListBox
                     Grid.Row="1"
@@ -321,12 +321,6 @@
                     x:Name="ListBoxClientObjects"
                     Items="{Binding SortedLocationsOfClient}"
                     SelectedItem="{Binding SelectedLocation}">
-
-                    <!-- <ListBox.ItemTemplate> -->
-                    <!--   <DataTemplate> -->
-                    <!--     <TextBox></TextBox> -->
-                    <!--   </DataTemplate> -->
-                    <!-- </ListBox.ItemTemplate> -->
 
                     <i:Interaction.Behaviors>
                       <ia:EventTriggerBehavior EventName="Tapped">
@@ -354,7 +348,8 @@
                 <!-- Групп - `Новый объект` -->
                 <Grid
                   RowDefinitions="Auto, *"
-                  ColumnDefinitions="Auto, *">
+                  ColumnDefinitions="Auto, *"
+                  Margin="6">
 
                   <!-- Заголоквок группы - `Новый объект` -->
                   <Border
@@ -459,17 +454,28 @@
 
                           </i:Interaction.Behaviors>
 
-
                         </TextBox>
-
-
+                        
                       </StackPanel>
 
                       <StackPanel>
                         <Label x:Name="LabelAdditionalParam">Дополнительные параметры</Label>
                         <TextBox
                           x:Name="TextBoxAdditionalParam"
-                          Text="{Binding AdditionalParam}" />
+                          Text="{Binding AdditionalParam}">
+                          
+                          <i:Interaction.Behaviors>
+
+                            <ia:EventTriggerBehavior EventName="KeyUp">
+                              <ia:InvokeCommandAction
+                                Command="{Binding KeyUpAdditionalParam}"
+                                CommandParameter="{Binding AdditionalParam}" />
+                            </ia:EventTriggerBehavior>
+
+                          </i:Interaction.Behaviors>
+
+                          
+                        </TextBox>
                       </StackPanel>
                       <CheckBox
                         x:Name="CheckBoxLocationAsFolder"
@@ -485,7 +491,8 @@
                 <!-- Группа - `Создать папки` -->
                 <Grid
                   RowDefinitions="Auto, *"
-                  ColumnDefinitions="Auto, *">
+                  ColumnDefinitions="Auto, *"
+                  Margin="6">
 
                   <!-- Заголовок группы - `Создать папки` -->
                   <Border
