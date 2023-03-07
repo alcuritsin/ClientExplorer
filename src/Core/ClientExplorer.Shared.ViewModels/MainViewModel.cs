@@ -317,6 +317,7 @@ public class MainViewModel : BaseViewModel
   private void SelectLocation(object param)
   {
     CheckLocationForFolders();
+    
   }
 
   #endregion
@@ -900,6 +901,8 @@ public class MainViewModel : BaseViewModel
 
   #endregion
 
+  // Кнопки
+  
   #region Buttons
 
   #region Commands Methods

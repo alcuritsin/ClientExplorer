@@ -455,7 +455,7 @@
                           </i:Interaction.Behaviors>
 
                         </TextBox>
-                        
+
                       </StackPanel>
 
                       <StackPanel>
@@ -463,7 +463,7 @@
                         <TextBox
                           x:Name="TextBoxAdditionalParam"
                           Text="{Binding AdditionalParam}">
-                          
+
                           <i:Interaction.Behaviors>
 
                             <ia:EventTriggerBehavior EventName="KeyUp">
@@ -474,7 +474,7 @@
 
                           </i:Interaction.Behaviors>
 
-                          
+
                         </TextBox>
                       </StackPanel>
                       <CheckBox
@@ -541,16 +541,17 @@
                               <Setter Property="Padding" Value="0 0" />
                               <Setter Property="Template">
                                 <ControlTemplate>
-                                  <ContentPresenter Name="PART_ContentPresenter"
-                                                    Padding="{TemplateBinding Padding}"
-                                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                    Background="Transparent"
-                                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                                    Content="{TemplateBinding Content}"
-                                                    ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                    CornerRadius="{TemplateBinding CornerRadius}">
+                                  <ContentPresenter
+                                    Name="PART_ContentPresenter"
+                                    Padding="{TemplateBinding Padding}"
+                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    Background="Transparent"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Content="{TemplateBinding Content}"
+                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                    CornerRadius="{TemplateBinding CornerRadius}">
 
                                   </ContentPresenter>
                                 </ControlTemplate>
@@ -570,17 +571,29 @@
                           </ListBox.ItemTemplate>
 
                         </ListBox>
-                        
-                        <!--TODO Добавить кнопку или чекбокс 'Все стандартные" --> 
-                        
+
+                        <!--TODO Добавить кнопку или чекбокс 'Все стандартные" -->
+
                         <CheckBox
                           Grid.Row="1" Grid.Column="0"
                           x:Name="CheckBoxFolderNameUserVersion"
-                          IsChecked="{Binding FolderNameUserVersionIsCheck}" />
+                          IsChecked="{Binding FolderNameUserVersionIsCheck}"
+                          IsEnabled="False"/>
                         <TextBox
                           Grid.Row="1" Grid.Column="1"
                           x:Name="TextBoxFolderNameUserVersion"
                           Text="{Binding FolderNameUserVersion}">
+                          
+                          <i:Interaction.Behaviors>
+
+                            <ia:EventTriggerBehavior EventName="KeyUp">
+                              <ia:InvokeCommandAction
+                                Command="{Binding KeyUpFolderNameUserVersion}"
+                                CommandParameter="{Binding FolderNameUserVersion}" />
+                            </ia:EventTriggerBehavior>
+
+                          </i:Interaction.Behaviors>
+                          
                         </TextBox>
 
 
