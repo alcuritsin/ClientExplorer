@@ -42,7 +42,7 @@
     <Grid
       x:Name="MainGrid"
       RowDefinitions="*, Auto, Auto"
-      Background="red">
+      >
 
       <!-- Список городов 'Popup' -->
       <Border
@@ -377,7 +377,7 @@
 
                     <StackPanel>
 
-                      <StackPanel>
+                      <StackPanel IsVisible="{Binding !IsSelectedLocation}">
                         <Label
                           x:Name="LabelCityName"
                           Target="CityName"
@@ -406,7 +406,7 @@
 
                       </StackPanel>
 
-                      <StackPanel>
+                      <StackPanel IsVisible="{Binding !IsSelectedLocation}">
                         <Label
                           x:Name="LabelStreetName"
                           Target="StreetName"
@@ -435,7 +435,7 @@
 
                       </StackPanel>
 
-                      <StackPanel>
+                      <StackPanel IsVisible="{Binding !IsSelectedLocation}">
                         <Label
                           x:Name="LabelHouseNumber"
                           Target="HouseNumber"
@@ -460,22 +460,32 @@
 
                       <StackPanel>
                         <Label x:Name="LabelAdditionalParam">Дополнительные параметры</Label>
-                        <TextBox
-                          x:Name="TextBoxAdditionalParam"
-                          Text="{Binding AdditionalParam}">
+                        <Grid>
+                          <TextBox
+                            x:Name="TextBoxAdditionalParam"
+                            Text="{Binding AdditionalParam}"
+                            IsEnabled="{Binding !IsSelectedLocation}">
 
-                          <i:Interaction.Behaviors>
+                            <i:Interaction.Behaviors>
 
-                            <ia:EventTriggerBehavior EventName="KeyUp">
-                              <ia:InvokeCommandAction
-                                Command="{Binding KeyUpAdditionalParam}"
-                                CommandParameter="{Binding AdditionalParam}" />
-                            </ia:EventTriggerBehavior>
+                              <ia:EventTriggerBehavior EventName="KeyUp">
+                                <ia:InvokeCommandAction
+                                  Command="{Binding KeyUpAdditionalParam}"
+                                  CommandParameter="{Binding AdditionalParam}" />
+                              </ia:EventTriggerBehavior>
 
-                          </i:Interaction.Behaviors>
+                            </i:Interaction.Behaviors>
+                            
+                          </TextBox>
 
-
-                        </TextBox>
+                          <Button
+                            x:Name="ButtonCancelSelectLocation"
+                            Content="x"
+                            ZIndex="1"
+                            HorizontalAlignment="Right"
+                            Command="{Binding OnClickButtonCancelSelectLocation}"
+                            IsVisible="{Binding IsSelectedLocation}"/>
+                        </Grid>
                       </StackPanel>
                       <CheckBox
                         x:Name="CheckBoxLocationAsFolder"
@@ -578,12 +588,12 @@
                           Grid.Row="1" Grid.Column="0"
                           x:Name="CheckBoxFolderNameUserVersion"
                           IsChecked="{Binding FolderNameUserVersionIsCheck}"
-                          IsEnabled="False"/>
+                          IsEnabled="False" />
                         <TextBox
                           Grid.Row="1" Grid.Column="1"
                           x:Name="TextBoxFolderNameUserVersion"
                           Text="{Binding FolderNameUserVersion}">
-                          
+
                           <i:Interaction.Behaviors>
 
                             <ia:EventTriggerBehavior EventName="KeyUp">
@@ -593,7 +603,7 @@
                             </ia:EventTriggerBehavior>
 
                           </i:Interaction.Behaviors>
-                          
+
                         </TextBox>
 
 

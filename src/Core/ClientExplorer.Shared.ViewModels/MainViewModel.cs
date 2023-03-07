@@ -325,6 +325,7 @@ public class MainViewModel : BaseViewModel
     ApplyFilterToLocationOfClient();
     SelectedLocation = SortedLocationsOfClient[0];
     CheckLocationForFolders();
+    IsSelectedLocation = true;
   }
 
   #endregion
@@ -430,6 +431,8 @@ public class MainViewModel : BaseViewModel
   #region Address Location
 
   #region Public Properties
+
+  public bool IsSelectedLocation { get; set; } = false;
 
   public ObservableCollection<string> CitiesFiltered { get; set; } =
     new ObservableCollection<string>();
@@ -674,6 +677,14 @@ public class MainViewModel : BaseViewModel
     ApplyFilterToLocationOfClient();
   }
 
+
+  public void OnClickButtonCancelSelectLocation()
+  {
+    IsSelectedLocation = false;
+    SelectedLocation = null;
+    AdditionalParam = string.Empty;
+    ApplyFilterToLocationOfClient();
+  }
   #endregion
 
   #region Private Properties
