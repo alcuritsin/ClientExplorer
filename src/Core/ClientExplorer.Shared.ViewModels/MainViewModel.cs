@@ -174,9 +174,14 @@ public class MainViewModel : BaseViewModel
   private void SelectClient(object param)
   {
     if (SelectedClient.Name != null) ClientFilter = SelectedClient.Name;
+    
 
-    //IsInitClient = CheckClientToInit();
+    ClientFilter = SelectedClient.Name;
+    
+    ApplyFilterToClientsList(ClientFilter);
 
+    SelectedClient = SortedClients[0];
+    
     LoadClientLocation();
   }
 
@@ -316,8 +321,10 @@ public class MainViewModel : BaseViewModel
 
   private void SelectLocation(object param)
   {
+    AdditionalParam = SelectedLocation;
+    ApplyFilterToLocationOfClient();
+    SelectedLocation = SortedLocationsOfClient[0];
     CheckLocationForFolders();
-    
   }
 
   #endregion
@@ -880,23 +887,19 @@ public class MainViewModel : BaseViewModel
     var pathForObject = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar +
                         ClientEr.FolderObjectsName;
 
-    foreach (var directoryEntity in ClientEr.DirectoriesInLocation.Folders)
-    {
-      var dir = pathForObject + Path.DirectorySeparatorChar + SelectedLocation + Path.DirectorySeparatorChar +
-                directoryEntity.Name;
-
       foreach (var folderForCreate in FoldersForCreate)
       {
         folderForCreate.IsCheck = false;
         folderForCreate.IsEnable = true;
 
+        var dir = pathForObject + Path.DirectorySeparatorChar + SelectedLocation + folderForCreate.FolderDirectory.GetDirectoryPath();
+        
         if (Directory.Exists(dir))
         {
           folderForCreate.IsCheck = true;
           folderForCreate.IsEnable = false;
         }
       }
-    }
   }
 
   #endregion
