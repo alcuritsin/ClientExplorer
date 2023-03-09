@@ -15,38 +15,82 @@ public class AddressLocationViewModel : BaseViewModel
 
   #endregion
 
+  #region Public Methods
+
+  /// <summary>
+  /// Сохраняет адрес в файле адресного класификатора, если этого адреса там не было.
+  /// </summary>
+  /// <param name="city">
+  /// Наименование населённого пункта
+  /// </param>
+  /// <param name="street">
+  /// Наименование улици
+  /// </param>
+  /// <param name="houseNumber">
+  /// Номер дома
+  /// </param>
+  /// <exception cref="Exception">
+  /// Список адресов не может быть пустым
+  /// </exception>
+  public void SaveLocationIfNew(string city, string street, string houseNumber)
+  {
+    if (AddressLocations == null)
+    {
+      throw new Exception("Err: " + nameof(AddressLocations) + " == null. In " + nameof(AddressLocationViewModel) +
+                          " class");
+    }
+
+    var isNew = true;
+
+    foreach (var addressLocation in AddressLocations)
+    {
+      if (addressLocation.CityName == city &&
+          addressLocation.StreetName == street &&
+          addressLocation.HouseNumber == houseNumber)
+      {
+        isNew = false;
+        break;
+      }
+    }
+
+    if (isNew)
+    {
+      var location = new AddressLocationEntityViewModel()
+      {
+        CityName = city,
+        StreetName = street,
+        HouseNumber = houseNumber
+      };
+
+      AddressLocations.Add(location);
+
+      OrderLocation();
+
+      UploadAddressLocations();
+    }
+  }
+
+  #endregion
+
   #region Constructor
 
   public AddressLocationViewModel()
   {
     _directoryDataResourcePath =
       ClientEr.CurrentPath + Path.DirectorySeparatorChar + ClientEr.DefaultDataResourcePath;
-    
+
     _locationsFilePath = _directoryDataResourcePath + Path.DirectorySeparatorChar + ClientEr.LocationsSourceFileName;
-    
+
+    if (!Directory.Exists(_directoryDataResourcePath))
+    {
+      return;
+    }
+
     LoadAddressLocations();
 
-    // Упорядочить список по Алфавиту. Город+Улица+НомерДома.
-    List<AddressLocForOrdered> addressLocs = new System.Collections.Generic.List<AddressLocForOrdered>();
+    OrderLocation();
 
-    foreach (var addressLocation in AddressLocations)
-    {
-      addressLocs.Add(new AddressLocForOrdered(addressLocation));
-    }
-
-    var addressLocsOrdered = addressLocs.OrderBy(i => i.OrderProp);
-
-    AddressLocations.Clear();
-
-    foreach (var addressLoc in addressLocsOrdered)
-    {
-      AddressLocations.Add(new AddressLocationEntityViewModel()
-      {
-        CityName = addressLoc.Loc.CityName,
-        StreetName = addressLoc.Loc.StreetName,
-        HouseNumber = addressLoc.Loc.HouseNumber
-      });
-    }
+    UploadAddressLocations();
   }
 
   #endregion
@@ -104,7 +148,7 @@ public class AddressLocationViewModel : BaseViewModel
   /// <summary>
   /// Выгрузка текущего списка адресов в файл  
   /// </summary>
-  private async Task UploadAddressLocations()
+  private void UploadAddressLocations()
   {
     if (!Directory.Exists(_directoryDataResourcePath))
     {
@@ -117,10 +161,44 @@ public class AddressLocationViewModel : BaseViewModel
       WriteIndented = true
     };
 
-    await using FileStream fs = new FileStream(_locationsFilePath, FileMode.OpenOrCreate);
-    if (AddressLocations != null)
-      await JsonSerializer.SerializeAsync<ObservableCollection<AddressLocationEntityViewModel>>(fs, AddressLocations,
-        options);
+    using FileStream fs = new FileStream(_locationsFilePath, FileMode.OpenOrCreate);
+    if (AddressLocations != null) JsonSerializer.Serialize(fs, AddressLocations, options);
+  }
+
+  /// <summary>
+  /// Упорядочивает список по Алфавиту. Город+Улица+НомерДома.
+  /// </summary>
+  /// <exception cref="Exception">
+  /// Список адресов (локаций) не может быть пустым.
+  /// </exception>
+  private void OrderLocation()
+  {
+    if (AddressLocations == null)
+    {
+      throw new Exception("Err: " + nameof(AddressLocations) + " == null. In " + nameof(AddressLocationViewModel) +
+                          " class");
+    }
+
+    List<AddressLocForOrdered> addressLocs = new List<AddressLocForOrdered>();
+
+    foreach (var addressLocation in AddressLocations)
+    {
+      addressLocs.Add(new AddressLocForOrdered(addressLocation));
+    }
+
+    var addressLocsOrdered = addressLocs.OrderBy(i => i.OrderProp);
+
+    AddressLocations.Clear();
+
+    foreach (var addressLoc in addressLocsOrdered)
+    {
+      AddressLocations.Add(new AddressLocationEntityViewModel()
+      {
+        CityName = addressLoc.Loc.CityName.Trim(),
+        StreetName = addressLoc.Loc.StreetName.Trim(),
+        HouseNumber = addressLoc.Loc.HouseNumber.Trim()
+      });
+    }
   }
 
   #endregion

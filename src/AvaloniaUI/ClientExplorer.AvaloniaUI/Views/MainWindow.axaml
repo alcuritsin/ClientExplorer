@@ -159,7 +159,7 @@
 
           <Grid
             Grid.Row="1"
-            ColumnDefinitions="*, Auto, Auto">
+            ColumnDefinitions="*">
 
             <!-- Фильтр для клиентов -->
             <TextBox
@@ -180,14 +180,9 @@
 
             <!-- Сбросить фильтр -->
             <Button
-              Grid.Column="1"
-              Content="X" />
-
-            <!-- Новый клиент. Создать нового клиента -->
-            <Button
-              Grid.Column="2"
-              Content="N" />
-
+              Content="X" 
+              HorizontalAlignment="Right"/>
+            
           </Grid>
 
           <ListBox
@@ -459,19 +454,21 @@
                       </StackPanel>
 
                       <StackPanel>
-                        <Label x:Name="LabelAdditionalParam">Дополнительные параметры</Label>
+                        <Label
+                          x:Name="LabelAdditionalParam"
+                          Content="Дополнительная информация"/>
                         <Grid>
                           <TextBox
-                            x:Name="TextBoxAdditionalParam"
-                            Text="{Binding AdditionalParam}"
+                            x:Name="TextBoxAdditionalInfo"
+                            Text="{Binding AdditionalInfo}"
                             IsEnabled="{Binding !IsSelectedLocation}">
 
                             <i:Interaction.Behaviors>
 
                               <ia:EventTriggerBehavior EventName="KeyUp">
                                 <ia:InvokeCommandAction
-                                  Command="{Binding KeyUpAdditionalParam}"
-                                  CommandParameter="{Binding AdditionalParam}" />
+                                  Command="{Binding KeyUpAdditionalInfo}"
+                                  CommandParameter="{Binding AdditionalInfo}" />
                               </ia:EventTriggerBehavior>
 
                             </i:Interaction.Behaviors>

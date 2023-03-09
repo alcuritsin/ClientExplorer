@@ -57,7 +57,7 @@ public class MainViewModel : BaseViewModel
     KeyUpHouseNumber = new DelegateCommand(ApplyFilterToHouseNumbers);
     TappedOnHouseNumberItem = new DelegateCommand(SelectHouseNumber);
 
-    KeyUpAdditionalParam = new DelegateCommand(EnterAdditionalParam);
+    KeyUpAdditionalInfo = new DelegateCommand(EnterAdditionalInfo);
 
     KeyUpFolderNameUserVersion = new DelegateCommand(EnterFolderNameUserVersion);
 
@@ -102,21 +102,34 @@ public class MainViewModel : BaseViewModel
   {
     /*
     Следующие зарезервированные символы:
-     < - (меньше чем);
-     > - (больше чем);
-     : - (двоеточие)
-     " - (двойная кавычка)
-     / - (косая черта)
-     \ - (обратная косая черта)
-     | - (вертикальная полоса или канал)
-     ? - (вопросительный знак)
-     * - (звёздочка)
-     */
+      Системные:
+        < - (меньше чем);
+        > - (больше чем);
+        : - (двоеточие)
+        " - (двойная кавычка)
+        / - (косая черта)
+        \ - (обратная косая черта)
+        | - (вертикальная полоса или канал)
+        ? - (вопросительный знак)
+        * - (звёздочка)
+      Только для приложения:        
+        ' - (апостроф) символ используется для выделения поля 'дополнительная информация'  
+        , - (запятая) символ используется для разделения (город, улица, номер дома)
+    */
 
     if (name.Equals(string.Empty)) return false;
 
     switch (name.Last())
     {
+      case ' ':
+        // не допускаем длинные пробелы
+        name = name.Length switch
+        {
+          1 => string.Empty,
+          > 2 when name[name.Length - 2] == ' ' => name.Substring(0, name.Length - 1),
+          _ => name
+        };
+        return true;
       case '<':
       case '>':
       case ':':
@@ -126,15 +139,9 @@ public class MainViewModel : BaseViewModel
       case '|':
       case '?':
       case '*':
-        if (name.Length != 1)
-        {
-          name = name.Substring(0, name.Length - 1);
-        }
-        else
-        {
-          name = String.Empty;
-        }
-
+      case '\'':
+      case ',':
+        name = name.Length != 1 ? name.Substring(0, name.Length - 1) : string.Empty;
         return true;
     }
 
@@ -171,17 +178,23 @@ public class MainViewModel : BaseViewModel
 
   #region Commands Methods
 
+  /// <summary>
+  /// Выделение клиента.
+  /// </summary>
+  /// <param name="param">
+  /// ClientEntityViewModel - выделенный клиент
+  /// </param>
   private void SelectClient(object param)
   {
     if (SelectedClient.Name != null) ClientFilter = SelectedClient.Name;
-    
+
 
     ClientFilter = SelectedClient.Name;
-    
+
     ApplyFilterToClientsList(ClientFilter);
 
     SelectedClient = SortedClients[0];
-    
+
     LoadClientLocation();
   }
 
@@ -319,9 +332,15 @@ public class MainViewModel : BaseViewModel
 
   #region Command Methods
 
+  /// <summary>
+  /// Комманда. Выделение объекта (локации)
+  /// </summary>
+  /// <param name="param">
+  /// Выделенный объект (локация)
+  /// </param>
   private void SelectLocation(object param)
   {
-    AdditionalParam = SelectedLocation;
+    AdditionalInfo = SelectedLocation;
     ApplyFilterToLocationOfClient();
     SelectedLocation = SortedLocationsOfClient[0];
     CheckLocationForFolders();
@@ -410,7 +429,7 @@ public class MainViewModel : BaseViewModel
       if (buffer.Count > 0 && CityName != string.Empty) FilteringList(ref buffer, CityName);
       if (buffer.Count > 0 && StreetName != string.Empty) FilteringList(ref buffer, StreetName);
       if (buffer.Count > 0 && HouseNumber != string.Empty) FilteringList(ref buffer, HouseNumber);
-      if (buffer.Count > 0 && AdditionalParam != string.Empty) FilteringList(ref buffer, AdditionalParam);
+      if (buffer.Count > 0 && AdditionalInfo != string.Empty) FilteringList(ref buffer, AdditionalInfo);
 
       if (buffer.Count > 0)
       {
@@ -452,7 +471,7 @@ public class MainViewModel : BaseViewModel
   public string HouseNumber { get; set; } = string.Empty;
   public string SelectedHouseNumber { get; set; } = string.Empty;
 
-  public string AdditionalParam { get; set; } = string.Empty;
+  public string AdditionalInfo { get; set; } = string.Empty;
 
   #endregion
 
@@ -469,7 +488,7 @@ public class MainViewModel : BaseViewModel
   public ICommand KeyUpHouseNumber { get; }
   public ICommand TappedOnHouseNumberItem { get; }
 
-  public ICommand KeyUpAdditionalParam { get; }
+  public ICommand KeyUpAdditionalInfo { get; }
 
   #endregion
 
@@ -664,27 +683,36 @@ public class MainViewModel : BaseViewModel
     ApplyFilterToLocationOfClient();
   }
 
-  private void EnterAdditionalParam(object param)
+  /// <summary>
+  /// Ввод текста в поле 'Дополнительная информация'
+  /// </summary>
+  /// <param name="param">
+  /// Значение поля
+  /// </param>
+  private void EnterAdditionalInfo(object param)
   {
-    var additionalParam = AdditionalParam;
+    var additionalInfo = AdditionalInfo;
 
-    if (IsNameHaveInvalidCharacter(ref additionalParam))
+    if (IsNameHaveInvalidCharacter(ref additionalInfo))
     {
-      AdditionalParam = additionalParam;
+      AdditionalInfo = additionalInfo;
       return;
     }
 
     ApplyFilterToLocationOfClient();
   }
 
-
+  /// <summary>
+  /// Комманда. Нажитие на кнопку сброса выделенного объекта (локации).
+  /// </summary>
   public void OnClickButtonCancelSelectLocation()
   {
     IsSelectedLocation = false;
     SelectedLocation = null;
-    AdditionalParam = string.Empty;
+    AdditionalInfo = string.Empty;
     ApplyFilterToLocationOfClient();
   }
+
   #endregion
 
   #region Private Properties
@@ -882,7 +910,7 @@ public class MainViewModel : BaseViewModel
   }
 
   #endregion
-  
+
   /// <summary>
   /// Проверить активированную локацию клиента на наличие стандартных папок 
   /// </summary>
@@ -898,33 +926,35 @@ public class MainViewModel : BaseViewModel
     var pathForObject = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar +
                         ClientEr.FolderObjectsName;
 
-      foreach (var folderForCreate in FoldersForCreate)
-      {
-        folderForCreate.IsCheck = false;
-        folderForCreate.IsEnable = true;
+    foreach (var folderForCreate in FoldersForCreate)
+    {
+      folderForCreate.IsCheck = false;
+      folderForCreate.IsEnable = true;
 
-        var dir = pathForObject + Path.DirectorySeparatorChar + SelectedLocation + folderForCreate.FolderDirectory.GetDirectoryPath();
-        
-        if (Directory.Exists(dir))
-        {
-          folderForCreate.IsCheck = true;
-          folderForCreate.IsEnable = false;
-        }
+      var dir = pathForObject + Path.DirectorySeparatorChar + SelectedLocation +
+                folderForCreate.FolderDirectory.GetDirectoryPath();
+
+      if (Directory.Exists(dir))
+      {
+        folderForCreate.IsCheck = true;
+        folderForCreate.IsEnable = false;
       }
+    }
   }
 
   #endregion
 
   // Кнопки
-  
+
   #region Buttons
 
   #region Commands Methods
 
+  /// <summary>
+  /// Комманда. Запуск алгоритма создания директорий
+  /// </summary>
   public void OnClickButtonCreateDirectory()
   {
-    StatusInfo = "Click";
-
     var clientPath = string.Empty;
 
     if (SelectedClient == null)
@@ -946,36 +976,7 @@ public class MainViewModel : BaseViewModel
     var locationPath = clientPath + Path.DirectorySeparatorChar + ClientEr.FolderObjectsName;
     var isValidLocation = false;
 
-    if (CityName != string.Empty)
-    {
-      locationPath += Path.DirectorySeparatorChar + CityName;
-      isValidLocation = true;
-    }
-
-    if (StreetName != string.Empty)
-    {
-      locationPath += ", " + StreetName;
-    }
-
-    if (HouseNumber != string.Empty)
-    {
-      locationPath += ", " + HouseNumber;
-    }
-
-    if (AdditionalParam != string.Empty)
-    {
-      if (CityName != string.Empty)
-      {
-        locationPath += " - ";
-      }
-      else
-      {
-        locationPath += Path.DirectorySeparatorChar;
-        isValidLocation = true;
-      }
-
-      locationPath += AdditionalParam;
-    }
+    locationPath = GetLocationPath(locationPath, ref isValidLocation);
 
     StatusInfo = locationPath;
 
@@ -996,6 +997,63 @@ public class MainViewModel : BaseViewModel
         CreateFolder(locationPath, new DirectoryEntity(FolderNameUserVersion));
       }
     }
+  }
+
+  #endregion
+
+  #region Private Methods
+
+  /// <summary>
+  /// Формирование полного пути до создаваемого объекта (локации)
+  /// </summary>
+  /// <param name="startPath">
+  /// Начальный путь, относительно которого будет сформирован остальной путь.
+  /// </param>
+  /// <param name="isValidLocation">
+  /// Выполнение требований по минимальной информации, которую необходимо заполнить.
+  /// true - выполнено, путь составлен
+  /// false - не выполнен, вернётся стартовый путь...
+  /// </param>
+  /// <returns>
+  /// Полный путь до папки объекта (локации)
+  /// </returns>
+  private string GetLocationPath(string startPath, ref bool isValidLocation)
+  {
+    if (CityName != string.Empty)
+    {
+      startPath += Path.DirectorySeparatorChar + CityName;
+      isValidLocation = true;
+
+      // Сохраняет адрес объекта (локации), если её ещё нет в базе.
+      _addressLocationViewModel.SaveLocationIfNew(CityName, StreetName, HouseNumber);
+    }
+
+    if (StreetName != string.Empty)
+    {
+      startPath += ", " + StreetName;
+    }
+
+    if (HouseNumber != string.Empty)
+    {
+      startPath += ", " + HouseNumber;
+    }
+
+    if (AdditionalInfo != string.Empty)
+    {
+      if (CityName != string.Empty)
+      {
+        startPath += " '";
+      }
+      else
+      {
+        startPath += Path.DirectorySeparatorChar;
+        isValidLocation = true;
+      }
+
+      startPath += AdditionalInfo + "'";
+    }
+
+    return startPath;
   }
 
   /// <summary>
