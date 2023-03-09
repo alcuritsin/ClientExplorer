@@ -8,7 +8,7 @@ namespace ClientExplorer.Shared.ViewModels;
 
 public class ClientEntityViewModel : BaseViewModel
 {
-  public string? Name { get; set; }
+  public string Name { get; set; }
   public Bitmap Icon { get; private set; }
   public DirectoryInfo? ClientPath { get; set; }
 

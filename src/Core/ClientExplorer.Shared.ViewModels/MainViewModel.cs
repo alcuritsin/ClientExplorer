@@ -32,7 +32,7 @@ public class MainViewModel : BaseViewModel
     OpenClient = new DelegateCommand(SelectClient);
     KeyUpClientName = new DelegateCommand(ApplyFilterToClientsList);
 
-    InitClientList();
+    InitClientListAsync();
 
     #endregion
 
@@ -165,7 +165,25 @@ public class MainViewModel : BaseViewModel
 
   public ClientEntityViewModel? SelectedClient { get; set; }
 
+  public bool IsSelectedClient { get; set; } = false;
+
   // public bool IsInitClient { get; private set; } = false;
+
+  #endregion
+
+  #region Public Methods
+
+  public void OnClickButtonCancelClient()
+  {
+    Task.Run(InitClientListAsync);
+    
+    ClientFilter = string.Empty;
+
+    SelectedLocation = string.Empty;
+    SortedLocationsOfClient.Clear();
+    
+    IsSelectedClient = false;
+  }
 
   #endregion
 
@@ -186,8 +204,8 @@ public class MainViewModel : BaseViewModel
   /// </param>
   private void SelectClient(object param)
   {
-    if (SelectedClient.Name != null) ClientFilter = SelectedClient.Name;
 
+    if (SelectedClient == null) throw new Exception("Err: " + nameof(SelectedClient) + " = null");
 
     ClientFilter = SelectedClient.Name;
 
@@ -196,6 +214,8 @@ public class MainViewModel : BaseViewModel
     SelectedClient = SortedClients[0];
 
     LoadClientLocation();
+
+    IsSelectedClient = true;
   }
 
   /// <summary>
@@ -252,7 +272,7 @@ public class MainViewModel : BaseViewModel
 
     StatusInfo += " SortedClients.Count: " + SortedClients.Count;
   }
-
+  
   #endregion
 
   #region Private Properties
@@ -266,10 +286,10 @@ public class MainViewModel : BaseViewModel
   /// <summary>
   /// Первичное заполнение списка клиентов
   /// </summary>
-  private void InitClientList()
+  private Task InitClientListAsync()
   {
     if (ClientEr.CurrentPath == null)
-      throw new Exception("Err: " + nameof(InitClientList) + ". " + nameof(ClientEr.CurrentPath) + " = null");
+      throw new Exception("Err: " + nameof(InitClientListAsync) + ". " + nameof(ClientEr.CurrentPath) + " = null");
 
     SortedClients.Clear();
 
@@ -287,6 +307,7 @@ public class MainViewModel : BaseViewModel
     SortedClients = new ObservableCollection<ClientEntityViewModel>(SortedClients.OrderBy(i => i.Name));
 
     _clientsList = SortedClients.ToList();
+    return Task.CompletedTask;
   }
 
   /// <summary>

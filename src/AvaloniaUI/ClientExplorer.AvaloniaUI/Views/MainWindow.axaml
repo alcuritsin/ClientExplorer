@@ -46,8 +46,9 @@
 
       <!-- Список городов 'Popup' -->
       <Border
-        x:Name="CitiesListPopup"
+        Grid.Row="0"
         Grid.RowSpan="3"
+        x:Name="CitiesListPopup"
         HorizontalAlignment="Left"
         VerticalAlignment="Top"
         IsVisible="{Binding  #CityName.IsFocused, Mode=OneWay}"
@@ -78,8 +79,9 @@
 
       <!-- Список улиц 'Popup' -->
       <Border
-        x:Name="StreetsListPopup"
+        Grid.Row="0"
         Grid.RowSpan="3"
+        x:Name="StreetsListPopup"
         HorizontalAlignment="Left"
         VerticalAlignment="Top"
         IsVisible="{Binding  #StreetName.IsFocused, Mode=OneWay}"
@@ -110,8 +112,9 @@
 
       <!-- Список номеров домов 'Popup' -->
       <Border
-        x:Name="HouseNumbersListPopup"
+        Grid.Row="0"
         Grid.RowSpan="3"
+        x:Name="HouseNumbersListPopup"
         HorizontalAlignment="Left"
         VerticalAlignment="Top"
         IsVisible="{Binding  #HouseNumber.IsFocused, Mode=OneWay}"
@@ -140,7 +143,6 @@
         </StackPanel>
       </Border>
 
-
       <!-- Панель - 'Основная' -->
       <Grid
         Grid.Row="0"
@@ -155,7 +157,7 @@
           <Label
             Grid.Row="0"
             x:Name="LabelClientName"
-            Content="Клиенты" />
+            Content="Клиент" />
 
           <Grid
             Grid.Row="1"
@@ -180,7 +182,10 @@
 
             <!-- Сбросить фильтр -->
             <Button
-              Content="X" 
+              x:Name="ButtonClearClient"
+              Content="X"
+              Command="{Binding OnClickButtonCancelClient}"
+              IsVisible="{Binding IsSelectedClient}"
               HorizontalAlignment="Right"/>
             
           </Grid>
@@ -342,6 +347,7 @@
               <StackPanel>
                 <!-- Групп - `Новый объект` -->
                 <Grid
+                  x:Name="GridLocation"
                   RowDefinitions="Auto, *"
                   ColumnDefinitions="Auto, *"
                   Margin="6">
@@ -355,7 +361,10 @@
                     BorderThickness="1"
                     CornerRadius="6">
 
-                    <Label>Новый объект</Label>
+                    <Label
+                      x:Name="LabelGridLocation"
+                      Target="GridLocation"
+                      Content="Объект (локация)"/>
 
                   </Border>
 
@@ -455,7 +464,8 @@
 
                       <StackPanel>
                         <Label
-                          x:Name="LabelAdditionalParam"
+                          x:Name="LabelAdditionalInfo"
+                          Target="TextBoxAdditionalInfo"
                           Content="Дополнительная информация"/>
                         <Grid>
                           <TextBox
