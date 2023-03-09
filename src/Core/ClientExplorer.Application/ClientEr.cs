@@ -6,8 +6,8 @@ namespace ClientExplorer.Application;
 
 public static class ClientEr
 {
-  public const string DefaultDataResourcePath = ".ClientExplorer.Assets";
-  public const string LocationsSourceFileName = ".AddressLocations.json";
+  public const string DefaultDataResourcePath = ".ClientExplorer";
+  public static readonly string LocationsSourceFileName = "Assets" + Path.DirectorySeparatorChar + "AddressLocations.json";
 
   public const string FolderObjectsName = "Объекты";
 
