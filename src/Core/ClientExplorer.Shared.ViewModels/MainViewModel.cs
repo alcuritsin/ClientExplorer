@@ -71,7 +71,6 @@ public class MainViewModel : BaseViewModel
       FoldersForCreate.Add(new FolderLocationEntityViewModel(directory.Name, directory));
     }
 
-
     //TODO Publication. Debug
     var currDir = ClientEr.CurrentPath + Path.DirectorySeparatorChar + ClientEr.DefaultDataResourcePath;
     if (Directory.Exists(currDir))
@@ -165,7 +164,7 @@ public class MainViewModel : BaseViewModel
 
   public ClientEntityViewModel? SelectedClient { get; set; }
 
-  public bool IsSelectedClient { get; set; } = false;
+  public bool IsClientEmpty { get; private set; } = true;
 
   // public bool IsInitClient { get; private set; } = false;
 
@@ -176,13 +175,14 @@ public class MainViewModel : BaseViewModel
   public void OnClickButtonCancelClient()
   {
     Task.Run(InitClientListAsync);
-    
+
     ClientFilter = string.Empty;
 
     SelectedLocation = string.Empty;
     SortedLocationsOfClient.Clear();
-    
-    IsSelectedClient = false;
+
+    IsLocationOfClientEmpty = SortedLocationsOfClient.Count <= 0;
+    IsClientEmpty = ClientFilter.Length <= 0;
   }
 
   #endregion
@@ -204,7 +204,6 @@ public class MainViewModel : BaseViewModel
   /// </param>
   private void SelectClient(object param)
   {
-
     if (SelectedClient == null) throw new Exception("Err: " + nameof(SelectedClient) + " = null");
 
     ClientFilter = SelectedClient.Name;
@@ -214,8 +213,6 @@ public class MainViewModel : BaseViewModel
     SelectedClient = SortedClients[0];
 
     LoadClientLocation();
-
-    IsSelectedClient = true;
   }
 
   /// <summary>
@@ -228,6 +225,7 @@ public class MainViewModel : BaseViewModel
   {
     // Сброс листа объектов клиента.
     SortedLocationsOfClient.Clear();
+    IsLocationOfClientEmpty = SortedLocationsOfClient.Count <= 0;
 
     var clientFilter = ClientFilter;
 
@@ -242,6 +240,8 @@ public class MainViewModel : BaseViewModel
       {
         SortedClients.Add(client);
       }
+
+      IsClientEmpty = ClientFilter.Length <= 0;
 
       StatusInfo += " SortedClients.Count: " + SortedClients.Count;
 
@@ -267,12 +267,19 @@ public class MainViewModel : BaseViewModel
         SortedClients.Add(client);
       }
     }
+    
+    IsClientEmpty = ClientFilter.Length <= 0;
 
-    //TODO Выделить клиента если он остался один в списке... 
+    // Выделить клиента если он остался один в списке...
+    if (SortedClients.Count == 1 && SortedClients[0].Name == clientFilter)
+    {
+      SelectedClient = SortedClients[0];
+      LoadClientLocation();
+    }
 
     StatusInfo += " SortedClients.Count: " + SortedClients.Count;
   }
-  
+
   #endregion
 
   #region Private Properties
@@ -343,6 +350,8 @@ public class MainViewModel : BaseViewModel
   public ObservableCollection<string> SortedLocationsOfClient { get; set; } = new ObservableCollection<string>();
   public string SelectedLocation { get; set; } = string.Empty;
 
+  public bool IsLocationOfClientEmpty { get; set; } = true;
+
   #endregion
 
   #region Events
@@ -410,6 +419,8 @@ public class MainViewModel : BaseViewModel
 
     SortedLocationsOfClient = new ObservableCollection<string>(SortedLocationsOfClient.OrderBy(i => i));
     _locationsOfClient = new List<string>(SortedLocationsOfClient.ToList());
+
+    IsLocationOfClientEmpty = SortedLocationsOfClient.Count <= 0;
   }
 
 
@@ -460,6 +471,8 @@ public class MainViewModel : BaseViewModel
         }
       }
     }
+    
+    IsLocationOfClientEmpty = SortedLocationsOfClient.Count <= 0;
   }
 
   #endregion

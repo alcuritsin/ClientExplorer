@@ -185,7 +185,7 @@
               x:Name="ButtonClearClient"
               Content="X"
               Command="{Binding OnClickButtonCancelClient}"
-              IsVisible="{Binding IsSelectedClient}"
+              IsVisible="{Binding !IsClientEmpty}"
               HorizontalAlignment="Right"/>
             
           </Grid>
@@ -264,12 +264,13 @@
             Grid.Row="1"
             ColumnDefinitions="Auto, *">
 
-            <!-- Группа - `Существующий объект` -->
+            <!-- Группа - `Существующие объекты` -->
             <Grid
               Grid.Column="0"
               RowDefinitions="Auto, *"
               ColumnDefinitions="Auto, *"
-              Margin="6">
+              Margin="6"
+              IsVisible="{Binding !IsLocationOfClientEmpty}">
 
               <!-- Заголовок группы - `Существующий объект` -->
               <Border
@@ -281,11 +282,11 @@
                 BorderThickness="1"
                 CornerRadius="6">
 
-                <Label>Существующий объект</Label>
+                <Label>Существующие объекты</Label>
 
               </Border>
 
-              <!-- Контент группы - `Существующий объект` -->
+              <!-- Контент группы - `Существующие объекты` -->
               <Border
                 Grid.Row="0" Grid.Column="0"
                 Grid.RowSpan="2" Grid.ColumnSpan="2"
