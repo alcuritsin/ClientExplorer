@@ -164,8 +164,6 @@ public class MainViewModel : BaseViewModel
 
   public ClientEntityViewModel? SelectedClient { get; set; }
 
-  public bool IsClientEmpty { get; private set; } = true;
-
   // public bool IsInitClient { get; private set; } = false;
 
   #endregion
@@ -182,7 +180,6 @@ public class MainViewModel : BaseViewModel
     SortedLocationsOfClient.Clear();
 
     IsLocationOfClientEmpty = SortedLocationsOfClient.Count <= 0;
-    IsClientEmpty = ClientFilter.Length <= 0;
   }
 
   #endregion
@@ -241,8 +238,6 @@ public class MainViewModel : BaseViewModel
         SortedClients.Add(client);
       }
 
-      IsClientEmpty = ClientFilter.Length <= 0;
-
       StatusInfo += " SortedClients.Count: " + SortedClients.Count;
 
       return;
@@ -267,8 +262,6 @@ public class MainViewModel : BaseViewModel
         SortedClients.Add(client);
       }
     }
-    
-    IsClientEmpty = ClientFilter.Length <= 0;
 
     // Выделить клиента если он остался один в списке...
     if (SortedClients.Count == 1 && SortedClients[0].Name == clientFilter)
@@ -341,144 +334,6 @@ public class MainViewModel : BaseViewModel
 
   #endregion
 
-  //Существующие объекты клиента
-
-  #region Location of Client
-
-  #region Public Properties
-
-  public ObservableCollection<string> SortedLocationsOfClient { get; set; } = new ObservableCollection<string>();
-  public string SelectedLocation { get; set; } = string.Empty;
-
-  public bool IsLocationOfClientEmpty { get; set; } = true;
-
-  #endregion
-
-  #region Events
-
-  public ICommand TappedOnLocationClientItem { get; }
-
-  #endregion
-
-  #region Command Methods
-
-  /// <summary>
-  /// Комманда. Выделение объекта (локации)
-  /// </summary>
-  /// <param name="param">
-  /// Выделенный объект (локация)
-  /// </param>
-  private void SelectLocation(object param)
-  {
-    AdditionalInfo = SelectedLocation;
-    ApplyFilterToLocationOfClient();
-    SelectedLocation = SortedLocationsOfClient[0];
-    CheckLocationForFolders();
-    IsSelectedLocation = true;
-  }
-
-  #endregion
-
-  #region Private Properties
-
-  private List<string> _locationsOfClient { get; set; } = new List<string>();
-
-  #endregion
-
-  #region Private Methods
-
-  /// <summary>
-  /// Загружает существующие объекты у клиента из директории 'Объекты'
-  /// </summary>
-  private void LoadClientLocation()
-  {
-    SortedLocationsOfClient.Clear();
-    _locationsOfClient.Clear();
-
-    if (SelectedClient.ClientPath == null)
-    {
-      StatusInfo = "Err: SelectedClient.ClientPath == null";
-      return;
-    }
-
-    var directoryPath = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar +
-                        ClientEr.FolderObjectsName;
-
-    if (!Directory.Exists(directoryPath))
-    {
-      StatusInfo = "Err: '" + directoryPath + "' не обнаружены";
-      return;
-    }
-
-    var directoryInfo = new DirectoryInfo(directoryPath);
-
-    foreach (var directory in directoryInfo.GetDirectories())
-    {
-      SortedLocationsOfClient.Add(directory.Name);
-    }
-
-    SortedLocationsOfClient = new ObservableCollection<string>(SortedLocationsOfClient.OrderBy(i => i));
-    _locationsOfClient = new List<string>(SortedLocationsOfClient.ToList());
-
-    IsLocationOfClientEmpty = SortedLocationsOfClient.Count <= 0;
-  }
-
-
-  /// <summary>
-  /// Фильтрация списка 'Объектов (локаций)' клиента
-  /// </summary>
-  /// <param name="source">
-  /// Копия оригинального списка
-  /// </param>
-  /// <param name="filter">
-  /// Основание для фильтрации
-  /// </param>
-  private void FilteringList(ref List<string> source, string filter)
-  {
-    List<string> buffer = new List<string>();
-    foreach (var item in source)
-    {
-      if (item.ToUpper().Contains(filter.ToUpper()))
-      {
-        buffer.Add(item);
-      }
-    }
-
-    source = buffer;
-  }
-
-  /// <summary>
-  /// Применение фильтра к списку 'Объектов (локаций)' клиента
-  /// </summary>
-  private void ApplyFilterToLocationOfClient()
-  {
-    if (_locationsOfClient.Count > 0)
-    {
-      List<string> buffer = new List<string>(_locationsOfClient);
-
-      SortedLocationsOfClient.Clear();
-
-      if (buffer.Count > 0 && CityName != string.Empty) FilteringList(ref buffer, CityName);
-      if (buffer.Count > 0 && StreetName != string.Empty) FilteringList(ref buffer, StreetName);
-      if (buffer.Count > 0 && HouseNumber != string.Empty) FilteringList(ref buffer, HouseNumber);
-      if (buffer.Count > 0 && AdditionalInfo != string.Empty) FilteringList(ref buffer, AdditionalInfo);
-
-      if (buffer.Count > 0)
-      {
-        foreach (var item in buffer)
-        {
-          SortedLocationsOfClient.Add(item);
-        }
-      }
-    }
-    
-    IsLocationOfClientEmpty = SortedLocationsOfClient.Count <= 0;
-  }
-
-  #endregion
-
-  #endregion
-
   // Адреса объектов (локации)
 
   #region Address Location
@@ -507,8 +362,10 @@ public class MainViewModel : BaseViewModel
 
   public string AdditionalInfo { get; set; } = string.Empty;
 
-  #endregion
+  public bool IsLocationAvailable { get; set; } = false;
 
+  #endregion
+  
   #region Events
 
   public ICommand KeyUpCityName { get; }
@@ -556,6 +413,7 @@ public class MainViewModel : BaseViewModel
     if (IsNameHaveInvalidCharacter(ref cityFilter))
     {
       CityName = cityFilter;
+      IsLocationAvailable = CheckLocationToAvailable();
       return;
     }
 
@@ -568,9 +426,16 @@ public class MainViewModel : BaseViewModel
         CitiesFiltered.Add(cityName);
       }
     }
+    
+    IsLocationAvailable = CheckLocationToAvailable();
 
     ApplyFilterToLocationOfClient();
     StatusInfo += " CitiesFiltered.Count: " + CitiesFiltered.Count;
+  }
+
+  private bool CheckLocationToAvailable()
+  {
+    return !string.IsNullOrEmpty(CityName) || !string.IsNullOrEmpty(CityName);
   }
 
   /// <summary>
@@ -730,10 +595,12 @@ public class MainViewModel : BaseViewModel
     if (IsNameHaveInvalidCharacter(ref additionalInfo))
     {
       AdditionalInfo = additionalInfo;
+      IsLocationAvailable = CheckLocationToAvailable();
       return;
     }
-
+    
     ApplyFilterToLocationOfClient();
+    IsLocationAvailable = CheckLocationToAvailable();
   }
 
   /// <summary>
@@ -907,7 +774,145 @@ public class MainViewModel : BaseViewModel
   #endregion
 
   #endregion
+  
+  //Существующие объекты клиента
 
+  #region Location of Client
+
+  #region Public Properties
+
+  public ObservableCollection<string> SortedLocationsOfClient { get; set; } = new ObservableCollection<string>();
+  public string SelectedLocation { get; set; } = string.Empty;
+
+  public bool IsLocationOfClientEmpty { get; set; } = true;
+
+  #endregion
+
+  #region Events
+
+  public ICommand TappedOnLocationClientItem { get; }
+
+  #endregion
+
+  #region Command Methods
+
+  /// <summary>
+  /// Комманда. Выделение объекта (локации)
+  /// </summary>
+  /// <param name="param">
+  /// Выделенный объект (локация)
+  /// </param>
+  private void SelectLocation(object param)
+  {
+    AdditionalInfo = SelectedLocation;
+    ApplyFilterToLocationOfClient();
+    SelectedLocation = SortedLocationsOfClient[0];
+    CheckLocationForFolders();
+    IsSelectedLocation = true;
+  }
+
+  #endregion
+
+  #region Private Properties
+
+  private List<string> _locationsOfClient { get; set; } = new List<string>();
+
+  #endregion
+
+  #region Private Methods
+
+  /// <summary>
+  /// Загружает существующие объекты у клиента из директории 'Объекты'
+  /// </summary>
+  private void LoadClientLocation()
+  {
+    SortedLocationsOfClient.Clear();
+    _locationsOfClient.Clear();
+
+    if (SelectedClient.ClientPath == null)
+    {
+      StatusInfo = "Err: SelectedClient.ClientPath == null";
+      return;
+    }
+
+    var directoryPath = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar +
+                        ClientEr.FolderObjectsName;
+
+    if (!Directory.Exists(directoryPath))
+    {
+      StatusInfo = "Err: '" + directoryPath + "' не обнаружены";
+      return;
+    }
+
+    var directoryInfo = new DirectoryInfo(directoryPath);
+
+    foreach (var directory in directoryInfo.GetDirectories())
+    {
+      SortedLocationsOfClient.Add(directory.Name);
+    }
+
+    SortedLocationsOfClient = new ObservableCollection<string>(SortedLocationsOfClient.OrderBy(i => i));
+    _locationsOfClient = new List<string>(SortedLocationsOfClient.ToList());
+
+    IsLocationOfClientEmpty = SortedLocationsOfClient.Count <= 0;
+  }
+
+
+  /// <summary>
+  /// Фильтрация списка 'Объектов (локаций)' клиента
+  /// </summary>
+  /// <param name="source">
+  /// Копия оригинального списка
+  /// </param>
+  /// <param name="filter">
+  /// Основание для фильтрации
+  /// </param>
+  private void FilteringList(ref List<string> source, string filter)
+  {
+    List<string> buffer = new List<string>();
+    foreach (var item in source)
+    {
+      if (item.ToUpper().Contains(filter.ToUpper()))
+      {
+        buffer.Add(item);
+      }
+    }
+
+    source = buffer;
+  }
+
+  /// <summary>
+  /// Применение фильтра к списку 'Объектов (локаций)' клиента
+  /// </summary>
+  private void ApplyFilterToLocationOfClient()
+  {
+    if (_locationsOfClient.Count > 0)
+    {
+      List<string> buffer = new List<string>(_locationsOfClient);
+
+      SortedLocationsOfClient.Clear();
+
+      if (buffer.Count > 0 && CityName != string.Empty) FilteringList(ref buffer, CityName);
+      if (buffer.Count > 0 && StreetName != string.Empty) FilteringList(ref buffer, StreetName);
+      if (buffer.Count > 0 && HouseNumber != string.Empty) FilteringList(ref buffer, HouseNumber);
+      if (buffer.Count > 0 && AdditionalInfo != string.Empty) FilteringList(ref buffer, AdditionalInfo);
+
+      if (buffer.Count > 0)
+      {
+        foreach (var item in buffer)
+        {
+          SortedLocationsOfClient.Add(item);
+        }
+      }
+    }
+    
+    IsLocationOfClientEmpty = SortedLocationsOfClient.Count <= 0;
+  }
+
+  #endregion
+
+  #endregion
+  
   //Папки
 
   #region Folders

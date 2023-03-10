@@ -41,8 +41,7 @@
 
     <Grid
       x:Name="MainGrid"
-      RowDefinitions="*, Auto, Auto"
-      >
+      RowDefinitions="*, Auto, Auto">
 
       <!-- Список городов 'Popup' -->
       <Border
@@ -146,13 +145,15 @@
       <!-- Панель - 'Основная' -->
       <Grid
         Grid.Row="0"
-        ColumnDefinitions="Auto, Auto">
+        RowDefinitions="Auto, *"
+        ColumnDefinitions="Auto, *">
 
-        <!-- Панель - `Клиенты` -->
+        <!-- Панель - `Клиент` -->
         <Grid
+          Grid.Row="0"
           Grid.Column="0"
-          RowDefinitions="Auto, Auto, *"
-          Margin="6">
+          Grid.ColumnSpan="2"
+          RowDefinitions="Auto, Auto, *">
 
           <Label
             Grid.Row="0"
@@ -167,8 +168,7 @@
             <TextBox
               Grid.Column="0"
               x:Name="ClientFilter"
-              Text="{Binding ClientFilter}"
-              Margin="0 6">
+              Text="{Binding ClientFilter}">
 
               <i:Interaction.Behaviors>
                 <ia:EventTriggerBehavior EventName="KeyUp">
@@ -185,94 +185,28 @@
               x:Name="ButtonClearClient"
               Content="X"
               Command="{Binding OnClickButtonCancelClient}"
-              IsVisible="{Binding !IsClientEmpty}"
-              HorizontalAlignment="Right"/>
-            
+              IsVisible="{Binding ClientFilter, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+              HorizontalAlignment="Right" />
+
           </Grid>
-
-          <ListBox
-            Grid.Row="2"
-            Width="460"
-            Items="{Binding SortedClients}"
-            SelectedItem="{Binding SelectedClient}">
-
-            <i:Interaction.Behaviors>
-              <ia:EventTriggerBehavior EventName="Tapped">
-                <ia:InvokeCommandAction
-                  Command="{Binding OpenClient}"
-                  CommandParameter="{Binding SelectedClient}" />
-              </ia:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-
-            <ListBox.ItemTemplate>
-              <DataTemplate>
-
-                <Grid
-                  ColumnDefinitions="Auto, *">
-
-                  <Image
-                    Grid.Column="0"
-                    Height="50"
-
-                    Source="{Binding Icon}"
-                    Stretch="Uniform" />
-
-                  <TextBlock
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Margin="6 0 0 0"
-                    Text="{Binding  Name}" />
-
-                </Grid>
-
-              </DataTemplate>
-            </ListBox.ItemTemplate>
-
-
-          </ListBox>
         </Grid>
 
-        <Grid
-          Grid.Column="1"
-          RowDefinitions="Auto, *">
+        <!-- Панель - `Ввода объекта + Отметка папок` -->
+        <StackPanel
+          Grid.Row="1"
+          Grid.Column="0"
+          Orientation="Horizontal">
 
-          <!-- Выделенный клиент -->
-          <Border
-            Grid.Row="0"
-            Height="100"
-            BorderBrush="Blue"
-            BorderThickness="2">
-
-            <StackPanel>
-              <TextBlock
-                Text="{Binding SelectedClient.Name}" />
-              <TextBlock
-                Text="{Binding SelectedClient.ClientPath}" />
-
-              <!-- <Button Content="Init client folder" -->
-              <!--         IsVisible="{Binding !IsInitClient}" /> -->
-
-              <TextBlock
-                Text="{Binding SelectedLocation}" />
-
-            </StackPanel>
-
-
-          </Border>
-
-          <Grid
-            Grid.Row="1"
-            ColumnDefinitions="Auto, *">
-
-            <!-- Группа - `Существующие объекты` -->
+          <StackPanel>
+            <!-- Группа ввода - `Объект (локация)` -->
             <Grid
-              Grid.Column="0"
+              x:Name="GridLocation"
               RowDefinitions="Auto, *"
               ColumnDefinitions="Auto, *"
-              Margin="6"
-              IsVisible="{Binding !IsLocationOfClientEmpty}">
+              Margin="0 6 6 0"
+              IsVisible="{Binding ClientFilter, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
 
-              <!-- Заголовок группы - `Существующий объект` -->
+              <!-- Title - `Объект (локация)` -->
               <Border
                 Grid.Row="0" Grid.Column="0"
                 ZIndex="1"
@@ -282,355 +216,424 @@
                 BorderThickness="1"
                 CornerRadius="6">
 
-                <Label>Существующие объекты</Label>
+                <Label
+                  x:Name="LabelGridLocation"
+                  Target="GridLocation"
+                  Content="Объект (локация)" />
 
               </Border>
 
-              <!-- Контент группы - `Существующие объекты` -->
+              <!-- Content - `Объект (локация)` -->
               <Border
+
                 Grid.Row="0" Grid.Column="0"
                 Grid.RowSpan="2" Grid.ColumnSpan="2"
                 Margin="0,12,0,0"
-                Padding="6,18,6,6"
+                Padding="6,12,6,6"
                 BorderThickness="1"
                 BorderBrush="White"
                 CornerRadius="6">
 
-                <Grid
-                  RowDefinitions="Auto, *">
+                <StackPanel>
 
-                  <!-- <Grid -->
-                  <!--   Grid.Row="0" -->
-                  <!--   ColumnDefinitions="*, Auto, Auto"> -->
-                  <!-- -->
-                  <!--   <TextBox -->
-                  <!--     Grid.Column="0" /> -->
-                  <!-- -->
-                  <!--   <Button -->
-                  <!--     Grid.Column="1" -->
-                  <!--     Content="X" /> -->
-                  <!-- -->
-                  <!--   <Button -->
-                  <!--     Grid.Column="2" -->
-                  <!--     Content="N" /> -->
-                  <!-- -->
-                  <!-- </Grid> -->
+                  <StackPanel IsVisible="{Binding !IsSelectedLocation}">
+                    <Label
+                      x:Name="LabelCityName"
+                      Target="CityName"
+                      Content="Населённый пункт (НП)" />
 
-                  <ListBox
-                    Grid.Row="1"
-                    Width="450"
-                    x:Name="ListBoxClientObjects"
-                    Items="{Binding SortedLocationsOfClient}"
-                    SelectedItem="{Binding SelectedLocation}">
+                    <TextBox
+                      x:Name="CityName"
+                      Text="{Binding CityName}">
 
-                    <i:Interaction.Behaviors>
-                      <ia:EventTriggerBehavior EventName="Tapped">
-                        <ia:InvokeCommandAction
-                          Command="{Binding TappedOnLocationClientItem}"
-                          CommandParameter="{Binding SelectedLocation}" />
-                      </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                      <i:Interaction.Behaviors>
 
+                        <ia:EventTriggerBehavior EventName="KeyUp">
+                          <ia:InvokeCommandAction
+                            Command="{Binding KeyUpCityName}"
+                            CommandParameter="{Binding CityName}" />
+                        </ia:EventTriggerBehavior>
 
-                  </ListBox>
+                        <ia:EventTriggerBehavior EventName="LostFocus">
+                          <ia:InvokeCommandAction
+                            Command="{Binding LostFocusCityName}"
+                            CommandParameter="{Binding SelectedCity}" />
+                        </ia:EventTriggerBehavior>
 
-                </Grid>
+                      </i:Interaction.Behaviors>
+
+                    </TextBox>
+
+                  </StackPanel>
+
+                  <StackPanel IsVisible="{Binding !IsSelectedLocation}">
+
+                    <StackPanel IsVisible="{Binding CityName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                      <Label
+                        x:Name="LabelStreetName"
+                        Target="StreetName"
+                        Content="Улица" />
+                      <TextBox
+                        x:Name="StreetName"
+                        Text="{Binding StreetName}">
+
+                        <i:Interaction.Behaviors>
+
+                          <ia:EventTriggerBehavior EventName="KeyUp">
+                            <ia:InvokeCommandAction
+                              Command="{Binding KeyUpStreetName}"
+                              CommandParameter="{Binding StreetName}" />
+                          </ia:EventTriggerBehavior>
+
+                          <ia:EventTriggerBehavior EventName="LostFocus">
+                            <ia:InvokeCommandAction
+                              Command="{Binding LostFocusStreetName}"
+                              CommandParameter="{Binding StreetName}" />
+                          </ia:EventTriggerBehavior>
+
+                        </i:Interaction.Behaviors>
+
+                      </TextBox>
+
+                    </StackPanel>
+
+                    <StackPanel
+                      IsVisible="{Binding StreetName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                      <Label
+                        x:Name="LabelHouseNumber"
+                        Target="HouseNumber"
+                        Content="Номер дома" />
+                      <TextBox
+                        x:Name="HouseNumber"
+                        Text="{Binding HouseNumber}">
+
+                        <i:Interaction.Behaviors>
+
+                          <ia:EventTriggerBehavior EventName="KeyUp">
+                            <ia:InvokeCommandAction
+                              Command="{Binding KeyUpHouseNumber}"
+                              CommandParameter="{Binding HouseNumber}" />
+                          </ia:EventTriggerBehavior>
+
+                        </i:Interaction.Behaviors>
+
+                      </TextBox>
+
+                    </StackPanel>
+                    
+                  </StackPanel>
+                  
+                  <StackPanel>
+                    <Label
+                      x:Name="LabelAdditionalInfo"
+                      Target="TextBoxAdditionalInfo"
+                      Content="Дополнительная информация" />
+                    <Grid>
+                      <TextBox
+                        x:Name="TextBoxAdditionalInfo"
+                        Text="{Binding AdditionalInfo}"
+                        IsEnabled="{Binding !IsSelectedLocation}">
+
+                        <i:Interaction.Behaviors>
+
+                          <ia:EventTriggerBehavior EventName="KeyUp">
+                            <ia:InvokeCommandAction
+                              Command="{Binding KeyUpAdditionalInfo}"
+                              CommandParameter="{Binding AdditionalInfo}" />
+                          </ia:EventTriggerBehavior>
+
+                        </i:Interaction.Behaviors>
+
+                      </TextBox>
+
+                      <Button
+                        x:Name="ButtonCancelSelectLocation"
+                        Content="x"
+                        ZIndex="1"
+                        HorizontalAlignment="Right"
+                        Command="{Binding OnClickButtonCancelSelectLocation}"
+                        IsVisible="{Binding AdditionalInfo, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                    </Grid>
+                  </StackPanel>
+
+                  <CheckBox
+                    x:Name="CheckBoxLocationAsFolder"
+                    Content="НП - как папка, например у МОНЕТКИ"
+                    IsEnabled="False" />
+
+                </StackPanel>
 
               </Border>
 
             </Grid>
 
-            <!-- Панель - `Действий - настроек` -->
-            <StackPanel
-              Grid.Column="1"
-              Orientation="Horizontal">
+            <!-- Группа - `Создать папки` -->
+            <Grid
+              RowDefinitions="Auto, *"
+              ColumnDefinitions="Auto, *"
+              Margin="0 6 6 0"
+              IsVisible="{Binding IsLocationAvailable}">
 
-              <StackPanel>
-                <!-- Групп - `Новый объект` -->
-                <Grid
-                  x:Name="GridLocation"
-                  RowDefinitions="Auto, *"
-                  ColumnDefinitions="Auto, *"
-                  Margin="6">
+              <!-- Заголовок группы - `Создать папки` -->
+              <Border
+                Grid.Row="0" Grid.Column="0"
+                ZIndex="1"
+                Padding="0,0"
+                Margin="6,0,0,0"
+                BorderBrush="white"
+                BorderThickness="1"
+                CornerRadius="6">
 
-                  <!-- Заголоквок группы - `Новый объект` -->
-                  <Border
-                    ZIndex="1"
-                    Padding="0,0"
-                    Margin="6,0,0,0"
-                    BorderBrush="white"
-                    BorderThickness="1"
-                    CornerRadius="6">
+                <Label>Создать папки</Label>
 
-                    <Label
-                      x:Name="LabelGridLocation"
-                      Target="GridLocation"
-                      Content="Объект (локация)"/>
+              </Border>
 
-                  </Border>
+              <!-- Контент группы - `Создать папки` -->
+              <Border
 
-                  <!-- Контент группы - `Новый объект` -->
-                  <Border
+                Grid.Row="0" Grid.Column="0"
+                Grid.RowSpan="2" Grid.ColumnSpan="2"
+                Margin="0,12,0,0"
+                Padding="6,12,6,6"
+                BorderThickness="1"
+                BorderBrush="White"
+                CornerRadius="6">
 
-                    Grid.Row="0" Grid.Column="0"
-                    Grid.RowSpan="2" Grid.ColumnSpan="2"
-                    Margin="0,12,0,0"
-                    Padding="6,12,6,6"
-                    BorderThickness="1"
-                    BorderBrush="White"
-                    CornerRadius="6">
+                <StackPanel>
 
-                    <StackPanel>
+                  <!-- Отметить папки для создания -->
+                  <Grid
+                    IsVisible="True"
+                    RowDefinitions="*, *"
+                    ColumnDefinitions="Auto, *">
 
-                      <StackPanel IsVisible="{Binding !IsSelectedLocation}">
-                        <Label
-                          x:Name="LabelCityName"
-                          Target="CityName"
-                          Content="Населённый пункт (НП)" />
-                        <TextBox
-                          x:Name="CityName"
-                          Text="{Binding CityName}">
+                    <ListBox
+                      Grid.Row="0" Grid.Column="0"
+                      Grid.ColumnSpan="2"
+                      Items="{Binding FoldersForCreate}"
+                      Background="Transparent">
+                      <ListBox.Styles>
 
-                          <i:Interaction.Behaviors>
+                        <Style Selector="ListBoxItem">
+                          <Setter Property="Background" Value="Transparent" />
+                          <Setter Property="BorderBrush" Value="Transparent" />
+                          <Setter Property="BorderThickness" Value="0" />
+                          <Setter Property="Padding" Value="0 0" />
+                          <Setter Property="Template">
+                            <ControlTemplate>
+                              <ContentPresenter
+                                Name="PART_ContentPresenter"
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Background="Transparent"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                CornerRadius="{TemplateBinding CornerRadius}">
 
-                            <ia:EventTriggerBehavior EventName="KeyUp">
-                              <ia:InvokeCommandAction
-                                Command="{Binding KeyUpCityName}"
-                                CommandParameter="{Binding CityName}" />
-                            </ia:EventTriggerBehavior>
+                              </ContentPresenter>
+                            </ControlTemplate>
+                          </Setter>
+                        </Style>
+                      </ListBox.Styles>
 
-                            <ia:EventTriggerBehavior EventName="LostFocus">
-                              <ia:InvokeCommandAction
-                                Command="{Binding LostFocusCityName}"
-                                CommandParameter="{Binding SelectedCity}" />
-                            </ia:EventTriggerBehavior>
+                      <ListBox.ItemTemplate>
+                        <DataTemplate>
+                          <StackPanel>
+                            <CheckBox
+                              Content="{Binding FolderName}"
+                              IsChecked="{Binding IsCheck}"
+                              IsEnabled="{Binding IsEnable}" />
+                          </StackPanel>
+                        </DataTemplate>
+                      </ListBox.ItemTemplate>
 
-                          </i:Interaction.Behaviors>
+                    </ListBox>
 
-                        </TextBox>
+                    <!--TODO Добавить кнопку или чекбокс 'Все стандартные" -->
 
-                      </StackPanel>
+                    <CheckBox
+                      Grid.Row="1" Grid.Column="0"
+                      x:Name="CheckBoxFolderNameUserVersion"
+                      IsChecked="{Binding FolderNameUserVersionIsCheck}"
+                      IsEnabled="False" />
+                    <TextBox
+                      Grid.Row="1" Grid.Column="1"
+                      x:Name="TextBoxFolderNameUserVersion"
+                      Text="{Binding FolderNameUserVersion}">
 
-                      <StackPanel IsVisible="{Binding !IsSelectedLocation}">
-                        <Label
-                          x:Name="LabelStreetName"
-                          Target="StreetName"
-                          Content="Улица" />
-                        <TextBox
-                          x:Name="StreetName"
-                          Text="{Binding StreetName}">
+                      <i:Interaction.Behaviors>
 
-                          <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="KeyUp">
+                          <ia:InvokeCommandAction
+                            Command="{Binding KeyUpFolderNameUserVersion}"
+                            CommandParameter="{Binding FolderNameUserVersion}" />
+                        </ia:EventTriggerBehavior>
 
-                            <ia:EventTriggerBehavior EventName="KeyUp">
-                              <ia:InvokeCommandAction
-                                Command="{Binding KeyUpStreetName}"
-                                CommandParameter="{Binding StreetName}" />
-                            </ia:EventTriggerBehavior>
+                      </i:Interaction.Behaviors>
 
-                            <ia:EventTriggerBehavior EventName="LostFocus">
-                              <ia:InvokeCommandAction
-                                Command="{Binding LostFocusStreetName}"
-                                CommandParameter="{Binding StreetName}" />
-                            </ia:EventTriggerBehavior>
-
-                          </i:Interaction.Behaviors>
-
-                        </TextBox>
-
-                      </StackPanel>
-
-                      <StackPanel IsVisible="{Binding !IsSelectedLocation}">
-                        <Label
-                          x:Name="LabelHouseNumber"
-                          Target="HouseNumber"
-                          Content="Номер дома" />
-                        <TextBox
-                          x:Name="HouseNumber"
-                          Text="{Binding HouseNumber}">
-
-                          <i:Interaction.Behaviors>
-
-                            <ia:EventTriggerBehavior EventName="KeyUp">
-                              <ia:InvokeCommandAction
-                                Command="{Binding KeyUpHouseNumber}"
-                                CommandParameter="{Binding HouseNumber}" />
-                            </ia:EventTriggerBehavior>
-
-                          </i:Interaction.Behaviors>
-
-                        </TextBox>
-
-                      </StackPanel>
-
-                      <StackPanel>
-                        <Label
-                          x:Name="LabelAdditionalInfo"
-                          Target="TextBoxAdditionalInfo"
-                          Content="Дополнительная информация"/>
-                        <Grid>
-                          <TextBox
-                            x:Name="TextBoxAdditionalInfo"
-                            Text="{Binding AdditionalInfo}"
-                            IsEnabled="{Binding !IsSelectedLocation}">
-
-                            <i:Interaction.Behaviors>
-
-                              <ia:EventTriggerBehavior EventName="KeyUp">
-                                <ia:InvokeCommandAction
-                                  Command="{Binding KeyUpAdditionalInfo}"
-                                  CommandParameter="{Binding AdditionalInfo}" />
-                              </ia:EventTriggerBehavior>
-
-                            </i:Interaction.Behaviors>
-                            
-                          </TextBox>
-
-                          <Button
-                            x:Name="ButtonCancelSelectLocation"
-                            Content="x"
-                            ZIndex="1"
-                            HorizontalAlignment="Right"
-                            Command="{Binding OnClickButtonCancelSelectLocation}"
-                            IsVisible="{Binding IsSelectedLocation}"/>
-                        </Grid>
-                      </StackPanel>
-                      <CheckBox
-                        x:Name="CheckBoxLocationAsFolder"
-                        Content="НП - как папка, например у МОНЕТКИ"
-                        IsEnabled="False" />
-
-                    </StackPanel>
-
-                  </Border>
-
-                </Grid>
-
-                <!-- Группа - `Создать папки` -->
-                <Grid
-                  RowDefinitions="Auto, *"
-                  ColumnDefinitions="Auto, *"
-                  Margin="6">
-
-                  <!-- Заголовок группы - `Создать папки` -->
-                  <Border
-                    Grid.Row="0" Grid.Column="0"
-                    ZIndex="1"
-                    Padding="0,0"
-                    Margin="6,0,0,0"
-                    BorderBrush="white"
-                    BorderThickness="1"
-                    CornerRadius="6">
-
-                    <Label>Создать папки</Label>
-
-                  </Border>
-
-                  <!-- Контент группы - `Создать папки` -->
-                  <Border
-
-                    Grid.Row="0" Grid.Column="0"
-                    Grid.RowSpan="2" Grid.ColumnSpan="2"
-                    Margin="0,12,0,0"
-                    Padding="6,12,6,6"
-                    BorderThickness="1"
-                    BorderBrush="White"
-                    CornerRadius="6">
-
-                    <StackPanel>
-
-                      <!-- Отметить папки для создания -->
-                      <Grid
-                        IsVisible="True"
-                        RowDefinitions="*, *"
-                        ColumnDefinitions="Auto, *">
-
-                        <ListBox
-                          Grid.Row="0" Grid.Column="0"
-                          Grid.ColumnSpan="2"
-                          Items="{Binding FoldersForCreate}"
-                          Background="Transparent">
-                          <ListBox.Styles>
-
-                            <Style Selector="ListBoxItem">
-                              <Setter Property="Background" Value="Transparent" />
-                              <Setter Property="BorderBrush" Value="Transparent" />
-                              <Setter Property="BorderThickness" Value="0" />
-                              <Setter Property="Padding" Value="0 0" />
-                              <Setter Property="Template">
-                                <ControlTemplate>
-                                  <ContentPresenter
-                                    Name="PART_ContentPresenter"
-                                    Padding="{TemplateBinding Padding}"
-                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                    Background="Transparent"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                    Content="{TemplateBinding Content}"
-                                    ContentTemplate="{TemplateBinding ContentTemplate}"
-                                    CornerRadius="{TemplateBinding CornerRadius}">
-
-                                  </ContentPresenter>
-                                </ControlTemplate>
-                              </Setter>
-                            </Style>
-                          </ListBox.Styles>
-
-                          <ListBox.ItemTemplate>
-                            <DataTemplate>
-                              <StackPanel>
-                                <CheckBox
-                                  Content="{Binding FolderName}"
-                                  IsChecked="{Binding IsCheck}"
-                                  IsEnabled="{Binding IsEnable}" />
-                              </StackPanel>
-                            </DataTemplate>
-                          </ListBox.ItemTemplate>
-
-                        </ListBox>
-
-                        <!--TODO Добавить кнопку или чекбокс 'Все стандартные" -->
-
-                        <CheckBox
-                          Grid.Row="1" Grid.Column="0"
-                          x:Name="CheckBoxFolderNameUserVersion"
-                          IsChecked="{Binding FolderNameUserVersionIsCheck}"
-                          IsEnabled="False" />
-                        <TextBox
-                          Grid.Row="1" Grid.Column="1"
-                          x:Name="TextBoxFolderNameUserVersion"
-                          Text="{Binding FolderNameUserVersion}">
-
-                          <i:Interaction.Behaviors>
-
-                            <ia:EventTriggerBehavior EventName="KeyUp">
-                              <ia:InvokeCommandAction
-                                Command="{Binding KeyUpFolderNameUserVersion}"
-                                CommandParameter="{Binding FolderNameUserVersion}" />
-                            </ia:EventTriggerBehavior>
-
-                          </i:Interaction.Behaviors>
-
-                        </TextBox>
+                    </TextBox>
 
 
-                      </Grid>
+                  </Grid>
 
 
-                    </StackPanel>
-                  </Border>
+                </StackPanel>
+              </Border>
 
-                </Grid>
+            </Grid>
 
-              </StackPanel>
+          </StackPanel>
 
 
-            </StackPanel>
+        </StackPanel>
 
-          </Grid>
+        <!-- Группа - `Существующие клиенты` -->
+        <Grid
+          Grid.Row="1"
+          Grid.Column="1"
+          RowDefinitions="Auto, *"
+          ColumnDefinitions="Auto, *"
+          Margin="0 6 0 0"
+          IsVisible="{Binding IsLocationOfClientEmpty}">
+          <!-- IsVisible="{Binding IsLocationOfClientEmpty}" -->
+
+          <!-- Заголовок группы - `Существующие клиенты` -->
+          <Border
+            Grid.Row="0" Grid.Column="0"
+            ZIndex="1"
+            Padding="0,0"
+            Margin="6,0,0,0"
+            BorderBrush="white"
+            BorderThickness="1"
+            CornerRadius="6">
+
+            <Label>Существующие клиенты</Label>
+
+          </Border>
+
+          <!-- Контент группы - `Существующие клиенты` -->
+          <Border
+            Grid.Row="0" Grid.Column="0"
+            Grid.RowSpan="2" Grid.ColumnSpan="2"
+            Margin="0,12,0,0"
+            Padding="6,18,6,6"
+            BorderThickness="1"
+            BorderBrush="White"
+            CornerRadius="6">
+
+            <Grid
+              RowDefinitions="Auto, *">
+
+              <!-- Лист клиентов -->
+              <ListBox
+                Grid.Row="1"
+                Items="{Binding SortedClients}"
+                SelectedItem="{Binding SelectedClient}">
+
+                <i:Interaction.Behaviors>
+                  <ia:EventTriggerBehavior EventName="Tapped">
+                    <ia:InvokeCommandAction
+                      Command="{Binding OpenClient}"
+                      CommandParameter="{Binding SelectedClient}" />
+                  </ia:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+
+                <ListBox.ItemTemplate>
+                  <DataTemplate>
+
+                    <Grid
+                      ColumnDefinitions="Auto, *">
+
+                      <Image
+                        Grid.Column="0"
+                        Height="50"
+
+                        Source="{Binding Icon}"
+                        Stretch="Uniform" />
+
+                      <TextBlock
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Margin="6 0 0 0"
+                        Text="{Binding  Name}" />
+
+                    </Grid>
+
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+
+
+              </ListBox>
+
+
+            </Grid>
+
+          </Border>
 
         </Grid>
+
+        <!-- Группа - `Существующие объекты` -->
+        <Grid
+          Grid.Row="1"
+          Grid.Column="1"
+          RowDefinitions="Auto, *"
+          ColumnDefinitions="Auto, *"
+          Margin="0 6 0 0"
+          IsVisible="{Binding !IsLocationOfClientEmpty}">
+          <!-- IsVisible="{Binding !IsLocationOfClientEmpty}" -->
+
+          <!-- Title - `Существующий объект` -->
+          <Border
+            Grid.Row="0" Grid.Column="0"
+            ZIndex="1"
+            Padding="0,0"
+            Margin="6,0,0,0"
+            BorderBrush="white"
+            BorderThickness="1"
+            CornerRadius="6">
+
+            <Label>Существующие объекты</Label>
+
+          </Border>
+
+          <!-- Content - `Существующие объекты` -->
+          <Border
+            Grid.Row="0" Grid.Column="0"
+            Grid.RowSpan="2" Grid.ColumnSpan="2"
+            Margin="0,12,0,0"
+            Padding="6,18,6,6"
+            BorderThickness="1"
+            BorderBrush="White"
+            CornerRadius="6">
+
+            <Grid
+              RowDefinitions="Auto, *">
+
+              <ListBox
+                Grid.Row="1"
+                x:Name="ListBoxClientObjects"
+                Items="{Binding SortedLocationsOfClient}"
+                SelectedItem="{Binding SelectedLocation}">
+
+                <i:Interaction.Behaviors>
+                  <ia:EventTriggerBehavior EventName="Tapped">
+                    <ia:InvokeCommandAction
+                      Command="{Binding TappedOnLocationClientItem}"
+                      CommandParameter="{Binding SelectedLocation}" />
+                  </ia:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+
+              </ListBox>
+
+            </Grid>
+
+          </Border>
+
+        </Grid>
+
       </Grid>
 
       <!-- Панель - `Кнопок` -->
@@ -643,8 +646,13 @@
         <Button
           x:Name="ButtonCreateDirectory"
           Content="Создать каталоги"
-          Command="{Binding OnClickButtonCreateDirectory}" />
-        <Button x:Name="ButtonCancel" Content="Отмена"></Button>
+          Command="{Binding OnClickButtonCreateDirectory}"
+          Margin="3 6" />
+
+        <Button
+          x:Name="ButtonCancel"
+          Content="Отмена"
+          Margin="3 6" />
 
       </StackPanel>
 
@@ -654,6 +662,28 @@
         Background="Gray">
         <Label x:Name="LabelInfo"
                Content="{Binding StatusInfo}" />
+
+        <!-- Выделенный клиент -->
+        <Border
+          BorderBrush="Blue"
+          BorderThickness="2">
+
+          <StackPanel>
+            <TextBlock
+              Text="{Binding SelectedClient.Name}" />
+            <TextBlock
+              Text="{Binding SelectedClient.ClientPath}" />
+
+            <!-- <Button Content="Init client folder" -->
+            <!--         IsVisible="{Binding !IsInitClient}" /> -->
+
+            <TextBlock
+              Text="{Binding SelectedLocation}" />
+
+          </StackPanel>
+
+
+        </Border>
       </StackPanel>
 
     </Grid>
