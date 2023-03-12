@@ -205,7 +205,7 @@
               ColumnDefinitions="Auto, *"
               Margin="0 6 6 0"
               IsVisible="{Binding ClientFilter, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-
+              
               <!-- Title - `Объект (локация)` -->
               <Border
                 Grid.Row="0" Grid.Column="0"
@@ -242,6 +242,8 @@
                       Target="CityName"
                       Content="Населённый пункт (НП)" />
 
+                    <Grid>
+                      
                     <TextBox
                       x:Name="CityName"
                       Text="{Binding CityName}">
@@ -263,71 +265,114 @@
                       </i:Interaction.Behaviors>
 
                     </TextBox>
+                    
+                    <Button
+                      x:Name="ButtonClearCityName"
+                      Command="{Binding OnClickButtonClearCityName}"
+                      Content="X"
+                      HorizontalAlignment="Right"
+                      IsVisible="{Binding CityName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                      ZIndex="1"/>
 
+                    </Grid>
                   </StackPanel>
 
-                  <StackPanel IsVisible="{Binding !IsSelectedLocation}">
+                  <StackPanel
+IsVisible="{Binding !IsSelectedLocation}"
+                    >
 
-                    <StackPanel IsVisible="{Binding CityName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                    <StackPanel
+                      IsVisible="{Binding CityName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                      >
+                      
                       <Label
                         x:Name="LabelStreetName"
                         Target="StreetName"
                         Content="Улица" />
-                      <TextBox
-                        x:Name="StreetName"
-                        Text="{Binding StreetName}">
+                      
+                      
+                      <Grid>
+                        <TextBox
+                          x:Name="StreetName"
+                          Text="{Binding StreetName}">
 
-                        <i:Interaction.Behaviors>
+                          <i:Interaction.Behaviors>
 
-                          <ia:EventTriggerBehavior EventName="KeyUp">
-                            <ia:InvokeCommandAction
-                              Command="{Binding KeyUpStreetName}"
-                              CommandParameter="{Binding StreetName}" />
-                          </ia:EventTriggerBehavior>
+                            <ia:EventTriggerBehavior EventName="KeyUp">
+                              <ia:InvokeCommandAction
+                                Command="{Binding KeyUpStreetName}"
+                                CommandParameter="{Binding StreetName}" />
+                            </ia:EventTriggerBehavior>
 
-                          <ia:EventTriggerBehavior EventName="LostFocus">
-                            <ia:InvokeCommandAction
-                              Command="{Binding LostFocusStreetName}"
-                              CommandParameter="{Binding StreetName}" />
-                          </ia:EventTriggerBehavior>
+                            <ia:EventTriggerBehavior EventName="LostFocus">
+                              <ia:InvokeCommandAction
+                                Command="{Binding LostFocusStreetName}"
+                                CommandParameter="{Binding StreetName}" />
+                            </ia:EventTriggerBehavior>
 
-                        </i:Interaction.Behaviors>
+                          </i:Interaction.Behaviors>
 
-                      </TextBox>
-
+                        </TextBox>
+                        
+                        <Button
+                          x:Name="ButtonClearStreetName"
+                          Command="{Binding OnClickButtonClearStreetName}"
+                          Content="X"
+                          HorizontalAlignment="Right"
+                          IsVisible="{Binding StreetName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                          ZIndex="1"/>
+                        
+                      </Grid>
+                      
                     </StackPanel>
 
                     <StackPanel
-                      IsVisible="{Binding StreetName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                      IsVisible="{Binding StreetName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                      >
+                      
                       <Label
                         x:Name="LabelHouseNumber"
                         Target="HouseNumber"
                         Content="Номер дома" />
-                      <TextBox
-                        x:Name="HouseNumber"
-                        Text="{Binding HouseNumber}">
+                      
+                      <Grid>
+                        
+                        <TextBox
+                          x:Name="HouseNumber"
+                          Text="{Binding HouseNumber}">
 
-                        <i:Interaction.Behaviors>
+                          <i:Interaction.Behaviors>
 
-                          <ia:EventTriggerBehavior EventName="KeyUp">
-                            <ia:InvokeCommandAction
-                              Command="{Binding KeyUpHouseNumber}"
-                              CommandParameter="{Binding HouseNumber}" />
-                          </ia:EventTriggerBehavior>
+                            <ia:EventTriggerBehavior EventName="KeyUp">
+                              <ia:InvokeCommandAction
+                                Command="{Binding KeyUpHouseNumber}"
+                                CommandParameter="{Binding HouseNumber}" />
+                            </ia:EventTriggerBehavior>
 
-                        </i:Interaction.Behaviors>
+                          </i:Interaction.Behaviors>
 
-                      </TextBox>
+                        </TextBox>
 
+                        <Button
+                          x:Name="ButtonClearHouseNumber"
+                          Command="{Binding OnClickButtonClearHouseNumber}"
+                          Content="X"
+                          HorizontalAlignment="Right"
+                          IsVisible="{Binding HouseNumber, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                          ZIndex="1"/>
+                        
+                      </Grid>
                     </StackPanel>
                     
                   </StackPanel>
                   
                   <StackPanel>
+                    
                     <Label
                       x:Name="LabelAdditionalInfo"
                       Target="TextBoxAdditionalInfo"
                       Content="Дополнительная информация" />
+                    
                     <Grid>
                       <TextBox
                         x:Name="TextBoxAdditionalInfo"
@@ -347,13 +392,14 @@
                       </TextBox>
 
                       <Button
-                        x:Name="ButtonCancelSelectLocation"
+                        x:Name="ButtonClearAdditionalInfo"
                         Content="x"
                         ZIndex="1"
                         HorizontalAlignment="Right"
-                        Command="{Binding OnClickButtonCancelSelectLocation}"
+                        Command="{Binding OnClickButtonClearAdditionalInfo}"
                         IsVisible="{Binding AdditionalInfo, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                     </Grid>
+                    
                   </StackPanel>
 
                   <CheckBox

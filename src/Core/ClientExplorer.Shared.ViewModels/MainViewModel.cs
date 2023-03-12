@@ -365,6 +365,43 @@ public class MainViewModel : BaseViewModel
   public bool IsLocationAvailable { get; set; } = false;
 
   #endregion
+
+  #region Public Methods
+
+  public void OnClickButtonClearCityName()
+  {
+    //TODO OnClickButtonClearCityName
+    // Очистить Название Города
+    // Отменить фильтр списка (города)
+    // Очистить Название улицы, номер дома.
+    // Очистить списки улиц, списки номеров домов
+    OnClickButtonClearStreetName();
+    CityName = SelectedCity = string.Empty;
+    ApplyFilterToCitiesName(CityName);
+  }
+
+  public void OnClickButtonClearStreetName()
+  {
+    //TODO ButtonClearStreetName
+    // Очистить Название улицы
+    // Отменить фильтр с названия улиц
+    // Очистить номер дома
+    // Очистить список номеров домов
+    OnClickButtonClearHouseNumber();
+    StreetName = SelectedStreet = string.Empty;
+    InitStreetsName();
+  }
+
+  public void OnClickButtonClearHouseNumber()
+  {
+    //TODO OnClickButtonClearHouseNumber
+    // Очистить номер дома
+    // Применить филтр по списку номеров домов
+    HouseNumber = SelectedHouseNumber = string.Empty;
+    InitHouseNumbers();
+  }
+  
+  #endregion
   
   #region Events
 
@@ -435,7 +472,7 @@ public class MainViewModel : BaseViewModel
 
   private bool CheckLocationToAvailable()
   {
-    return !string.IsNullOrEmpty(CityName) || !string.IsNullOrEmpty(CityName);
+    return !string.IsNullOrEmpty(CityName) || !string.IsNullOrEmpty(AdditionalInfo);
   }
 
   /// <summary>
@@ -606,12 +643,13 @@ public class MainViewModel : BaseViewModel
   /// <summary>
   /// Комманда. Нажитие на кнопку сброса выделенного объекта (локации).
   /// </summary>
-  public void OnClickButtonCancelSelectLocation()
+  public void OnClickButtonClearAdditionalInfo()
   {
     IsSelectedLocation = false;
     SelectedLocation = null;
     AdditionalInfo = string.Empty;
     ApplyFilterToLocationOfClient();
+    IsLocationAvailable = CheckLocationToAvailable();
   }
 
   #endregion
@@ -805,6 +843,9 @@ public class MainViewModel : BaseViewModel
   private void SelectLocation(object param)
   {
     AdditionalInfo = SelectedLocation;
+    CityName = string.Empty;
+    StreetName = string.Empty;
+    HouseNumber = string.Empty;
     ApplyFilterToLocationOfClient();
     SelectedLocation = SortedLocationsOfClient[0];
     CheckLocationForFolders();
