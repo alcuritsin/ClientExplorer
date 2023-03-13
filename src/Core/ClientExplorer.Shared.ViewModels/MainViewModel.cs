@@ -13,6 +13,7 @@ public class MainViewModel : BaseViewModel
 
   //Info панель
   public string StatusInfo { get; set; }
+  public string CurrentInfo { get; set; }
 
   #endregion
 
@@ -25,13 +26,15 @@ public class MainViewModel : BaseViewModel
     //Хардкодим путь до папок с клиентами на время разработки и тестирования.
     //В будущем значение будет вынесено в файл настроек "*.ini".
     //Или будем использовать путь расположения программы, т.к. программа рассчитана и на Windows и на Linux.
-    ClientEr.CurrentPath = "/mnt/share/Clients";
+    ClientEr.CurrentPath = "../";
+    // ClientEr.CurrentPath = "/mnt/share/Clients";
+    CurrentInfo = AppDomain.CurrentDomain.BaseDirectory;
 
     #region Client
 
     OpenClient = new DelegateCommand(SelectClient);
     KeyUpClientName = new DelegateCommand(ApplyFilterToClientsList);
-
+    
     InitClientListAsync();
 
     #endregion
@@ -177,6 +180,7 @@ public class MainViewModel : BaseViewModel
     ClientFilter = string.Empty;
 
     SelectedLocation = string.Empty;
+    FoldersForCreateDefault();
     SortedLocationsOfClient.Clear();
 
     IsLocationOfClientEmpty = SortedLocationsOfClient.Count <= 0;
@@ -207,9 +211,14 @@ public class MainViewModel : BaseViewModel
 
     ApplyFilterToClientsList(ClientFilter);
 
-    SelectedClient = SortedClients[0];
+    if (SortedClients.Count == 1) SelectedClient = SortedClients[0];
 
     LoadClientLocation();
+
+    if (string.IsNullOrEmpty(CityName) || string.IsNullOrEmpty(AdditionalInfo))
+    {
+      ApplyFilterToLocationOfClient();
+    }
   }
 
   /// <summary>
@@ -222,6 +231,7 @@ public class MainViewModel : BaseViewModel
   {
     // Сброс листа объектов клиента.
     SortedLocationsOfClient.Clear();
+    SelectedClient = null;
     IsLocationOfClientEmpty = SortedLocationsOfClient.Count <= 0;
 
     var clientFilter = ClientFilter;
@@ -268,6 +278,8 @@ public class MainViewModel : BaseViewModel
     {
       SelectedClient = SortedClients[0];
       LoadClientLocation();
+
+      ApplyFilterToLocationOfClient();
     }
 
     StatusInfo += " SortedClients.Count: " + SortedClients.Count;
@@ -294,6 +306,12 @@ public class MainViewModel : BaseViewModel
     SortedClients.Clear();
 
     var directoryInfo = new DirectoryInfo(ClientEr.CurrentPath);
+
+    if (!Directory.Exists(ClientEr.CurrentPath))
+    {
+      StatusInfo = "Err: CurrentPath  - not available...";
+      return Task.CompletedTask;
+    }
 
     foreach (var directory in directoryInfo.GetDirectories())
     {
@@ -400,9 +418,9 @@ public class MainViewModel : BaseViewModel
     HouseNumber = SelectedHouseNumber = string.Empty;
     InitHouseNumbers();
   }
-  
+
   #endregion
-  
+
   #region Events
 
   public ICommand KeyUpCityName { get; }
@@ -463,7 +481,7 @@ public class MainViewModel : BaseViewModel
         CitiesFiltered.Add(cityName);
       }
     }
-    
+
     IsLocationAvailable = CheckLocationToAvailable();
 
     ApplyFilterToLocationOfClient();
@@ -635,7 +653,7 @@ public class MainViewModel : BaseViewModel
       IsLocationAvailable = CheckLocationToAvailable();
       return;
     }
-    
+
     ApplyFilterToLocationOfClient();
     IsLocationAvailable = CheckLocationToAvailable();
   }
@@ -646,7 +664,8 @@ public class MainViewModel : BaseViewModel
   public void OnClickButtonClearAdditionalInfo()
   {
     IsSelectedLocation = false;
-    SelectedLocation = null;
+    SelectedLocation = string.Empty;
+    FoldersForCreateDefault();
     AdditionalInfo = string.Empty;
     ApplyFilterToLocationOfClient();
     IsLocationAvailable = CheckLocationToAvailable();
@@ -812,7 +831,7 @@ public class MainViewModel : BaseViewModel
   #endregion
 
   #endregion
-  
+
   //Существующие объекты клиента
 
   #region Location of Client
@@ -946,14 +965,14 @@ public class MainViewModel : BaseViewModel
         }
       }
     }
-    
+
     IsLocationOfClientEmpty = SortedLocationsOfClient.Count <= 0;
   }
 
   #endregion
 
   #endregion
-  
+
   //Папки
 
   #region Folders
@@ -1022,6 +1041,18 @@ public class MainViewModel : BaseViewModel
     }
   }
 
+  /// <summary>
+  /// Установка полей IsCheck, IsEnable в состояние по-умолчанию
+  /// </summary>
+  private void FoldersForCreateDefault()
+  {
+    foreach (var folderForCreate in FoldersForCreate)
+    {
+      folderForCreate.IsCheck = false;
+      folderForCreate.IsEnable = true;
+    }
+  }
+
   #endregion
 
   // Кнопки
@@ -1033,7 +1064,7 @@ public class MainViewModel : BaseViewModel
   /// <summary>
   /// Комманда. Запуск алгоритма создания директорий
   /// </summary>
-  public void OnClickButtonCreateDirectory()
+  public async Task OnClickButtonCreateDirectory()
   {
     var clientPath = string.Empty;
 
@@ -1077,6 +1108,10 @@ public class MainViewModel : BaseViewModel
         CreateFolder(locationPath, new DirectoryEntity(FolderNameUserVersion));
       }
     }
+
+    await InitClientListAsync();
+
+    ApplyFilterToClientsList(ClientFilter);
   }
 
   #endregion
