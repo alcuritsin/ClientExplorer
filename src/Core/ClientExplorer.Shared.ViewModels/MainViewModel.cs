@@ -26,8 +26,9 @@ public class MainViewModel : BaseViewModel
     //Хардкодим путь до папок с клиентами на время разработки и тестирования.
     //В будущем значение будет вынесено в файл настроек "*.ini".
     //Или будем использовать путь расположения программы, т.к. программа рассчитана и на Windows и на Linux.
-    ClientEr.CurrentPath = "../";
-    // ClientEr.CurrentPath = "/mnt/share/Clients";
+    // ClientEr.CurrentPath = "../";
+    ClientEr.CurrentPath = "/mnt/share/Clients";
+    
     CurrentInfo = AppDomain.CurrentDomain.BaseDirectory;
 
     #region Client
@@ -889,6 +890,7 @@ public class MainViewModel : BaseViewModel
     SortedLocationsOfClient.Clear();
     _locationsOfClient.Clear();
 
+    //TODO Bag. После создания папки клиентка без создания объекта нет выделенного клиента!!!
     if (SelectedClient.ClientPath == null)
     {
       StatusInfo = "Err: SelectedClient.ClientPath == null";

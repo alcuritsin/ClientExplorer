@@ -88,6 +88,8 @@ public class AddressLocationViewModel : BaseViewModel
 
     LoadAddressLocations();
 
+    UniqLocation();
+    
     OrderLocation();
 
     UploadAddressLocations();
@@ -132,19 +134,6 @@ public class AddressLocationViewModel : BaseViewModel
     AddressLocations = JsonSerializer.Deserialize<ObservableCollection<AddressLocationEntityViewModel>>(fs);
   }
 
-  // private async Task FillAddressLocations()
-  // {
-  //     using (FileStream fs = new FileStream(_locationsFilePath, FileMode.OpenOrCreate, FileAccess.Read))
-  //     {
-  //         //AppData.Locations = await JsonSerializer.DeserializeAsync<ListLocations>(fs); //Это не работало
-  //         AddressLocations = await JsonSerializer.DeserializeAsync<ObservableCollection<AddressLocationEntityViewModel>>(fs);
-  //
-  //         //MessageBox.Show(string.Format("Count: {0}", AppData.Locations.Locations.Count)); //Тут поле пустое == null
-  //         //ListLocations? loc = await JsonSerializer.DeserializeAsync<ListLocations>(fs);
-  //         //Console.WriteLine(loc.Locations.Count.ToString());
-  //     }
-  // }
-
   /// <summary>
   /// Выгрузка текущего списка адресов в файл  
   /// </summary>
@@ -161,7 +150,7 @@ public class AddressLocationViewModel : BaseViewModel
       WriteIndented = true
     };
 
-    using FileStream fs = new FileStream(_locationsFilePath, FileMode.OpenOrCreate);
+    using FileStream fs = new FileStream(_locationsFilePath, FileMode.Create, FileAccess.Write, FileShare.None);
     if (AddressLocations != null) JsonSerializer.Serialize(fs, AddressLocations, options);
   }
 
@@ -198,6 +187,35 @@ public class AddressLocationViewModel : BaseViewModel
         StreetName = addressLoc.Loc.StreetName.Trim(),
         HouseNumber = addressLoc.Loc.HouseNumber.Trim()
       });
+    }
+  }
+
+  private void UniqLocation()
+  {
+    List<AddressLocationEntityViewModel> addressLocsBuffer = AddressLocations.ToList();
+
+    AddressLocations.Clear();
+    
+    foreach (var addressLocBuff in addressLocsBuffer)
+    {
+      var isNewLocation = true;
+
+      foreach (var addressLocation in AddressLocations)
+      {
+        if (Equals(addressLocation.CityName, addressLocBuff.CityName) &&
+            Equals(addressLocation.StreetName, addressLocBuff.StreetName) &&
+            Equals(addressLocation.HouseNumber, addressLocBuff.HouseNumber))
+        {
+          isNewLocation = false;
+          break;
+        }
+      }
+
+      if (isNewLocation)
+      {
+        AddressLocations.Add(addressLocBuff);
+      }
+      
     }
   }
 
