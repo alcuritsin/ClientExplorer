@@ -10,8 +10,7 @@ public class AddressLocationViewModel : BaseViewModel
 {
   #region Public Properties
 
-  public ObservableCollection<AddressLocationEntityViewModel>? AddressLocations { get; private set; } =
-    new ObservableCollection<AddressLocationEntityViewModel>();
+  public ObservableCollection<AddressLocationEntityViewModel> AddressLocations { get; private set; }
 
   #endregion
 
@@ -29,17 +28,8 @@ public class AddressLocationViewModel : BaseViewModel
   /// <param name="houseNumber">
   /// Номер дома
   /// </param>
-  /// <exception cref="Exception">
-  /// Список адресов не может быть пустым
-  /// </exception>
-  public void SaveLocationIfNew(string city, string street, string houseNumber)
+  public bool SaveLocationIfNew(string city, string street, string houseNumber)
   {
-    if (AddressLocations == null)
-    {
-      throw new Exception("Err: " + nameof(AddressLocations) + " == null. In " + nameof(AddressLocationViewModel) +
-                          " class");
-    }
-
     var isNew = true;
 
     foreach (var addressLocation in AddressLocations)
@@ -68,6 +58,8 @@ public class AddressLocationViewModel : BaseViewModel
 
       UploadAddressLocations();
     }
+
+    return isNew;
   }
 
   #endregion
@@ -76,6 +68,8 @@ public class AddressLocationViewModel : BaseViewModel
 
   public AddressLocationViewModel()
   {
+    AddressLocations = new ObservableCollection<AddressLocationEntityViewModel>();
+
     _directoryDataResourcePath =
       ClientEr.CurrentPath + Path.DirectorySeparatorChar + ClientEr.DefaultDataResourcePath;
 
@@ -89,7 +83,7 @@ public class AddressLocationViewModel : BaseViewModel
     LoadAddressLocations();
 
     UniqLocation();
-    
+
     OrderLocation();
 
     UploadAddressLocations();
@@ -130,8 +124,12 @@ public class AddressLocationViewModel : BaseViewModel
   /// </summary>
   private void LoadAddressLocations()
   {
-    using FileStream fs = new FileStream(_locationsFilePath, FileMode.OpenOrCreate, FileAccess.Read);
-    AddressLocations = JsonSerializer.Deserialize<ObservableCollection<AddressLocationEntityViewModel>>(fs);
+    if (Directory.Exists(_locationsFilePath))
+    {
+      using FileStream fs = new FileStream(_locationsFilePath, FileMode.OpenOrCreate, FileAccess.Read);
+      var json = JsonSerializer.Deserialize<ObservableCollection<AddressLocationEntityViewModel>>(fs);
+      if (json != null) AddressLocations = json;
+    }
   }
 
   /// <summary>
@@ -151,23 +149,14 @@ public class AddressLocationViewModel : BaseViewModel
     };
 
     using FileStream fs = new FileStream(_locationsFilePath, FileMode.Create, FileAccess.Write, FileShare.None);
-    if (AddressLocations != null) JsonSerializer.Serialize(fs, AddressLocations, options);
+    JsonSerializer.Serialize(fs, AddressLocations, options);
   }
 
   /// <summary>
   /// Упорядочивает список по Алфавиту. Город+Улица+НомерДома.
   /// </summary>
-  /// <exception cref="Exception">
-  /// Список адресов (локаций) не может быть пустым.
-  /// </exception>
   private void OrderLocation()
   {
-    if (AddressLocations == null)
-    {
-      throw new Exception("Err: " + nameof(AddressLocations) + " == null. In " + nameof(AddressLocationViewModel) +
-                          " class");
-    }
-
     List<AddressLocForOrdered> addressLocs = new List<AddressLocForOrdered>();
 
     foreach (var addressLocation in AddressLocations)
@@ -195,7 +184,7 @@ public class AddressLocationViewModel : BaseViewModel
     List<AddressLocationEntityViewModel> addressLocsBuffer = AddressLocations.ToList();
 
     AddressLocations.Clear();
-    
+
     foreach (var addressLocBuff in addressLocsBuffer)
     {
       var isNewLocation = true;
@@ -215,7 +204,6 @@ public class AddressLocationViewModel : BaseViewModel
       {
         AddressLocations.Add(addressLocBuff);
       }
-      
     }
   }
 

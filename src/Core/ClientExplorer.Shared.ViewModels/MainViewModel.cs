@@ -28,14 +28,14 @@ public class MainViewModel : BaseViewModel
     //Или будем использовать путь расположения программы, т.к. программа рассчитана и на Windows и на Linux.
     // ClientEr.CurrentPath = "../";
     ClientEr.CurrentPath = "/mnt/share/Clients";
-    
+
     CurrentInfo = AppDomain.CurrentDomain.BaseDirectory;
 
     #region Client
 
     OpenClient = new DelegateCommand(SelectClient);
     KeyUpClientName = new DelegateCommand(ApplyFilterToClientsList);
-    
+
     InitClientListAsync();
 
     #endregion
@@ -206,13 +206,20 @@ public class MainViewModel : BaseViewModel
   /// </param>
   private void SelectClient(object param)
   {
-    if (SelectedClient == null) throw new Exception("Err: " + nameof(SelectedClient) + " = null");
+    if (SelectedClient == null)
+    {
+      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(SelectClient),
+        nameof(SelectedClient));
+      Task.Delay(2000);
+      return;
+    }
 
     ClientFilter = SelectedClient.Name;
 
+    var selected = SelectedClient;
     ApplyFilterToClientsList(ClientFilter);
 
-    if (SortedClients.Count == 1) SelectedClient = SortedClients[0];
+    SelectedClient = SortedClients.Count == 1 ? SortedClients[0] : selected;
 
     LoadClientLocation();
 
@@ -232,7 +239,9 @@ public class MainViewModel : BaseViewModel
   {
     // Сброс листа объектов клиента.
     SortedLocationsOfClient.Clear();
-    SelectedClient = null;
+
+    //TODO Bag!!! При создании папки обнуляется Выделенный клиент...
+    // SelectedClient = null;
     IsLocationOfClientEmpty = SortedLocationsOfClient.Count <= 0;
 
     var clientFilter = ClientFilter;
@@ -264,10 +273,6 @@ public class MainViewModel : BaseViewModel
 
     foreach (var client in _clientsList)
     {
-      if (client.Name == null)
-        throw new Exception("Err: " + nameof(ApplyFilterToClientsList) + ". " + nameof(client.Name) +
-                            " = null");
-
       if (client.Name.ToUpper().Contains(clientFilter.ToUpper()))
       {
         SortedClients.Add(client);
@@ -302,7 +307,12 @@ public class MainViewModel : BaseViewModel
   private Task InitClientListAsync()
   {
     if (ClientEr.CurrentPath == null)
-      throw new Exception("Err: " + nameof(InitClientListAsync) + ". " + nameof(ClientEr.CurrentPath) + " = null");
+    {
+      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(InitClientListAsync),
+        nameof(ClientEr.CurrentPath));
+      Task.Delay(2000);
+      return Task.CompletedTask;
+    }
 
     SortedClients.Clear();
 
@@ -694,13 +704,15 @@ public class MainViewModel : BaseViewModel
   private void InitCitiesName()
   {
     if (_addressLocationViewModel.AddressLocations == null)
-      throw new Exception("Err: " + nameof(InitCitiesName) + ". AddressLocations = null");
+    {
+      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(InitCitiesName),
+        nameof(_addressLocationViewModel.AddressLocations));
+      Task.Delay(2000);
+      return;
+    }
 
     foreach (var addressLocation in _addressLocationViewModel.AddressLocations)
     {
-      if (addressLocation.CityName == null)
-        throw new Exception("Err: " + nameof(InitCitiesName) + ". CityName = null");
-
       if (CitiesFiltered.Count == 0)
       {
         _citiesName.Add(addressLocation.CityName);
@@ -733,7 +745,13 @@ public class MainViewModel : BaseViewModel
   private void InitStreetsName()
   {
     if (_addressLocationViewModel.AddressLocations == null)
-      throw new Exception("Err: " + nameof(InitStreetsName) + ". AddressLocations = null");
+    {
+      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(InitStreetsName),
+        nameof(_addressLocationViewModel.AddressLocations));
+      Task.Delay(2000);
+      return;
+
+    }
 
     _streetsName.Clear();
     StreetsFiltered.Clear();
@@ -751,9 +769,6 @@ public class MainViewModel : BaseViewModel
     {
       if (Equals(addressLocation.CityName, CityName))
       {
-        if (addressLocation.StreetName == null)
-          throw new Exception("Err: " + nameof(InitStreetsName) + ". StreetName = null");
-
         if (_streetsName.Count == 0)
         {
           _streetsName.Add(addressLocation.StreetName);
@@ -787,7 +802,12 @@ public class MainViewModel : BaseViewModel
   private void InitHouseNumbers()
   {
     if (_addressLocationViewModel.AddressLocations == null)
-      throw new Exception("Err: " + nameof(InitHouseNumbers) + ". AddressLocations = null");
+    {
+      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(InitHouseNumbers),
+        nameof(_addressLocationViewModel.AddressLocations));
+      Task.Delay(2000);
+      return;
+    }
 
     _houseNumbers.Clear();
     HouseNumbersFiltered.Clear();
@@ -799,9 +819,6 @@ public class MainViewModel : BaseViewModel
     {
       if (Equals(addressLocation.CityName, CityName) && Equals(addressLocation.StreetName, StreetName))
       {
-        if (addressLocation.HouseNumber == null)
-          throw new Exception("Err: " + nameof(InitHouseNumbers) + ". HouseNumber = null");
-
         if (_houseNumbers.Count == 0)
         {
           _houseNumbers.Add(addressLocation.HouseNumber);
@@ -869,6 +886,7 @@ public class MainViewModel : BaseViewModel
     ApplyFilterToLocationOfClient();
     SelectedLocation = SortedLocationsOfClient[0];
     CheckLocationForFolders();
+    
     IsSelectedLocation = true;
   }
 
@@ -890,10 +908,10 @@ public class MainViewModel : BaseViewModel
     SortedLocationsOfClient.Clear();
     _locationsOfClient.Clear();
 
-    //TODO Bag. После создания папки клиентка без создания объекта нет выделенного клиента!!!
-    if (SelectedClient.ClientPath == null)
+    if (SelectedClient == null)
     {
-      StatusInfo = "Err: SelectedClient.ClientPath == null";
+      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(LoadClientLocation),
+        nameof(SelectedClient));
       return;
     }
 
@@ -984,7 +1002,7 @@ public class MainViewModel : BaseViewModel
   public ObservableCollection<FolderLocationEntityViewModel> FoldersForCreate { get; set; } =
     new ObservableCollection<FolderLocationEntityViewModel>();
 
-  public bool FolderNameUserVersionIsCheck { get; set; } = false;
+  public bool FolderNameUserVersionIsCheck { get; set; }
   public string FolderNameUserVersion { get; set; } = string.Empty;
 
   #endregion
@@ -1013,16 +1031,18 @@ public class MainViewModel : BaseViewModel
   #endregion
 
   /// <summary>
-  /// Проверить активированную локацию клиента на наличие стандартных папок 
+  /// Проверить активированную локацию клиента на наличие стандартных папок
+  /// Ошибка: Нет выделенного клиента. Ничего не сделает.
   /// </summary>
-  /// <exception cref="Exception">
-  /// Нет выделенного клиента. Или у выделенного клиента отсутствует путь.
-  /// </exception>
   private void CheckLocationForFolders()
   {
-    if (SelectedClient.ClientPath == null)
-      throw new Exception("Err: " + nameof(CheckLocationForFolders) + " " + nameof(SelectedClient.ClientPath) +
-                          "=null");
+    if (SelectedClient == null)
+    {
+      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(CheckLocationForFolders),
+        nameof(SelectedClient));
+      Task.Delay(2000);
+      return;
+    }
 
     var pathForObject = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar +
                         ClientEr.FolderObjectsName;
@@ -1068,7 +1088,7 @@ public class MainViewModel : BaseViewModel
   /// </summary>
   public async Task OnClickButtonCreateDirectory()
   {
-    var clientPath = string.Empty;
+    string clientPath;
 
     if (SelectedClient == null)
     {
@@ -1076,7 +1096,7 @@ public class MainViewModel : BaseViewModel
     }
     else
     {
-      if (SelectedClient.ClientPath != null) clientPath = SelectedClient.ClientPath.FullName;
+      clientPath = SelectedClient.ClientPath.FullName;
     }
 
     // Создаёт в корневой папке клиента стандартный набор директорий.
@@ -1114,6 +1134,10 @@ public class MainViewModel : BaseViewModel
     await InitClientListAsync();
 
     ApplyFilterToClientsList(ClientFilter);
+
+    LoadClientLocation();
+
+    ApplyFilterToLocationOfClient();
   }
 
   #endregion
@@ -1141,8 +1165,12 @@ public class MainViewModel : BaseViewModel
       startPath += Path.DirectorySeparatorChar + CityName;
       isValidLocation = true;
 
-      // Сохраняет адрес объекта (локации), если её ещё нет в базе.
-      _addressLocationViewModel.SaveLocationIfNew(CityName, StreetName, HouseNumber);
+      // Сохраняет адрес объекта (локации), если его ещё нет в базе.
+      if (_addressLocationViewModel.SaveLocationIfNew(CityName, StreetName, HouseNumber))
+      {
+        InitCitiesName();
+        ApplyFilterToCitiesName(CityName);
+      }
     }
 
     if (StreetName != string.Empty)

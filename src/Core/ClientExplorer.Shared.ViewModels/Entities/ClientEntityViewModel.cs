@@ -10,7 +10,7 @@ public class ClientEntityViewModel : BaseViewModel
 {
   public string Name { get; set; }
   public Bitmap Icon { get; private set; }
-  public DirectoryInfo? ClientPath { get; set; }
+  public DirectoryInfo ClientPath { get; set; }
 
   public ClientEntityViewModel(string clientName, DirectoryInfo clientDirectory)
   {
