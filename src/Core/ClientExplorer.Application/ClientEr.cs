@@ -2,6 +2,7 @@
 
 public static class ClientEr
 {
+  public const string VersionApp = "ver: 1.0.0";
   public const string DefaultDataResourcePath = ".ClientExplorer";
   public static readonly string LocationsSourceFileName = "Assets" + Path.DirectorySeparatorChar + "AddressLocations.json";
 

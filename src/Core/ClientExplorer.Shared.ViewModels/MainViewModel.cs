@@ -13,7 +13,9 @@ public class MainViewModel : BaseViewModel
 
   //Info панель
   public string StatusInfo { get; set; }
-  public string CurrentInfo { get; set; }
+  public string LocationNameInfo { get; set; }
+
+  public string VersionAppInfo { get; }
 
   #endregion
 
@@ -21,6 +23,8 @@ public class MainViewModel : BaseViewModel
 
   public MainViewModel()
   {
+    VersionAppInfo = ClientEr.VersionApp;
+
     //ClientEr.CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
     //TODO: Вынести в настройки CurrentPath (расположение папок клиентов)
     //Хардкодим путь до папок с клиентами на время разработки и тестирования.
@@ -29,12 +33,13 @@ public class MainViewModel : BaseViewModel
     // ClientEr.CurrentPath = "../";
     ClientEr.CurrentPath = "/mnt/share/Clients";
 
-    CurrentInfo = AppDomain.CurrentDomain.BaseDirectory;
+    // LocationNameInfo = AppDomain.CurrentDomain.BaseDirectory;
 
     #region Client
 
     OpenClient = new DelegateCommand(SelectClient);
-    KeyUpClientName = new DelegateCommand(EnterInClientName);
+    KeyUpClientName = new DelegateCommand(KeyUpInClientName);
+    LostFocusClientName = new DelegateCommand(LostFocusInClientName);
 
     InitClientListAsync();
 
@@ -61,14 +66,17 @@ public class MainViewModel : BaseViewModel
     KeyUpHouseNumber = new DelegateCommand(ApplyFilterToHouseNumbers);
     TappedOnHouseNumberItem = new DelegateCommand(SelectHouseNumber);
 
-    KeyUpAdditionalInfo = new DelegateCommand(EnterAdditionalInfo);
-
-    KeyUpFolderNameUserVersion = new DelegateCommand(EnterFolderNameUserVersion);
+    KeyUpAdditionalInfo = new DelegateCommand(KeyUpInAdditionalInfo);
 
     InitCitiesName();
 
     #endregion
 
+    #region Folders
+
+    KeyUpFolderNameUserVersion = new DelegateCommand(KeyUpInFolderNameUserVersion);
+
+    #endregion
 
     foreach (var directory in ClientEr.DirectoriesInLocation.Folders)
     {
@@ -193,6 +201,8 @@ public class MainViewModel : BaseViewModel
 
   public ICommand OpenClient { get; }
   public ICommand KeyUpClientName { get; }
+  
+  public ICommand LostFocusClientName { get; }
 
   #endregion
 
@@ -230,11 +240,28 @@ public class MainViewModel : BaseViewModel
   }
 
 
-  private void EnterInClientName(object param)
+  private void KeyUpInClientName(object param)
   {
     //TODO Проверить нужно ли обнулять SelectedClient
     SelectedClient = null;
     ApplyFilterToClientsList();
+
+    LostFocusInClientName(param);
+
+  }
+
+  private void LostFocusInClientName(object param)
+  {
+    foreach (var client in SortedClients)
+    {
+      if (client.Name.Equals(ClientFilter))
+      {
+        SelectedClient = client;
+        break;
+      }
+    }
+    
+    LoadLocationsOfClient();
   }
 
   /// <summary>
@@ -413,6 +440,8 @@ public class MainViewModel : BaseViewModel
     OnClickButtonClearStreetName();
     CityName = SelectedCity = string.Empty;
     ApplyFilterToCitiesName(CityName);
+    
+    LocationNameInfo = GetLocationName();
   }
 
   public void OnClickButtonClearStreetName()
@@ -425,6 +454,8 @@ public class MainViewModel : BaseViewModel
     OnClickButtonClearHouseNumber();
     StreetName = SelectedStreet = string.Empty;
     InitStreetsName();
+    
+    LocationNameInfo = GetLocationName();
   }
 
   public void OnClickButtonClearHouseNumber()
@@ -434,6 +465,8 @@ public class MainViewModel : BaseViewModel
     // Применить филтр по списку номеров домов
     HouseNumber = SelectedHouseNumber = string.Empty;
     InitHouseNumbers();
+    
+    LocationNameInfo = GetLocationName();
   }
 
   #endregion
@@ -503,12 +536,14 @@ public class MainViewModel : BaseViewModel
 
     ApplyFilterToLocationOfClient();
     StatusInfo += " CitiesFiltered.Count: " + CitiesFiltered.Count;
+
+    LocationNameInfo = GetLocationName();
   }
 
   private void CheckLocationToAvailable()
   {
     IsLocationAvailable = !string.IsNullOrEmpty(CityName) || !string.IsNullOrEmpty(AdditionalInfo);
-    
+
     CheckLocationForFolders();
   }
 
@@ -524,6 +559,8 @@ public class MainViewModel : BaseViewModel
     InitStreetsName();
     ApplyFilterToStreetsName(null);
     ApplyFilterToLocationOfClient();
+
+    LocationNameInfo = GetLocationName();
   }
 
   /// <summary>
@@ -533,6 +570,7 @@ public class MainViewModel : BaseViewModel
   private void FillStreetsName(object param)
   {
     InitStreetsName();
+    LocationNameInfo = GetLocationName();
   }
 
   /// <summary>
@@ -577,6 +615,8 @@ public class MainViewModel : BaseViewModel
 
     ApplyFilterToLocationOfClient();
     StatusInfo += " StreetsFiltered.Count: " + StreetsFiltered.Count;
+
+    LocationNameInfo = GetLocationName();
   }
 
   /// <summary>
@@ -590,6 +630,8 @@ public class MainViewModel : BaseViewModel
     InitHouseNumbers();
     ApplyFilterToHouseNumbers(null);
     ApplyFilterToLocationOfClient();
+
+    LocationNameInfo = GetLocationName();
   }
 
   /// <summary>
@@ -599,6 +641,8 @@ public class MainViewModel : BaseViewModel
   private void FillHouseNumbers(object param)
   {
     InitHouseNumbers();
+
+    LocationNameInfo = GetLocationName();
   }
 
   /// <summary>
@@ -643,6 +687,8 @@ public class MainViewModel : BaseViewModel
 
     ApplyFilterToLocationOfClient();
     StatusInfo += " HouseNumbersFiltered.Count: " + HouseNumbersFiltered.Count;
+
+    LocationNameInfo = GetLocationName();
   }
 
   /// <summary>
@@ -654,6 +700,8 @@ public class MainViewModel : BaseViewModel
     HouseNumber = SelectedHouseNumber;
     ApplyFilterToHouseNumbers(param);
     ApplyFilterToLocationOfClient();
+
+    LocationNameInfo = GetLocationName();
   }
 
   /// <summary>
@@ -662,7 +710,7 @@ public class MainViewModel : BaseViewModel
   /// <param name="param">
   /// Значение поля
   /// </param>
-  private void EnterAdditionalInfo(object param)
+  private void KeyUpInAdditionalInfo(object param)
   {
     var additionalInfo = AdditionalInfo;
 
@@ -675,6 +723,8 @@ public class MainViewModel : BaseViewModel
 
     ApplyFilterToLocationOfClient();
     CheckLocationToAvailable();
+
+    LocationNameInfo = GetLocationName();
   }
 
   /// <summary>
@@ -682,12 +732,23 @@ public class MainViewModel : BaseViewModel
   /// </summary>
   public void OnClickButtonClearAdditionalInfo()
   {
+    if (IsSelectedLocation)
+    {
+      CityName = string.Empty;
+      StreetName = string.Empty;
+      HouseNumber = string.Empty;
+      
+      ApplyFilterToCitiesName(CityName);
+    }
+    
     IsSelectedLocation = false;
     SelectedLocation = string.Empty;
     FoldersForCreateDefault();
     AdditionalInfo = string.Empty;
     ApplyFilterToLocationOfClient();
     CheckLocationToAvailable();
+    
+    LocationNameInfo = GetLocationName();
   }
 
   #endregion
@@ -886,15 +947,18 @@ public class MainViewModel : BaseViewModel
   /// </param>
   private void SelectLocation(object param)
   {
+    if (param.ToString() == string.Empty) return; 
     AdditionalInfo = SelectedLocation;
     CityName = string.Empty;
     StreetName = string.Empty;
     HouseNumber = string.Empty;
     ApplyFilterToLocationOfClient();
     SelectedLocation = SortedLocationsOfClient[0];
-    
+
     CheckLocationToAvailable();
     IsSelectedLocation = true;
+
+    LocationNameInfo = GetLocationName();
   }
 
   #endregion
@@ -1022,7 +1086,7 @@ public class MainViewModel : BaseViewModel
 
   #region Command Methods
 
-  private void EnterFolderNameUserVersion(object param)
+  private void KeyUpInFolderNameUserVersion(object param)
   {
     var folderNameUserVersion = FolderNameUserVersion;
 
@@ -1148,7 +1212,7 @@ public class MainViewModel : BaseViewModel
         LoadLocationsOfClient();
 
         ApplyFilterToLocationOfClient();
-        
+
         foreach (var location in SortedLocationsOfClient)
         {
           if (location.Equals(GetLocationName()))
@@ -1171,8 +1235,9 @@ public class MainViewModel : BaseViewModel
         }
       }
 
+      //TODO Bug!!! Не срабатывает проверка папки на существующие, при создании новой директории.
       CheckLocationForFolders();
-      
+
       if (FolderNameUserVersionIsCheck)
       {
         CreateFolder(locationPath, new DirectoryEntity(FolderNameUserVersion));
@@ -1210,10 +1275,6 @@ public class MainViewModel : BaseViewModel
       {
         name += " - ";
       }
-      else
-      // {
-      //   name += Path.DirectorySeparatorChar;
-      // }
 
       name += AdditionalInfo;
     }

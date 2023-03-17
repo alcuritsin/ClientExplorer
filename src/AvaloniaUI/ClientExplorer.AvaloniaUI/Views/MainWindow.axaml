@@ -176,6 +176,12 @@
                     Command="{Binding KeyUpClientName}"
                     CommandParameter="{Binding ClientFilter}" />
                 </ia:EventTriggerBehavior>
+                
+                <ia:EventTriggerBehavior EventName="LostFocus">
+                  <ia:InvokeCommandAction
+                    Command="{Binding LostFocusClientName}"
+                    CommandParameter="{Binding ClientFilter}" />
+                </ia:EventTriggerBehavior>
               </i:Interaction.Behaviors>
 
             </TextBox>
@@ -214,7 +220,8 @@
                 Margin="6,0,0,0"
                 BorderBrush="white"
                 BorderThickness="1"
-                CornerRadius="6">
+                CornerRadius="6"
+                Background="Black">
 
                 <Label
                   x:Name="LabelGridLocation"
@@ -425,7 +432,8 @@
                 Margin="6,0,0,0"
                 BorderBrush="white"
                 BorderThickness="1"
-                CornerRadius="6">
+                CornerRadius="6"
+                Background="Black">
 
                 <Label>Создать папки</Label>
 
@@ -551,7 +559,8 @@
             Margin="6,0,0,0"
             BorderBrush="white"
             BorderThickness="1"
-            CornerRadius="6">
+            CornerRadius="6"
+            Background="Black">
 
             <Label>Существующие клиенты</Label>
 
@@ -701,10 +710,9 @@
 
       <!-- Панель - `Информации` -->
       <StackPanel
-        Grid.Row="2"
-        Background="Gray">
+        Grid.Row="2">
         <Grid
-          ColumnDefinitions="*,*">
+          ColumnDefinitions="*,*, Auto">
           
         <Label
           Grid.Column="0"
@@ -713,13 +721,19 @@
 
         <Label
           Grid.Column="1"
-          Content="{Binding CurrentInfo}"/>
+          Content="{Binding LocationNameInfo}"/>
+        
+        <Label
+          Grid.Column="2"
+          Content="{Binding VersionAppInfo}"
+          Margin="5 0"/>
         </Grid>
 
         <!-- Выделенный клиент -->
         <Border
           BorderBrush="Blue"
-          BorderThickness="2">
+          BorderThickness="2"
+          IsVisible="False">
 
           <StackPanel>
             <TextBlock
