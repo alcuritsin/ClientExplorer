@@ -124,7 +124,7 @@ public class AddressLocationViewModel : BaseViewModel
   /// </summary>
   private void LoadAddressLocations()
   {
-    if (Directory.Exists(_locationsFilePath))
+    if (!Directory.Exists(_locationsFilePath))
     {
       using FileStream fs = new FileStream(_locationsFilePath, FileMode.OpenOrCreate, FileAccess.Read);
       var json = JsonSerializer.Deserialize<ObservableCollection<AddressLocationEntityViewModel>>(fs);

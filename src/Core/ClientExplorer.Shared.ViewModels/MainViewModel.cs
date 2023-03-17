@@ -34,7 +34,7 @@ public class MainViewModel : BaseViewModel
     #region Client
 
     OpenClient = new DelegateCommand(SelectClient);
-    KeyUpClientName = new DelegateCommand(ApplyFilterToClientsList);
+    KeyUpClientName = new DelegateCommand(EnterInClientName);
 
     InitClientListAsync();
 
@@ -217,16 +217,24 @@ public class MainViewModel : BaseViewModel
     ClientFilter = SelectedClient.Name;
 
     var selected = SelectedClient;
-    ApplyFilterToClientsList(ClientFilter);
+    ApplyFilterToClientsList();
 
     SelectedClient = SortedClients.Count == 1 ? SortedClients[0] : selected;
 
-    LoadClientLocation();
+    LoadLocationsOfClient();
 
     if (string.IsNullOrEmpty(CityName) || string.IsNullOrEmpty(AdditionalInfo))
     {
       ApplyFilterToLocationOfClient();
     }
+  }
+
+
+  private void EnterInClientName(object param)
+  {
+    //TODO Проверить нужно ли обнулять SelectedClient
+    SelectedClient = null;
+    ApplyFilterToClientsList();
   }
 
   /// <summary>
@@ -235,13 +243,11 @@ public class MainViewModel : BaseViewModel
   /// <param name="param">
   /// Строка фильтр
   /// </param>
-  private void ApplyFilterToClientsList(object param)
+  private void ApplyFilterToClientsList()
   {
     // Сброс листа объектов клиента.
     SortedLocationsOfClient.Clear();
 
-    //TODO Bag!!! При создании папки обнуляется Выделенный клиент...
-    // SelectedClient = null;
     IsLocationOfClientEmpty = SortedLocationsOfClient.Count <= 0;
 
     var clientFilter = ClientFilter;
@@ -283,7 +289,7 @@ public class MainViewModel : BaseViewModel
     if (SortedClients.Count == 1 && SortedClients[0].Name == clientFilter)
     {
       SelectedClient = SortedClients[0];
-      LoadClientLocation();
+      LoadLocationsOfClient();
 
       ApplyFilterToLocationOfClient();
     }
@@ -479,7 +485,7 @@ public class MainViewModel : BaseViewModel
     if (IsNameHaveInvalidCharacter(ref cityFilter))
     {
       CityName = cityFilter;
-      IsLocationAvailable = CheckLocationToAvailable();
+      CheckLocationToAvailable();
       return;
     }
 
@@ -493,15 +499,17 @@ public class MainViewModel : BaseViewModel
       }
     }
 
-    IsLocationAvailable = CheckLocationToAvailable();
+    CheckLocationToAvailable();
 
     ApplyFilterToLocationOfClient();
     StatusInfo += " CitiesFiltered.Count: " + CitiesFiltered.Count;
   }
 
-  private bool CheckLocationToAvailable()
+  private void CheckLocationToAvailable()
   {
-    return !string.IsNullOrEmpty(CityName) || !string.IsNullOrEmpty(AdditionalInfo);
+    IsLocationAvailable = !string.IsNullOrEmpty(CityName) || !string.IsNullOrEmpty(AdditionalInfo);
+    
+    CheckLocationForFolders();
   }
 
   /// <summary>
@@ -661,12 +669,12 @@ public class MainViewModel : BaseViewModel
     if (IsNameHaveInvalidCharacter(ref additionalInfo))
     {
       AdditionalInfo = additionalInfo;
-      IsLocationAvailable = CheckLocationToAvailable();
+      CheckLocationToAvailable();
       return;
     }
 
     ApplyFilterToLocationOfClient();
-    IsLocationAvailable = CheckLocationToAvailable();
+    CheckLocationToAvailable();
   }
 
   /// <summary>
@@ -679,7 +687,7 @@ public class MainViewModel : BaseViewModel
     FoldersForCreateDefault();
     AdditionalInfo = string.Empty;
     ApplyFilterToLocationOfClient();
-    IsLocationAvailable = CheckLocationToAvailable();
+    CheckLocationToAvailable();
   }
 
   #endregion
@@ -750,7 +758,6 @@ public class MainViewModel : BaseViewModel
         nameof(_addressLocationViewModel.AddressLocations));
       Task.Delay(2000);
       return;
-
     }
 
     _streetsName.Clear();
@@ -885,8 +892,8 @@ public class MainViewModel : BaseViewModel
     HouseNumber = string.Empty;
     ApplyFilterToLocationOfClient();
     SelectedLocation = SortedLocationsOfClient[0];
-    CheckLocationForFolders();
     
+    CheckLocationToAvailable();
     IsSelectedLocation = true;
   }
 
@@ -903,14 +910,14 @@ public class MainViewModel : BaseViewModel
   /// <summary>
   /// Загружает существующие объекты у клиента из директории 'Объекты'
   /// </summary>
-  private void LoadClientLocation()
+  private void LoadLocationsOfClient()
   {
     SortedLocationsOfClient.Clear();
     _locationsOfClient.Clear();
 
     if (SelectedClient == null)
     {
-      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(LoadClientLocation),
+      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(LoadLocationsOfClient),
         nameof(SelectedClient));
       return;
     }
@@ -1099,6 +1106,26 @@ public class MainViewModel : BaseViewModel
       clientPath = SelectedClient.ClientPath.FullName;
     }
 
+    // Создаёт папку клиента. Если это новый клиент.
+    if (!Directory.Exists(clientPath))
+    {
+      Directory.CreateDirectory(clientPath);
+
+      await InitClientListAsync();
+
+      ApplyFilterToClientsList();
+    }
+
+    // Выделяем клиента.
+    foreach (var client in SortedClients)
+    {
+      if (client.Name.Equals(ClientFilter))
+      {
+        SelectedClient = client;
+        break;
+      }
+    }
+
     // Создаёт в корневой папке клиента стандартный набор директорий.
     foreach (var directoryInClient in ClientEr.DirectoriesInClient.Folders)
     {
@@ -1111,11 +1138,30 @@ public class MainViewModel : BaseViewModel
 
     locationPath = GetLocationPath(locationPath, ref isValidLocation);
 
-    StatusInfo = locationPath;
-
-    // Создаёт в папке объекта (локации) отмеченные директории из стандартного набора.
     if (isValidLocation)
     {
+      // Создаёт папку объекта. Если это новый объект.
+      if (!Directory.Exists(locationPath))
+      {
+        Directory.CreateDirectory(locationPath);
+
+        LoadLocationsOfClient();
+
+        ApplyFilterToLocationOfClient();
+        
+        foreach (var location in SortedLocationsOfClient)
+        {
+          if (location.Equals(GetLocationName()))
+          {
+            SelectedLocation = location;
+            break;
+          }
+        }
+      }
+
+      StatusInfo = locationPath;
+
+      // Создаёт в папке объекта (локации) отмеченные директории из стандартного набора.
       foreach (var folderForCreate in FoldersForCreate)
       {
         if (folderForCreate.IsCheck)
@@ -1125,24 +1171,55 @@ public class MainViewModel : BaseViewModel
         }
       }
 
+      CheckLocationForFolders();
+      
       if (FolderNameUserVersionIsCheck)
       {
         CreateFolder(locationPath, new DirectoryEntity(FolderNameUserVersion));
       }
     }
-
-    await InitClientListAsync();
-
-    ApplyFilterToClientsList(ClientFilter);
-
-    LoadClientLocation();
-
-    ApplyFilterToLocationOfClient();
   }
 
   #endregion
 
   #region Private Methods
+
+  private string GetLocationName()
+  {
+    // Формирование имени локации.
+    var name = string.Empty;
+
+    if (CityName != string.Empty)
+    {
+      name += CityName;
+    }
+
+    if (StreetName != string.Empty)
+    {
+      name += ", " + StreetName;
+    }
+
+    if (HouseNumber != string.Empty)
+    {
+      name += ", " + HouseNumber;
+    }
+
+    if (AdditionalInfo != string.Empty)
+    {
+      if (CityName != string.Empty)
+      {
+        name += " - ";
+      }
+      else
+      // {
+      //   name += Path.DirectorySeparatorChar;
+      // }
+
+      name += AdditionalInfo;
+    }
+
+    return name;
+  }
 
   /// <summary>
   /// Формирование полного пути до создаваемого объекта (локации)
@@ -1162,7 +1239,6 @@ public class MainViewModel : BaseViewModel
   {
     if (CityName != string.Empty)
     {
-      startPath += Path.DirectorySeparatorChar + CityName;
       isValidLocation = true;
 
       // Сохраняет адрес объекта (локации), если его ещё нет в базе.
@@ -1173,32 +1249,12 @@ public class MainViewModel : BaseViewModel
       }
     }
 
-    if (StreetName != string.Empty)
-    {
-      startPath += ", " + StreetName;
-    }
-
-    if (HouseNumber != string.Empty)
-    {
-      startPath += ", " + HouseNumber;
-    }
-
     if (AdditionalInfo != string.Empty)
     {
-      if (CityName != string.Empty)
-      {
-        startPath += " '";
-      }
-      else
-      {
-        startPath += Path.DirectorySeparatorChar;
-        isValidLocation = true;
-      }
-
-      startPath += AdditionalInfo + "'";
+      isValidLocation = true;
     }
 
-    return startPath;
+    return startPath + Path.DirectorySeparatorChar + GetLocationName();
   }
 
   /// <summary>
