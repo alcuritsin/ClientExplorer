@@ -201,7 +201,7 @@ public class MainViewModel : BaseViewModel
 
   public ICommand OpenClient { get; }
   public ICommand KeyUpClientName { get; }
-  
+
   public ICommand LostFocusClientName { get; }
 
   #endregion
@@ -247,7 +247,6 @@ public class MainViewModel : BaseViewModel
     ApplyFilterToClientsList();
 
     LostFocusInClientName(param);
-
   }
 
   private void LostFocusInClientName(object param)
@@ -260,7 +259,7 @@ public class MainViewModel : BaseViewModel
         break;
       }
     }
-    
+
     LoadLocationsOfClient();
   }
 
@@ -440,7 +439,7 @@ public class MainViewModel : BaseViewModel
     OnClickButtonClearStreetName();
     CityName = SelectedCity = string.Empty;
     ApplyFilterToCitiesName(CityName);
-    
+
     LocationNameInfo = GetLocationName();
   }
 
@@ -454,7 +453,7 @@ public class MainViewModel : BaseViewModel
     OnClickButtonClearHouseNumber();
     StreetName = SelectedStreet = string.Empty;
     InitStreetsName();
-    
+
     LocationNameInfo = GetLocationName();
   }
 
@@ -465,7 +464,7 @@ public class MainViewModel : BaseViewModel
     // Применить филтр по списку номеров домов
     HouseNumber = SelectedHouseNumber = string.Empty;
     InitHouseNumbers();
-    
+
     LocationNameInfo = GetLocationName();
   }
 
@@ -737,17 +736,17 @@ public class MainViewModel : BaseViewModel
       CityName = string.Empty;
       StreetName = string.Empty;
       HouseNumber = string.Empty;
-      
+
       ApplyFilterToCitiesName(CityName);
     }
-    
+
     IsSelectedLocation = false;
     SelectedLocation = string.Empty;
     FoldersForCreateDefault();
     AdditionalInfo = string.Empty;
     ApplyFilterToLocationOfClient();
     CheckLocationToAvailable();
-    
+
     LocationNameInfo = GetLocationName();
   }
 
@@ -947,13 +946,21 @@ public class MainViewModel : BaseViewModel
   /// </param>
   private void SelectLocation(object param)
   {
-    if (param.ToString() == string.Empty) return; 
+    if (param.ToString() == string.Empty) return;
     AdditionalInfo = SelectedLocation;
     CityName = string.Empty;
     StreetName = string.Empty;
     HouseNumber = string.Empty;
     ApplyFilterToLocationOfClient();
-    SelectedLocation = SortedLocationsOfClient[0];
+
+    foreach (var locationOfClient in SortedLocationsOfClient)
+    {
+      if (locationOfClient.Equals(AdditionalInfo))
+      {
+        SelectedLocation = locationOfClient;
+        break;
+      }
+    }
 
     CheckLocationToAvailable();
     IsSelectedLocation = true;
@@ -1196,6 +1203,8 @@ public class MainViewModel : BaseViewModel
       CreateFolder(clientPath, directoryInClient);
     }
 
+    //Bug Если новый адрес, происходит сброс отмеченных папок для создания!!!.
+
     // Составляет путь директории объекта (локации)
     var locationPath = clientPath + Path.DirectorySeparatorChar + ClientEr.FolderObjectsName;
     var isValidLocation = false;
@@ -1235,7 +1244,6 @@ public class MainViewModel : BaseViewModel
         }
       }
 
-      //TODO Bug!!! Не срабатывает проверка папки на существующие, при создании новой директории.
       CheckLocationForFolders();
 
       if (FolderNameUserVersionIsCheck)
@@ -1243,6 +1251,12 @@ public class MainViewModel : BaseViewModel
         CreateFolder(locationPath, new DirectoryEntity(FolderNameUserVersion));
       }
     }
+
+    AdditionalInfo = SelectedLocation;
+    CityName = string.Empty;
+    StreetName = string.Empty;
+    HouseNumber = string.Empty;
+    IsSelectedLocation = true;
   }
 
   #endregion
