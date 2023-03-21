@@ -588,7 +588,7 @@
                 <i:Interaction.Behaviors>
                   <ia:EventTriggerBehavior EventName="Tapped">
                     <ia:InvokeCommandAction
-                      Command="{Binding OpenClient}"
+                      Command="{Binding TappedClientItem}"
                       CommandParameter="{Binding SelectedClient}" />
                   </ia:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
