@@ -246,6 +246,16 @@ public class MainViewModel : BaseViewModel
     ApplyFilterToClientsList();
 
     LostFocusInClientName(param);
+    
+    AdditionalInfo = string.Empty;
+    CityName = string.Empty;
+    StreetName = string.Empty;
+    HouseNumber = string.Empty;
+    IsSelectedLocation = false;
+    IsLocationAvailable = false;
+    LocationNameInfo = GetLocationName();
+    
+    FoldersForCreateDefault();
   }
 
   private void LostFocusInClientName(object param)
@@ -963,6 +973,8 @@ public class MainViewModel : BaseViewModel
     IsSelectedLocation = true;
 
     LocationNameInfo = GetLocationName();
+    
+    CheckLocationForFolders();
   }
 
   #endregion
@@ -1220,19 +1232,21 @@ public class MainViewModel : BaseViewModel
 
         LoadLocationsOfClient();
 
-        var locationName = GetLocationName();
-        
-        foreach (var locationOfClient in SortedLocationsOfClient)
-        {
-          if (Equals(locationOfClient, locationName))
-          {
-            SelectedLocation = locationOfClient;
-            break;
-          }
-        }
-        
-        IsSelectedLocation = true;
       }
+      
+      var locationName = GetLocationName();
+        
+      foreach (var locationOfClient in SortedLocationsOfClient)
+      {
+        if (Equals(locationOfClient, locationName))
+        {
+          SelectedLocation = locationOfClient;
+          break;
+        }
+      }
+        
+      IsSelectedLocation = true;
+
 
       StatusInfo = locationPath;
 
@@ -1249,6 +1263,7 @@ public class MainViewModel : BaseViewModel
       if (FolderNameUserVersionIsCheck)
       {
         CreateFolder(locationPath, new DirectoryEntity(FolderNameUserVersion));
+        FolderNameUserVersion = string.Empty;
       }
 
       //LoadLocationsOfClient();

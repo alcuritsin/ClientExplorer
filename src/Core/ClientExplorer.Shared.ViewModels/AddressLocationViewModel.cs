@@ -124,11 +124,16 @@ public class AddressLocationViewModel : BaseViewModel
   /// </summary>
   private void LoadAddressLocations()
   {
-    if (Directory.Exists(_locationsFilePath))
+    if (File.Exists(_locationsFilePath))
     {
-      using FileStream fs = new FileStream(_locationsFilePath, FileMode.Open, FileAccess.Read);
+      using FileStream fs = new FileStream(_locationsFilePath, FileMode.OpenOrCreate, FileAccess.Read);
       var json = JsonSerializer.Deserialize<ObservableCollection<AddressLocationEntityViewModel>>(fs);
-      if (json != null) AddressLocations = json;
+      // if (json != null) AddressLocations = json;
+    }
+    else
+    {
+      // Создать пустой файл базы адресов, если он не обнаружен
+      //UploadAddressLocations();
     }
   }
 
@@ -137,10 +142,10 @@ public class AddressLocationViewModel : BaseViewModel
   /// </summary>
   private void UploadAddressLocations()
   {
-    if (!Directory.Exists(_directoryDataResourcePath))
-    {
-      Directory.CreateDirectory(_directoryDataResourcePath);
-    }
+    // if (!File.Exists(_directoryDataResourcePath))
+    // {
+    //   Directory.CreateDirectory(_directoryDataResourcePath);
+    // }
 
     JsonSerializerOptions options = new JsonSerializerOptions
     {
@@ -148,8 +153,8 @@ public class AddressLocationViewModel : BaseViewModel
       WriteIndented = true
     };
 
-    using FileStream fs = new FileStream(_locationsFilePath, FileMode.Create, FileAccess.Write, FileShare.None);
-    JsonSerializer.Serialize(fs, AddressLocations, options);
+    //using FileStream fs = new FileStream(_locationsFilePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+    // JsonSerializer.Serialize(fs, AddressLocations, options);
   }
 
   /// <summary>
