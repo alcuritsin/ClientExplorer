@@ -87,11 +87,13 @@ public class MainViewModel : BaseViewModel
     var currDir = ClientEr.CurrentPath + Path.DirectorySeparatorChar + ClientEr.DefaultDataResourcePath;
     if (Directory.Exists(currDir))
     {
-      StatusInfo = "Ready";
+      var msg = "Ready";
+      ShowMessageInfoAsync(msg, 0.0, false);
     }
     else
     {
-      StatusInfo = currDir + " - not available...";
+      var msg = currDir + " - not available...";
+      ShowMessageInfoAsync(msg, 0.0, false);
     }
   }
 
@@ -159,6 +161,34 @@ public class MainViewModel : BaseViewModel
     return false;
   }
 
+  /// <summary>
+  /// Вывод сообщений в поле "информация" асинхронный.
+  /// </summary>
+  /// <param name="msg">
+  /// Сообщение
+  /// </param>
+  /// <param name="timeShowInSec">
+  /// Время показа сообщений в секундах, по умолчанию полсекунды
+  /// </param>
+  /// <param name="eraseAfter">
+  /// Очистить поле после показа? По умолчанию 'true' - очистить
+  /// </param>
+  /// <returns>
+  /// Отметка о завершении.
+  /// </returns>
+  private async Task<Task> ShowMessageInfoAsync(string msg, double timeShowInSec = 2.0, bool eraseAfter = true)
+  {
+    StatusInfo = msg;
+    
+    if (eraseAfter)
+    {
+      await Task.Delay((int)(1000 * timeShowInSec));
+      StatusInfo = string.Empty;
+    }
+    
+    return Task.CompletedTask;
+  }
+
   #endregion
 
   #endregion
@@ -218,9 +248,11 @@ public class MainViewModel : BaseViewModel
   {
     if (SelectedClient == null)
     {
-      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(SelectClient),
+      var msg = string.Format(
+        "Err: In methods - {0}. {1} == null",
+        nameof(SelectClient),
         nameof(SelectedClient));
-      Task.Delay(2000);
+      ShowMessageInfoAsync(msg);
       return;
     }
 
@@ -246,7 +278,7 @@ public class MainViewModel : BaseViewModel
     ApplyFilterToClientsList();
 
     LostFocusInClientName(param);
-    
+
     AdditionalInfo = string.Empty;
     CityName = string.Empty;
     StreetName = string.Empty;
@@ -254,7 +286,7 @@ public class MainViewModel : BaseViewModel
     IsSelectedLocation = false;
     IsLocationAvailable = false;
     LocationNameInfo = GetLocationName();
-    
+
     FoldersForCreateDefault();
   }
 
@@ -287,7 +319,8 @@ public class MainViewModel : BaseViewModel
 
     var clientFilter = ClientFilter;
 
-    StatusInfo = "ClientFilter: " + clientFilter;
+    var msg = "ClientFilter: " + clientFilter;
+    ShowMessageInfoAsync(msg);
 
     // Пустой фильтр
     if (Equals(clientFilter, string.Empty))
@@ -299,7 +332,8 @@ public class MainViewModel : BaseViewModel
         SortedClients.Add(client);
       }
 
-      StatusInfo += " SortedClients.Count: " + SortedClients.Count;
+      msg += " SortedClients.Count: " + SortedClients.Count;
+      ShowMessageInfoAsync(msg);
 
       return;
     }
@@ -329,7 +363,8 @@ public class MainViewModel : BaseViewModel
       ApplyFilterToLocationOfClient();
     }
 
-    StatusInfo += " SortedClients.Count: " + SortedClients.Count;
+    msg += " SortedClients.Count: " + SortedClients.Count;
+    ShowMessageInfoAsync(msg);
   }
 
   #endregion
@@ -349,9 +384,9 @@ public class MainViewModel : BaseViewModel
   {
     if (ClientEr.CurrentPath == null)
     {
-      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(InitClientListAsync),
+      var msg = string.Format("Err: In methods - {0}. {1} == null", nameof(InitClientListAsync),
         nameof(ClientEr.CurrentPath));
-      Task.Delay(2000);
+      ShowMessageInfoAsync(msg, 0.0, false);
       return Task.CompletedTask;
     }
 
@@ -361,7 +396,9 @@ public class MainViewModel : BaseViewModel
 
     if (!Directory.Exists(ClientEr.CurrentPath))
     {
-      StatusInfo = "Err: CurrentPath  - not available...";
+      var msg = string.Format("Err: In methods - {0}. {1} - not available...", nameof(InitClientListAsync),
+        nameof(ClientEr.CurrentPath));
+      ShowMessageInfoAsync(msg, 0.0, false);
       return Task.CompletedTask;
     }
 
@@ -503,7 +540,8 @@ public class MainViewModel : BaseViewModel
   {
     var cityFilter = CityName;
 
-    StatusInfo = "CityFilter: " + cityFilter;
+    var msg = "CityFilter: " + cityFilter;
+    ShowMessageInfoAsync(msg);
 
     if (Equals(cityFilter, string.Empty))
     {
@@ -514,7 +552,8 @@ public class MainViewModel : BaseViewModel
         CitiesFiltered.Add(cityName);
       }
 
-      StatusInfo += " CitiesFiltered.Count: " + CitiesFiltered.Count;
+      msg += " CitiesFiltered.Count: " + CitiesFiltered.Count;
+      ShowMessageInfoAsync(msg);
 
       ApplyFilterToLocationOfClient();
       return;
@@ -536,11 +575,12 @@ public class MainViewModel : BaseViewModel
         CitiesFiltered.Add(cityName);
       }
     }
-    
+
     ChangeIsLocationAvailable();
 
     ApplyFilterToLocationOfClient();
-    StatusInfo += " CitiesFiltered.Count: " + CitiesFiltered.Count;
+    msg += " CitiesFiltered.Count: " + CitiesFiltered.Count;
+    ShowMessageInfoAsync(msg);
 
     LocationNameInfo = GetLocationName();
   }
@@ -584,7 +624,8 @@ public class MainViewModel : BaseViewModel
   {
     var streetFilter = StreetName;
 
-    StatusInfo = "StreetsFiltered: " + streetFilter;
+    var msg = "StreetsFiltered: " + streetFilter;
+    ShowMessageInfoAsync(msg);
 
     if (Equals(streetFilter, string.Empty))
     {
@@ -595,7 +636,9 @@ public class MainViewModel : BaseViewModel
         StreetsFiltered.Add(streetName);
       }
 
-      StatusInfo += " StreetsFiltered.Count: " + StreetsFiltered.Count;
+      msg += " StreetsFiltered.Count: " + StreetsFiltered.Count;
+      ShowMessageInfoAsync(msg);
+
       ApplyFilterToLocationOfClient();
       return;
     }
@@ -617,7 +660,9 @@ public class MainViewModel : BaseViewModel
     }
 
     ApplyFilterToLocationOfClient();
-    StatusInfo += " StreetsFiltered.Count: " + StreetsFiltered.Count;
+
+    msg += " StreetsFiltered.Count: " + StreetsFiltered.Count;
+    ShowMessageInfoAsync(msg);
 
     LocationNameInfo = GetLocationName();
   }
@@ -656,7 +701,8 @@ public class MainViewModel : BaseViewModel
   {
     var houseNumberFilter = HouseNumber;
 
-    StatusInfo = "HouseNumberFilter: " + houseNumberFilter;
+    var msg = "HouseNumberFilter: " + houseNumberFilter;
+    ShowMessageInfoAsync(msg);
 
     if (Equals(houseNumberFilter, string.Empty))
     {
@@ -667,7 +713,9 @@ public class MainViewModel : BaseViewModel
         HouseNumbersFiltered.Add(houseNumber);
       }
 
-      StatusInfo += " HouseNumbersFiltered.Count: " + HouseNumbersFiltered.Count;
+      msg += " HouseNumbersFiltered.Count: " + HouseNumbersFiltered.Count;
+      ShowMessageInfoAsync(msg);
+
       ApplyFilterToLocationOfClient();
       return;
     }
@@ -689,7 +737,9 @@ public class MainViewModel : BaseViewModel
     }
 
     ApplyFilterToLocationOfClient();
-    StatusInfo += " HouseNumbersFiltered.Count: " + HouseNumbersFiltered.Count;
+
+    msg += " HouseNumbersFiltered.Count: " + HouseNumbersFiltered.Count;
+    ShowMessageInfoAsync(msg);
 
     LocationNameInfo = GetLocationName();
   }
@@ -777,9 +827,9 @@ public class MainViewModel : BaseViewModel
   {
     if (_addressLocationViewModel.AddressLocations == null)
     {
-      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(InitCitiesName),
+      var msg = string.Format("Err: In methods - {0}. {1} == null", nameof(InitCitiesName),
         nameof(_addressLocationViewModel.AddressLocations));
-      Task.Delay(2000);
+      ShowMessageInfoAsync(msg);
       return;
     }
 
@@ -818,9 +868,9 @@ public class MainViewModel : BaseViewModel
   {
     if (_addressLocationViewModel.AddressLocations == null)
     {
-      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(InitStreetsName),
+      var msg = string.Format("Err: In methods - {0}. {1} == null", nameof(InitStreetsName),
         nameof(_addressLocationViewModel.AddressLocations));
-      Task.Delay(2000);
+      ShowMessageInfoAsync(msg);
       return;
     }
 
@@ -874,9 +924,9 @@ public class MainViewModel : BaseViewModel
   {
     if (_addressLocationViewModel.AddressLocations == null)
     {
-      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(InitHouseNumbers),
+      var msg = string.Format("Err: In methods - {0}. {1} == null", nameof(InitHouseNumbers),
         nameof(_addressLocationViewModel.AddressLocations));
-      Task.Delay(2000);
+      ShowMessageInfoAsync(msg);
       return;
     }
 
@@ -970,7 +1020,7 @@ public class MainViewModel : BaseViewModel
     IsSelectedLocation = true;
 
     LocationNameInfo = GetLocationName();
-    
+
     CheckLocationForFolders();
   }
 
@@ -994,8 +1044,9 @@ public class MainViewModel : BaseViewModel
 
     if (SelectedClient == null)
     {
-      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(LoadLocationsOfClient),
+      var msg = string.Format("Err: In methods - {0}. {1} == null", nameof(LoadLocationsOfClient),
         nameof(SelectedClient));
+      ShowMessageInfoAsync(msg);
       return;
     }
 
@@ -1004,7 +1055,8 @@ public class MainViewModel : BaseViewModel
 
     if (!Directory.Exists(directoryPath))
     {
-      StatusInfo = "Err: '" + directoryPath + "' не обнаружены";
+      var msg = "Err: '" + directoryPath + "' не обнаружены";
+      ShowMessageInfoAsync(msg);
       return;
     }
 
@@ -1122,9 +1174,9 @@ public class MainViewModel : BaseViewModel
   {
     if (SelectedClient == null)
     {
-      StatusInfo = string.Format("Err: In methods - {0}. {1} == null", nameof(CheckLocationForFolders),
+      var msg = string.Format("Err: In methods - {0}. {1} == null", nameof(CheckLocationForFolders),
         nameof(SelectedClient));
-      Task.Delay(2000);
+      ShowMessageInfoAsync(msg);
       return;
     }
 
@@ -1170,7 +1222,7 @@ public class MainViewModel : BaseViewModel
   /// <summary>
   /// Комманда. Запуск алгоритма создания директорий
   /// </summary>
-  public async Task OnClickButtonCreateDirectory()
+  public async Task<Task> OnClickButtonCreateDirectory()
   {
     string clientPath;
 
@@ -1206,9 +1258,9 @@ public class MainViewModel : BaseViewModel
     // Создаёт в корневой папке клиента стандартный набор директорий.
     foreach (var directoryInClient in ClientEr.DirectoriesInClient.Folders)
     {
-      CreateFolder(clientPath, directoryInClient);
+      await CreateFolder(clientPath, directoryInClient);
     }
-    
+
     // Составляет путь директории объекта (локации)
     var locationPath = clientPath + Path.DirectorySeparatorChar + ClientEr.FolderObjectsName;
     var isValidLocation = false;
@@ -1223,11 +1275,10 @@ public class MainViewModel : BaseViewModel
         Directory.CreateDirectory(locationPath);
 
         LoadLocationsOfClient();
-
       }
-      
+
       var locationName = GetLocationName();
-        
+
       foreach (var locationOfClient in SortedLocationsOfClient)
       {
         if (Equals(locationOfClient, locationName))
@@ -1236,44 +1287,55 @@ public class MainViewModel : BaseViewModel
           break;
         }
       }
-        
+
       IsSelectedLocation = true;
 
-
-      StatusInfo = locationPath;
+      var msg = locationPath;
+      await ShowMessageInfoAsync(msg, 0.25);
 
       // Создаёт в папке объекта (локации) отмеченные директории из стандартного набора.
       foreach (var folderForCreate in FoldersForCreate)
       {
         if (folderForCreate.IsCheck)
         {
-          CreateFolder(locationPath, folderForCreate.FolderDirectory);
-          StatusInfo = folderForCreate.FolderName + " +";
+          await CreateFolder(locationPath, folderForCreate.FolderDirectory);
         }
       }
 
       if (FolderNameUserVersionIsCheck)
       {
-        CreateFolder(locationPath, new DirectoryEntity(FolderNameUserVersion));
+        await CreateFolder(locationPath, new DirectoryEntity(FolderNameUserVersion));
+
         FolderNameUserVersion = string.Empty;
+        FolderNameUserVersionIsCheck = false;
       }
-
-
-
-      var buf = SelectedLocation;
       
+      var buf = SelectedLocation;
+
       ApplyFilterToLocationOfClient();
 
       SelectedLocation = buf;
-      
+
       CheckLocationForFolders();
+      
+      //Bug Это сообщение исчезает очень выстро.
+      msg = "Info: Create completed - Ok";
+      await ShowMessageInfoAsync(msg);
     }
+    
+    return Task.CompletedTask;
   }
 
   #endregion
 
   #region Private Methods
 
+  /// <summary>
+  /// Получить имя объекта (локации)
+  /// </summary>
+  /// <returns>
+  /// Имя объекта (локации)
+  /// </returns>
   private string GetLocationName()
   {
     // Формирование имени локации.
@@ -1332,7 +1394,6 @@ public class MainViewModel : BaseViewModel
       {
         // Перечитываем список городов
         InitCitiesName();
-        
       }
     }
 
@@ -1345,11 +1406,11 @@ public class MainViewModel : BaseViewModel
     ApplyFilterToCitiesName(CityName);
 
     AdditionalInfo = GetLocationName();
-    
+
     CityName = string.Empty;
     StreetName = string.Empty;
     HouseNumber = string.Empty;
-    
+
     return startPath + Path.DirectorySeparatorChar + AdditionalInfo;
   }
 
@@ -1363,17 +1424,23 @@ public class MainViewModel : BaseViewModel
   /// <param name="directoryEntity">
   /// Директория, которую необходимо создать.
   /// </param>
-  private void CreateFolder(string locationPath, DirectoryEntity directoryEntity)
+  private async Task CreateFolder(string locationPath, DirectoryEntity directoryEntity)
   {
     var dir = locationPath + directoryEntity.GetDirectoryPath();
 
-    if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+    if (!Directory.Exists(dir))
+    {
+      Directory.CreateDirectory(dir);
+      
+      var msg = directoryEntity.Name + " +";
+      await ShowMessageInfoAsync(msg, 0.10);
+    }
 
     if (directoryEntity.ChildDirs != null)
     {
       foreach (var childDir in directoryEntity.ChildDirs)
       {
-        CreateFolder(locationPath, childDir);
+        await CreateFolder(locationPath, childDir);
       }
     }
   }

@@ -645,7 +645,8 @@
             Margin="6,0,0,0"
             BorderBrush="white"
             BorderThickness="1"
-            CornerRadius="6">
+            CornerRadius="6"
+            Background="Black">
 
             <Label>Существующие объекты</Label>
 
@@ -701,10 +702,10 @@
           Margin="3 6"
           IsEnabled="{Binding ClientFilter, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
 
-        <Button
-          x:Name="ButtonCancel"
-          Content="Отмена"
-          Margin="3 6" />
+        <!-- <Button -->
+        <!--   x:Name="ButtonCancel" -->
+        <!--   Content="Отмена" -->
+        <!--   Margin="3 6" /> -->
 
       </StackPanel>
 
