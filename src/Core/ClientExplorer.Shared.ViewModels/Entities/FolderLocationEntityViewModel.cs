@@ -4,10 +4,10 @@ namespace ClientExplorer.Shared.ViewModels;
 
 public class FolderLocationEntityViewModel : BaseViewModel
 {
-  public string FolderName { get; set; } = string.Empty;
-  public bool IsCheck { get; set; } = false;
+  public string FolderName { get; set; }
+  public bool IsCheck { get; set; }
   public bool IsEnable { get; set; } = true;
-  public DirectoryEntity FolderDirectory { get; set; }
+  public DirectoryEntity FolderDirectory { get; }
 
   public FolderLocationEntityViewModel(string folderName, DirectoryEntity folderDirectory)
   {

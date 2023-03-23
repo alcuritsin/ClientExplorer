@@ -1,10 +1,10 @@
 ﻿using System.Collections.ObjectModel;
-using System.Data;
 using System.Windows.Input;
 using ClientExplorer.Application;
 
 namespace ClientExplorer.Shared.ViewModels;
 
+#pragma warning disable CS4014
 public class MainViewModel : BaseViewModel
 {
   #region For Windows
@@ -23,14 +23,16 @@ public class MainViewModel : BaseViewModel
 
   public MainViewModel()
   {
+    LocationNameInfo = string.Empty;
+    StatusInfo = "Run";
     VersionAppInfo = ClientEr.VersionApp;
 
-    //ClientEr.CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
-    //TODO: Вынести в настройки CurrentPath (расположение папок клиентов)
-    //Хардкодим путь до папок с клиентами на время разработки и тестирования.
+    //TODO Вынести в настройки CurrentPath (расположение папок клиентов)
+    //Пишем в коде, путь до папок с клиентами на время разработки и тестирования.
     //В будущем значение будет вынесено в файл настроек "*.ini".
     //Или будем использовать путь расположения программы, т.к. программа рассчитана и на Windows и на Linux.
     // ClientEr.CurrentPath = "../";
+    //ClientEr.CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
     ClientEr.CurrentPath = "/mnt/share/Clients";
 
     // LocationNameInfo = AppDomain.CurrentDomain.BaseDirectory;
@@ -82,9 +84,9 @@ public class MainViewModel : BaseViewModel
     {
       FoldersForCreate.Add(new FolderLocationEntityViewModel(directory.Name, directory));
     }
-
-    //TODO Publication. Debug
+    
     var currDir = ClientEr.CurrentPath + Path.DirectorySeparatorChar + ClientEr.DefaultDataResourcePath;
+    
     if (Directory.Exists(currDir))
     {
       var msg = "Ready";
@@ -102,7 +104,7 @@ public class MainViewModel : BaseViewModel
   #region Private Methods
 
   /// <summary>
-  /// Проверяет и удаляет из имени по ссылке, запрещённые символы для именования папок в операцинной системе. 
+  /// Проверяет/удаляет из имени по ссылке, запрещённые символы для имени папки в операционной системе. 
   /// </summary>
   /// <param name="name">
   /// Ссылка на имя.
@@ -139,7 +141,7 @@ public class MainViewModel : BaseViewModel
         name = name.Length switch
         {
           1 => string.Empty,
-          > 2 when name[name.Length - 2] == ' ' => name.Substring(0, name.Length - 1),
+          > 2 when name[^2] == ' ' => name.Substring(0, name.Length - 1),
           _ => name
         };
         return true;
@@ -165,18 +167,18 @@ public class MainViewModel : BaseViewModel
   /// Вывод сообщений в поле "информация" асинхронный.
   /// </summary>
   /// <param name="msg">
-  /// Сообщение
+  ///   Сообщение
   /// </param>
   /// <param name="timeShowInSec">
-  /// Время показа сообщений в секундах, по умолчанию полсекунды
+  ///   Время показа сообщений в секундах, по умолчанию полсекунды
   /// </param>
   /// <param name="eraseAfter">
-  /// Очистить поле после показа? По умолчанию 'true' - очистить
+  ///   Очистить поле после показа? По умолчанию 'true' - очистить
   /// </param>
   /// <returns>
   /// Отметка о завершении.
   /// </returns>
-  private async Task<Task> ShowMessageInfoAsync(string msg, double timeShowInSec = 2.0, bool eraseAfter = true)
+  private async Task ShowMessageInfoAsync(string msg, double timeShowInSec = 2.0, bool eraseAfter = true)
   {
     StatusInfo = msg;
     
@@ -185,8 +187,6 @@ public class MainViewModel : BaseViewModel
       await Task.Delay((int)(1000 * timeShowInSec));
       StatusInfo = string.Empty;
     }
-    
-    return Task.CompletedTask;
   }
 
   #endregion
@@ -273,7 +273,7 @@ public class MainViewModel : BaseViewModel
 
   private void KeyUpInClientName(object param)
   {
-    //TODO Проверить нужно ли обнулять SelectedClient
+    //TODO Проверить нужно ли очищать SelectedClient
     SelectedClient = null;
     ApplyFilterToClientsList();
 
@@ -307,9 +307,6 @@ public class MainViewModel : BaseViewModel
   /// <summary>
   /// Применение фильтра к 'Списку Клиентов' (SortedClients). На основании (ClientFilter).
   /// </summary>
-  /// <param name="param">
-  /// Строка фильтр
-  /// </param>
   private void ApplyFilterToClientsList()
   {
     // Сброс листа объектов клиента.
@@ -416,27 +413,7 @@ public class MainViewModel : BaseViewModel
     _clientsList = SortedClients.ToList();
     return Task.CompletedTask;
   }
-
-  /// <summary>
-  /// Проверяет директорию клиента на наличие стандартных папок
-  /// </summary>
-  /// <returns>
-  /// true - Директория клиента содержит все необходимые папки
-  /// false - В директории клиента не хватает как минимум одной папки стандартной папки
-  /// </returns>
-  private bool CheckClientToInit()
-  {
-    //TODO Publication.Временный метод для тестирования. Удалить перед публикацией.
-    foreach (DirectoryEntity folder in ClientEr.DirectoriesInClient.Folders)
-    {
-      var clientDirectory = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar + folder.Name;
-
-      if (!Directory.Exists(clientDirectory)) return false;
-    }
-
-    return true;
-  }
-
+  
   #endregion
 
   #endregion
@@ -447,7 +424,7 @@ public class MainViewModel : BaseViewModel
 
   #region Public Properties
 
-  public bool IsSelectedLocation { get; set; } = false;
+  public bool IsSelectedLocation { get; private set; }
 
   public ObservableCollection<string> CitiesFiltered { get; set; } =
     new ObservableCollection<string>();
@@ -469,7 +446,7 @@ public class MainViewModel : BaseViewModel
 
   public string AdditionalInfo { get; set; } = string.Empty;
 
-  public bool IsLocationAvailable { get; set; } = false;
+  public bool IsLocationAvailable { get; set; } 
 
   #endregion
 
@@ -504,7 +481,7 @@ public class MainViewModel : BaseViewModel
   public void OnClickButtonClearHouseNumber()
   {
     // Очистить номер дома
-    // Применить филтр по списку номеров домов
+    // Применить фильтр по списку номеров домов
     HouseNumber = SelectedHouseNumber = string.Empty;
     InitHouseNumbers();
 
@@ -781,7 +758,7 @@ public class MainViewModel : BaseViewModel
   }
 
   /// <summary>
-  /// Комманда. Нажитие на кнопку сброса выделенного объекта (локации).
+  /// Команда. Нажатие на кнопку сброса выделенного объекта (локации).
   /// </summary>
   public void OnClickButtonClearAdditionalInfo()
   {
@@ -810,12 +787,10 @@ public class MainViewModel : BaseViewModel
 
   private readonly AddressLocationViewModel _addressLocationViewModel;
 
-  private List<string> _citiesName = new List<string>();
-  private List<string> _streetsName = new List<string>();
-  private List<string> _houseNumbers = new List<string>();
-
-  // private string _lastSelectCityName = string.Empty;
-
+  private readonly List<string> _citiesName = new List<string>();
+  private readonly List<string> _streetsName = new List<string>();
+  private readonly List<string> _houseNumbers = new List<string>();
+  
   #endregion
 
   #region Private Methods
@@ -825,13 +800,6 @@ public class MainViewModel : BaseViewModel
   /// </summary>
   private void InitCitiesName()
   {
-    if (_addressLocationViewModel.AddressLocations == null)
-    {
-      var msg = string.Format("Err: In methods - {0}. {1} == null", nameof(InitCitiesName),
-        nameof(_addressLocationViewModel.AddressLocations));
-      ShowMessageInfoAsync(msg);
-      return;
-    }
 
     foreach (var addressLocation in _addressLocationViewModel.AddressLocations)
     {
@@ -866,13 +834,6 @@ public class MainViewModel : BaseViewModel
   /// </summary>
   private void InitStreetsName()
   {
-    if (_addressLocationViewModel.AddressLocations == null)
-    {
-      var msg = string.Format("Err: In methods - {0}. {1} == null", nameof(InitStreetsName),
-        nameof(_addressLocationViewModel.AddressLocations));
-      ShowMessageInfoAsync(msg);
-      return;
-    }
 
     _streetsName.Clear();
     StreetsFiltered.Clear();
@@ -922,13 +883,6 @@ public class MainViewModel : BaseViewModel
   /// </summary>
   private void InitHouseNumbers()
   {
-    if (_addressLocationViewModel.AddressLocations == null)
-    {
-      var msg = string.Format("Err: In methods - {0}. {1} == null", nameof(InitHouseNumbers),
-        nameof(_addressLocationViewModel.AddressLocations));
-      ShowMessageInfoAsync(msg);
-      return;
-    }
 
     _houseNumbers.Clear();
     HouseNumbersFiltered.Clear();
@@ -993,7 +947,7 @@ public class MainViewModel : BaseViewModel
   #region Command Methods
 
   /// <summary>
-  /// Комманда. Выделение объекта (локации)
+  /// Команда. Выделение объекта (локации)
   /// </summary>
   /// <param name="param">
   /// Выделенный объект (локация)
@@ -1028,7 +982,7 @@ public class MainViewModel : BaseViewModel
 
   #region Private Properties
 
-  private List<string> _locationsOfClient { get; set; } = new List<string>();
+  private List<string> LocationsOfClient { get; set; } = new List<string>();
 
   #endregion
 
@@ -1040,7 +994,7 @@ public class MainViewModel : BaseViewModel
   private void LoadLocationsOfClient()
   {
     SortedLocationsOfClient.Clear();
-    _locationsOfClient.Clear();
+    LocationsOfClient.Clear();
 
     if (SelectedClient == null)
     {
@@ -1068,7 +1022,7 @@ public class MainViewModel : BaseViewModel
     }
 
     SortedLocationsOfClient = new ObservableCollection<string>(SortedLocationsOfClient.OrderBy(i => i));
-    _locationsOfClient = new List<string>(SortedLocationsOfClient.ToList());
+    LocationsOfClient = new List<string>(SortedLocationsOfClient.ToList());
 
     IsLocationOfClientEmpty = SortedLocationsOfClient.Count <= 0;
   }
@@ -1102,9 +1056,9 @@ public class MainViewModel : BaseViewModel
   /// </summary>
   private void ApplyFilterToLocationOfClient()
   {
-    if (_locationsOfClient.Count > 0)
+    if (LocationsOfClient.Count > 0)
     {
-      List<string> buffer = new List<string>(_locationsOfClient);
+      List<string> buffer = new List<string>(LocationsOfClient);
 
       SortedLocationsOfClient.Clear();
 
@@ -1220,7 +1174,7 @@ public class MainViewModel : BaseViewModel
   #region Commands Methods
 
   /// <summary>
-  /// Комманда. Запуск алгоритма создания директорий
+  /// Команда. Запуск алгоритма создания директорий
   /// </summary>
   public async Task<Task> OnClickButtonCreateDirectory()
   {
@@ -1318,7 +1272,6 @@ public class MainViewModel : BaseViewModel
 
       CheckLocationForFolders();
       
-      //Bug Это сообщение исчезает очень выстро.
       msg = "Info: Create completed - Ok";
       await ShowMessageInfoAsync(msg);
     }
@@ -1422,7 +1375,7 @@ public class MainViewModel : BaseViewModel
   /// Путь, в котором будет происходить создание директории
   /// </param>
   /// <param name="directoryEntity">
-  /// Директория, которую необходимо создать.
+  /// Путь, который необходимо создать.
   /// </param>
   private async Task CreateFolder(string locationPath, DirectoryEntity directoryEntity)
   {
