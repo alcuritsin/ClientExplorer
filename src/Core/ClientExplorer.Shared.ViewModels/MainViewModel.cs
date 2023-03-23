@@ -440,7 +440,6 @@ public class MainViewModel : BaseViewModel
 
   public void OnClickButtonClearCityName()
   {
-    //TODO OnClickButtonClearCityName
     // Очистить Название Города
     // Отменить фильтр списка (города)
     // Очистить Название улицы, номер дома.
@@ -454,7 +453,6 @@ public class MainViewModel : BaseViewModel
 
   public void OnClickButtonClearStreetName()
   {
-    //TODO ButtonClearStreetName
     // Очистить Название улицы
     // Отменить фильтр с названия улиц
     // Очистить номер дома
@@ -468,7 +466,6 @@ public class MainViewModel : BaseViewModel
 
   public void OnClickButtonClearHouseNumber()
   {
-    //TODO OnClickButtonClearHouseNumber
     // Очистить номер дома
     // Применить филтр по списку номеров домов
     HouseNumber = SelectedHouseNumber = string.Empty;
@@ -1216,13 +1213,8 @@ public class MainViewModel : BaseViewModel
     var locationPath = clientPath + Path.DirectorySeparatorChar + ClientEr.FolderObjectsName;
     var isValidLocation = false;
 
-    //Bug Если новый адрес, происходит сброс отмеченных папок для создания!!!.
     locationPath = GetLocationPath(locationPath, ref isValidLocation);
-    
 
-    //Bug Если новая локация, происходит сброс выделенных папок для создания
-    // CheckLocationForFolders();
-    
     if (isValidLocation)
     {
       // Создаёт папку объекта. Если это новый объект.
@@ -1266,7 +1258,7 @@ public class MainViewModel : BaseViewModel
         FolderNameUserVersion = string.Empty;
       }
 
-      //LoadLocationsOfClient();
+
 
       var buf = SelectedLocation;
       
@@ -1349,6 +1341,7 @@ public class MainViewModel : BaseViewModel
       isValidLocation = true;
     }
 
+    InitCitiesName();
     ApplyFilterToCitiesName(CityName);
 
     AdditionalInfo = GetLocationName();

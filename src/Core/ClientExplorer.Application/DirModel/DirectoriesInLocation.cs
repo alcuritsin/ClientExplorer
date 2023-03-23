@@ -1,3 +1,7 @@
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
+
 namespace ClientExplorer.Application;
 
 public class DirectoriesInLocation
@@ -12,7 +16,9 @@ public class DirectoriesInLocation
 
   private void InitLocationFolders()
   {
-    //TODO Вынести список папок в какой-то файл настроек. Для возможности редактирования. Пока список папок хардкодим. 
+    //TODO Вынести список папок в какой-то файл настроек, для возможности редактирования.
+    //Пока список папок хардкодим. Известная проблема - из-за использования в качестве дочерней директории,
+    //объект этого же класса, образуется рекурсия с бесконечностью. Это не позволяет сериализовать такую коллекцию.
 
     #region ./Клиент/Объекты/Город/Адрес, Дом, ТЦ/
 
