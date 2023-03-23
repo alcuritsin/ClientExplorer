@@ -55,5 +55,9 @@
 
   <ItemGroup>
     <Content Include=".ClientExplorer\Assets\AddressLocations.json" />
+    <None Remove="Assets\Setting.json" />
+    <Content Include="Assets\Settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

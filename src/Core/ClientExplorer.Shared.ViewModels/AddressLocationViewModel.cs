@@ -71,9 +71,9 @@ public class AddressLocationViewModel : BaseViewModel
     AddressLocations = new ObservableCollection<AddressLocationEntityViewModel>();
 
     _directoryDataResourcePath =
-      ClientEr.CurrentPath + Path.DirectorySeparatorChar + ClientEr.DefaultDataResourcePath;
+      ClientExplorerApp.CurrentPath + Path.DirectorySeparatorChar + ClientExplorerApp.DefaultDataResourcePath;
 
-    _locationsFilePath = _directoryDataResourcePath + Path.DirectorySeparatorChar + ClientEr.LocationsSourceFileName;
+    _locationsFilePath = _directoryDataResourcePath + Path.DirectorySeparatorChar + ClientExplorerApp.LocationsSourceFileName;
 
     if (!Directory.Exists(_directoryDataResourcePath))
     {
