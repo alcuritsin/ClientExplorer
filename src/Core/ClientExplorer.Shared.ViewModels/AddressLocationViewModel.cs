@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
-using ClientExplorer.Application;
+using static ClientExplorer.Application.ClientExplorerApp;
 
 namespace ClientExplorer.Shared.ViewModels;
 
@@ -17,7 +17,7 @@ public class AddressLocationViewModel : BaseViewModel
   #region Public Methods
 
   /// <summary>
-  /// Сохраняет адрес в файле адресного класификатора, если этого адреса там не было.
+  /// Сохраняет адрес в файле адресного классификатора, если этого адреса там не было.
   /// </summary>
   /// <param name="city">
   /// Наименование населённого пункта
@@ -70,12 +70,9 @@ public class AddressLocationViewModel : BaseViewModel
   {
     AddressLocations = new ObservableCollection<AddressLocationEntityViewModel>();
 
-    _directoryDataResourcePath =
-      ClientExplorerApp.CurrentPath + Path.DirectorySeparatorChar + ClientExplorerApp.DefaultDataResourcePath;
+    var locationsFilePath = GetLocationsSourceFilePath();
 
-    _locationsFilePath = _directoryDataResourcePath + Path.DirectorySeparatorChar + ClientExplorerApp.LocationsSourceFileName;
-
-    if (!Directory.Exists(_directoryDataResourcePath))
+    if (!File.Exists(locationsFilePath))
     {
       return;
     }
@@ -112,9 +109,6 @@ public class AddressLocationViewModel : BaseViewModel
 
   #region Private Properties
 
-  private readonly string _locationsFilePath;
-  private readonly string _directoryDataResourcePath;
-
   #endregion
 
   #region Private Methods
@@ -124,9 +118,10 @@ public class AddressLocationViewModel : BaseViewModel
   /// </summary>
   private void LoadAddressLocations()
   {
-    if (File.Exists(_locationsFilePath))
+    var locationsFilePath = GetLocationsSourceFilePath();
+    if (File.Exists(locationsFilePath))
     {
-      using FileStream fs = new FileStream(_locationsFilePath, FileMode.Open, FileAccess.Read);
+      using FileStream fs = new FileStream(locationsFilePath, FileMode.Open, FileAccess.Read);
       var json = JsonSerializer.Deserialize<ObservableCollection<AddressLocationEntityViewModel>>(fs);
       if (json != null) AddressLocations = json;
     }
@@ -151,13 +146,14 @@ public class AddressLocationViewModel : BaseViewModel
 
     if (AddressLocations.Count > 0)
     {
-      using var fs = new FileStream(_locationsFilePath, FileMode.Create, FileAccess.Write);
+      var locationsFilePath = GetLocationsSourceFilePath();
+      using var fs = new FileStream(locationsFilePath, FileMode.Create, FileAccess.Write);
       JsonSerializer.Serialize(fs, AddressLocations, options);
     }
   }
 
   /// <summary>
-  /// Упорядочивает список по Алфавиту. Город+Улица+НомерДома.
+  /// Упорядочивается список по Алфавиту. Город+Улица+НомерДома.
   /// </summary>
   private void OrderLocation()
   {
@@ -183,6 +179,9 @@ public class AddressLocationViewModel : BaseViewModel
     }
   }
 
+  /// <summary>
+  /// Удаляет дубликаты из коллекции адресов
+  /// </summary>
   private void UniqLocation()
   {
     List<AddressLocationEntityViewModel> addressLocsBuffer = AddressLocations.ToList();

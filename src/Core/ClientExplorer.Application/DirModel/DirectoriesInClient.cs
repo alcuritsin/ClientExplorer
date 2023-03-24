@@ -1,5 +1,3 @@
-using System.Collections;
-
 namespace ClientExplorer.Application;
 
 public class DirectoriesInClient
@@ -18,6 +16,6 @@ public class DirectoriesInClient
     //TODO Вынести список папок в какой-то файл настроек. Для возможности редактирования. Пока список папок хардкодим. 
     Folders.Add(new DirectoryEntity("Документы общие"));
     Folders.Add(new DirectoryEntity("Каталог стандартных решений"));
-    Folders.Add(new DirectoryEntity(ClientExplorerApp.FolderObjectsName));
+    Folders.Add(new DirectoryEntity(ClientExplorerApp.Settings.FolderObjectsEntityName));
   }
 }

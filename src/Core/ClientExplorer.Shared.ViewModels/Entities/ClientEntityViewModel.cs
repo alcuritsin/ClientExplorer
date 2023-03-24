@@ -1,8 +1,7 @@
-using System;
-using System.IO;
 using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using static ClientExplorer.Application.ClientExplorerApp;
 
 namespace ClientExplorer.Shared.ViewModels;
 
@@ -17,7 +16,7 @@ public class ClientEntityViewModel : BaseViewModel
     Name = clientName;
     ClientPath = clientDirectory;
     
-    var iconPath = clientDirectory.FullName + Path.DirectorySeparatorChar + ".logo.png";
+    var iconPath = clientDirectory.FullName + Path.DirectorySeparatorChar + Settings.ClientLogoFileName;
     if (File.Exists(iconPath))
     {
       Icon = new Bitmap(iconPath);

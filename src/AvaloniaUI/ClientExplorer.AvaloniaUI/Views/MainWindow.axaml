@@ -13,6 +13,8 @@
         mc:Ignorable="d" d:DesignWidth="1325" d:DesignHeight="706"
 
         Width="1325" Height="706"
+        
+        MinWidth="762" MinHeight="684"
 
         Icon="/Assets/avalonia-logo.ico"
         Title="ClientExplorer"
@@ -155,46 +157,83 @@
           Grid.ColumnSpan="2"
           RowDefinitions="Auto, Auto, *">
 
-          <Label
-            Grid.Row="0"
-            x:Name="LabelClientName"
-            Content="Клиент" />
-
           <Grid
-            Grid.Row="1"
-            ColumnDefinitions="*">
+            x:Name="GridClient"
+            RowDefinitions="Auto, *"
+            ColumnDefinitions="Auto, *"
+            Margin="0 6 0 0">
 
-            <!-- Фильтр для клиентов -->
-            <TextBox
-              Grid.Column="0"
-              x:Name="ClientFilter"
-              Text="{Binding ClientFilter}">
+            <!-- Title - `Объект (локация)` -->
+            <Border
+              Grid.Row="0" Grid.Column="0"
+              ZIndex="1"
+              Padding="0,0"
+              Margin="6,0,0,0"
+              BorderBrush="white"
+              BorderThickness="1"
+              CornerRadius="6"
+              Background="Black">
 
-              <i:Interaction.Behaviors>
-                <ia:EventTriggerBehavior EventName="KeyUp">
-                  <ia:InvokeCommandAction
-                    Command="{Binding KeyUpClientName}"
-                    CommandParameter="{Binding ClientFilter}" />
-                </ia:EventTriggerBehavior>
-                
-                <ia:EventTriggerBehavior EventName="LostFocus">
-                  <ia:InvokeCommandAction
-                    Command="{Binding LostFocusClientName}"
-                    CommandParameter="{Binding ClientFilter}" />
-                </ia:EventTriggerBehavior>
-              </i:Interaction.Behaviors>
+              <Label
+                x:Name="LabelClientName"
+                Target="GridClient"
+                Content="Клиент" />
 
-            </TextBox>
+            </Border>
 
-            <!-- Сбросить фильтр -->
-            <Button
-              x:Name="ButtonClearClient"
-              Content="X"
-              Command="{Binding OnClickButtonCancelClient}"
-              IsVisible="{Binding ClientFilter, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-              HorizontalAlignment="Right" />
+            <!-- Content - `Объект (локация)` -->
+            <Border
+
+              Grid.Row="0" Grid.Column="0"
+              Grid.RowSpan="2" Grid.ColumnSpan="2"
+              Margin="0,12,0,0"
+              Padding="6,18,6,6"
+              BorderThickness="1"
+              BorderBrush="White"
+              CornerRadius="6">
+
+              <StackPanel>
+                <Grid
+                  ColumnDefinitions="*">
+
+                  <!-- Фильтр для клиентов -->
+                  <TextBox
+                    Grid.Column="0"
+                    x:Name="ClientFilter"
+                    Text="{Binding ClientFilter}">
+
+                    <i:Interaction.Behaviors>
+                      <ia:EventTriggerBehavior EventName="KeyUp">
+                        <ia:InvokeCommandAction
+                          Command="{Binding KeyUpClientName}"
+                          CommandParameter="{Binding ClientFilter}" />
+                      </ia:EventTriggerBehavior>
+
+                      <ia:EventTriggerBehavior EventName="LostFocus">
+                        <ia:InvokeCommandAction
+                          Command="{Binding LostFocusClientName}"
+                          CommandParameter="{Binding ClientFilter}" />
+                      </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+
+                  </TextBox>
+
+                  <!-- Сбросить фильтр -->
+                  <Button
+                    x:Name="ButtonClearClient"
+                    Content="X"
+                    Command="{Binding OnClickButtonCancelClient}"
+                    IsVisible="{Binding ClientFilter, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    HorizontalAlignment="Right" />
+
+                </Grid>
+
+              </StackPanel>
+
+            </Border>
 
           </Grid>
+
         </Grid>
 
         <!-- Панель - `Ввода объекта + Отметка папок` -->
@@ -700,7 +739,7 @@
           Content="Создать каталоги"
           Command="{Binding OnClickButtonCreateDirectory}"
           Margin="3 6"
-          IsEnabled="{Binding ClientFilter, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+          IsEnabled="{Binding ClientFilter, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
         <!-- <Button -->
         <!--   x:Name="ButtonCancel" -->
@@ -714,20 +753,20 @@
         Grid.Row="2">
         <Grid
           ColumnDefinitions="*,*, Auto">
-          
-        <Label
-          Grid.Column="0"
-          x:Name="LabelInfo"
-               Content="{Binding StatusInfo}" />
 
-        <Label
-          Grid.Column="1"
-          Content="{Binding LocationNameInfo}"/>
-        
-        <Label
-          Grid.Column="2"
-          Content="{Binding VersionAppInfo}"
-          Margin="5 0"/>
+          <Label
+            Grid.Column="0"
+            x:Name="LabelInfo"
+            Content="{Binding StatusInfo}" />
+
+          <Label
+            Grid.Column="1"
+            Content="{Binding LocationNameInfo}" />
+
+          <Label
+            Grid.Column="2"
+            Content="{Binding VersionAppInfo}"
+            Margin="5 0" />
         </Grid>
 
         <!-- Выделенный клиент -->

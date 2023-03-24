@@ -1,9 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Unicode;
 using System.Windows.Input;
 using ClientExplorer.Application;
+using static ClientExplorer.Application.ClientExplorerApp;
 
 namespace ClientExplorer.Shared.ViewModels;
 
@@ -27,30 +25,8 @@ public class MainViewModel : BaseViewModel
   public MainViewModel()
   {
     LocationNameInfo = string.Empty;
-    StatusInfo = "Run";
-    VersionAppInfo = ClientExplorerApp.VersionApp;
-
-    //TODO Вынести в настройки CurrentPath (расположение папок клиентов)
-    //Пишем в коде, путь до папок с клиентами на время разработки и тестирования.
-    //В будущем значение будет вынесено в файл настроек "*.ini".
-    //Или будем использовать путь расположения программы, т.к. программа рассчитана и на Windows и на Linux.
-    // ClientEr.CurrentPath = "../";
-    //ClientEr.CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
-    ClientExplorerApp.CurrentPath = "/mnt/share/Clients";
-
-    // var setting = new ClientExplorerSetting();
-    //
-    // var options = new JsonSerializerOptions
-    // {
-    //   Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
-    //   WriteIndented = true
-    // };
-    //
-    // if (!Directory.Exists("./Assets")) Directory.CreateDirectory("./Assets");
-    // using var fs = new FileStream("./Assets/Setting.json", FileMode.Create, FileAccess.Write);
-    // JsonSerializer.Serialize(fs, setting, options);
-
-    // LocationNameInfo = AppDomain.CurrentDomain.BaseDirectory;
+    StatusInfo = "Run...";
+    VersionAppInfo = VersionApp;
 
     #region Client
 
@@ -100,9 +76,9 @@ public class MainViewModel : BaseViewModel
       FoldersForCreate.Add(new FolderLocationEntityViewModel(directory.Name, directory));
     }
     
-    var currDir = ClientExplorerApp.CurrentPath + Path.DirectorySeparatorChar + ClientExplorerApp.DefaultDataResourcePath;
+    var currDir = GetLocationsSourceFilePath();
     
-    if (Directory.Exists(currDir))
+    if (File.Exists(currDir))
     {
       var msg = "Ready";
       ShowMessageInfoAsync(msg, 0.0, false);
@@ -394,22 +370,14 @@ public class MainViewModel : BaseViewModel
   /// </summary>
   private Task InitClientListAsync()
   {
-    if (ClientExplorerApp.CurrentPath == null)
-    {
-      var msg = string.Format("Err: In methods - {0}. {1} == null", nameof(InitClientListAsync),
-        nameof(ClientExplorerApp.CurrentPath));
-      ShowMessageInfoAsync(msg, 0.0, false);
-      return Task.CompletedTask;
-    }
-
     SortedClients.Clear();
 
-    var directoryInfo = new DirectoryInfo(ClientExplorerApp.CurrentPath);
+    var directoryInfo = new DirectoryInfo(Settings.CurrentPath);
 
-    if (!Directory.Exists(ClientExplorerApp.CurrentPath))
+    if (!Directory.Exists(Settings.CurrentPath))
     {
       var msg = string.Format("Err: In methods - {0}. {1} - not available...", nameof(InitClientListAsync),
-        nameof(ClientExplorerApp.CurrentPath));
+        nameof(Settings.CurrentPath));
       ShowMessageInfoAsync(msg, 0.0, false);
       return Task.CompletedTask;
     }
@@ -1020,7 +988,7 @@ public class MainViewModel : BaseViewModel
     }
 
     var directoryPath = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar +
-                        ClientExplorerApp.FolderObjectsName;
+                        Settings.FolderObjectsEntityName;
 
     if (!Directory.Exists(directoryPath))
     {
@@ -1150,7 +1118,7 @@ public class MainViewModel : BaseViewModel
     }
 
     var pathForObject = SelectedClient.ClientPath.FullName + Path.DirectorySeparatorChar +
-                        ClientExplorerApp.FolderObjectsName;
+                        Settings.FolderObjectsEntityName;
 
     foreach (var folderForCreate in FoldersForCreate)
     {
@@ -1197,7 +1165,7 @@ public class MainViewModel : BaseViewModel
 
     if (SelectedClient == null)
     {
-      clientPath = ClientExplorerApp.CurrentPath + Path.DirectorySeparatorChar + ClientFilter;
+      clientPath = Settings.CurrentPath + Path.DirectorySeparatorChar + ClientFilter;
 
       // Создаёт папку клиента. Если это новый клиент.
       if (!Directory.Exists(clientPath))
@@ -1231,7 +1199,7 @@ public class MainViewModel : BaseViewModel
     }
 
     // Составляет путь директории объекта (локации)
-    var locationPath = clientPath + Path.DirectorySeparatorChar + ClientExplorerApp.FolderObjectsName;
+    var locationPath = clientPath + Path.DirectorySeparatorChar + Settings.FolderObjectsEntityName;
     var isValidLocation = false;
 
     locationPath = GetLocationPath(locationPath, ref isValidLocation);

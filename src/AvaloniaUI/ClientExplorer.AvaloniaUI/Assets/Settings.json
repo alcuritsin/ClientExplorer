@@ -1,7 +1,8 @@
 {
   "CurrentPath": "/mnt/share/Clients",
-  "DataResourcePathName": ".ClientExplorer",
-  "AssetsPathName": "Assets",
+  "OnClientPathDataResourceAppFolderName": ".ClientExplorer",
+  "OnClientPathAssetsFolderName": "Assets",
   "AddressLocationsSourceFileName": "AddressLocations.json",
-  "FolderObjectsName": "Объекты"
+  "FolderObjectsEntityName": "Объекты",
+  "ClientLogoFileName": ".logo.png"  
 }

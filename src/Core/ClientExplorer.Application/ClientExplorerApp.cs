@@ -1,72 +1,53 @@
-﻿using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Unicode;
-
-namespace ClientExplorer.Application;
+﻿namespace ClientExplorer.Application;
 
 public static class ClientExplorerApp
 {
   public const string VersionApp = "ver: 1.0.0";
-  public const string DefaultDataResourcePath = ".ClientExplorer";
-  public static readonly string LocationsSourceFileName = "Assets" + Path.DirectorySeparatorChar + "AddressLocations.json";
-
-  public const string FolderObjectsName = "Объекты";
-
-  public static string? CurrentPath { get; set; }
+  public static readonly AppSetting Settings = new AppSetting().LoadSettings();
 
   public static readonly DirectoriesInClient DirectoriesInClient = new DirectoriesInClient();
   public static readonly DirectoriesInLocation DirectoriesInLocation = new DirectoriesInLocation();
 
-  public static ClientExplorerSetting Settings = new ClientExplorerSetting();
-}
 
-public class ClientExplorerSetting
-{
-  //TODO Вынос всех настроек в файл "setting.json"
-  public string CurrentPath { get; set; }
-  public string DataResourcePathName { get; set; }
-  public string AssetsPathName { get; set; }
-  public string AddressLocationsSourceFileName { get; set; }
-  public string FolderObjectsName { get; set; }
-  
-  public ClientExplorerSetting()
+  /// <summary>
+  /// Возвращает путь к файлу хранения коллекции адресов (локаций).
+  /// </summary>
+  /// <returns>
+  /// Путь к файлу коллекции адресов (локаций)
+  /// </returns>
+  public static string GetLocationsSourceFilePath()
   {
-    // Путь к файлу настроек - './Assets/Settings.json'
-    var filePath = "." + Path.DirectorySeparatorChar;
-    filePath += "Assets" + Path.DirectorySeparatorChar;
-    filePath += "Settings.json";
-    
-    DataResourcePathName = ".ClientExplorer";
-    AssetsPathName = "Assets";
+    var locationsFilePath = GetOnClientPathAssetsFolderPath();
+    locationsFilePath += Settings.AddressLocationsSourceFileName;
 
-    AddressLocationsSourceFileName = "AddressLocations.json";
-
-    FolderObjectsName = "Объекты";
-
-    CurrentPath = "/mnt/share/Clients";
+    return locationsFilePath;
   }
 
-  private void LoadSettings(string filePath)
+  /// <summary>
+  /// Возвращает путь к папке хранения служебных данных приложения, в папке клиентов.
+  /// </summary>
+  /// <returns>
+  /// Путь к папке хранения служебных данных приложения.
+  /// </returns>
+  public static string GetOnClientPathDataResourceAppPath()
   {
-    
-   
-    
-  }
-  
-  private void UploadSettings(string filePath)
-  {
-    var setting = new ClientExplorerSetting();
-    
-    var options = new JsonSerializerOptions
-    {
-      Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
-      WriteIndented = true
-    };
-    
-    if (!Directory.Exists("./Assets")) Directory.CreateDirectory("./Assets");
-    using var fs = new FileStream("./Assets/Setting.json", FileMode.Create, FileAccess.Write);
-    JsonSerializer.Serialize(fs, this, options);
+    var onClientPathDataResourceAppPath = Settings.CurrentPath + Path.DirectorySeparatorChar;
+    onClientPathDataResourceAppPath += Settings.OnClientPathDataResourceAppFolderName + Path.DirectorySeparatorChar;
 
+    return onClientPathDataResourceAppPath;
   }
-  
+
+  /// <summary>
+  /// Возвращает путь к папке хранения ресурсов приложения, в папке клиентов.
+  /// </summary>
+  /// <returns>
+  /// Путь к папке хранения служебных данных приложения.
+  /// </returns>
+  public static string GetOnClientPathAssetsFolderPath()
+  {
+    var onClientPathAssetsFolderPath = GetOnClientPathDataResourceAppPath();
+    onClientPathAssetsFolderPath += Settings.OnClientPathAssetsFolderName + Path.DirectorySeparatorChar;
+
+    return onClientPathAssetsFolderPath;
+  }
 }
