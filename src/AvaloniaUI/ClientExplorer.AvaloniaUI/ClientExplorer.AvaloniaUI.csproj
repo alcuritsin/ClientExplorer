@@ -16,6 +16,7 @@
     <SignAssembly>true</SignAssembly>
     <PublicSign>false</PublicSign>
     <DelaySign>true</DelaySign>
+    <Title>Client Explorer</Title>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>true</Optimize>
@@ -26,6 +27,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PlatformTarget>x64</PlatformTarget>
+    <DocumentationFile>bin\Release\net6.0\ClientExplorer.AvaloniaUI.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

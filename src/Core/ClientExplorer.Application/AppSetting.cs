@@ -4,15 +4,55 @@ using System.Text.Unicode;
 
 namespace ClientExplorer.Application;
 
+/// <summary>
+/// Класс настроек приложения
+/// </summary>
 public class AppSetting
 {
+  #region Public Properties
+
+  /// <summary>
+  /// Путь до общей папки клиентов.
+  /// Необходимо указывать путь в зависимости от типа операционной системы.
+  /// </summary>
   public string CurrentPath { get; set; }
+
+  /// <summary>
+  /// Имя папки хранения различных ресурсов приложения.
+  /// Она хранится в общей папке клиентов.
+  /// </summary>
   public string OnClientPathDataResourceAppFolderName { get; set; }
+
+  /// <summary>
+  /// Имя папки хранения активов приложения.
+  /// Это вложенная папка, находится в папке ресурсов.
+  /// </summary>
   public string OnClientPathAssetsFolderName { get; set; }
+
+  /// <summary>
+  /// Имя файла, в котором хранится база адресов объектов
+  /// </summary>
   public string AddressLocationsSourceFileName { get; set; }
+
+  /// <summary>
+  /// Имя для папки 'Объекты'
+  /// </summary>
   public string FolderObjectsEntityName { get; set; }
+
+  /// <summary>
+  /// Имя файла логотипа клиента.
+  /// Если в папке клиента найден файл с таким именем, этот файл будет использоваться как иконка.
+  /// Файл должен быть *.png 
+  /// </summary>
   public string ClientLogoFileName { get; set; }
 
+  #endregion
+
+  #region Constructor
+
+  /// <summary>
+  /// Конструктор. Инициализация свойств
+  /// </summary>
   public AppSetting()
   {
     CurrentPath = string.Empty;
@@ -23,6 +63,16 @@ public class AppSetting
     ClientLogoFileName = string.Empty;
   }
 
+  #endregion
+
+  #region Public Methods
+
+  /// <summary>
+  /// Чтение настроек из файла.
+  /// </summary>
+  /// <returns>
+  /// Возвращает тип AppSetting
+  /// </returns>
   public AppSetting LoadSettings()
   {
     var filePath = "Assets" + Path.DirectorySeparatorChar;
@@ -41,7 +91,12 @@ public class AppSetting
     return new AppSetting();
   }
 
-
+  /// <summary>
+  /// Сохранение настроек в файл
+  /// </summary>
+  /// <param name="filePath">
+  /// Имя файла, включая расщирение.
+  /// </param>
   private void UploadSettings(string filePath)
   {
     var options = new JsonSerializerOptions
@@ -56,6 +111,9 @@ public class AppSetting
     JsonSerializer.Serialize(fs, this, options);
   }
 
+  /// <summary>
+  /// Устанавливает настройки по умолчанию.
+  /// </summary>
   private void DefaultSettings()
   {
     OnClientPathDataResourceAppFolderName = ".ClientExplorer";
@@ -69,4 +127,6 @@ public class AppSetting
 
     ClientLogoFileName = ".logo.png";
   }
+
+  #endregion
 }
