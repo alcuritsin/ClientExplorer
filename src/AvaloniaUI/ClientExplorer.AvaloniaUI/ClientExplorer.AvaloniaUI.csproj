@@ -8,10 +8,29 @@
     <AssemblyVersion>0.1.0</AssemblyVersion>
     <FileVersion>0.1.0</FileVersion>
     <NeutralLanguage>ru</NeutralLanguage>
+    <AssemblyName>ClientExplorer</AssemblyName>
+    <RootNamespace>ClientExplorer</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <Company>ClientExplorer</Company>
+    <Product>ClientExplorer</Product>
+    <SignAssembly>true</SignAssembly>
+    <PublicSign>false</PublicSign>
+    <DelaySign>true</DelaySign>
+    <Title>Client Explorer</Title>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <Optimize>true</Optimize>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DocumentationFile>bin\Release\net6.0\ClientExplorer.AvaloniaUI.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
     <None Remove=".gitignore" />
   </ItemGroup>
@@ -26,6 +45,21 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.18" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.18" />
+    <PackageReference Include="Avalonia.Xaml.Interactions" Version="0.10.18" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="0.10.18" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\ClientExplorer.Shared.ViewModels\ClientExplorer.Shared.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include=".ClientExplorer\Assets\AddressLocations.json" />
+    <None Remove="Assets\Setting.json" />
+    <Content Include="Assets\Settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>
