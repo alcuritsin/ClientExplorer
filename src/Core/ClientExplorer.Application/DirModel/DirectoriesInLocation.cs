@@ -1,9 +1,18 @@
 namespace ClientExplorer.Application;
 
+/// <summary>
+/// Директории в каталоге локации 
+/// </summary>
 public class DirectoriesInLocation
 {
+  /// <summary>
+  /// Список директорий в каталоге локации
+  /// </summary>
   public List<DirectoryEntity> Folders { get; private set; }
 
+  /// <summary>
+  /// Генератор директорий в каталоге локации, по умолчанию
+  /// </summary>
   public DirectoriesInLocation()
   {
     Folders = new List<DirectoryEntity>();
@@ -16,10 +25,6 @@ public class DirectoriesInLocation
     //Пока список папок хардкодим. Известная проблема - из-за использования в качестве дочерней директории,
     //объект этого же класса, образуется рекурсия с бесконечностью. Это не позволяет сериализовать такую коллекцию.
     
-    //TODO Откорректировать структуру папок
-    // из папки 02 Фото папку 01 Замеры убираем
-    // 04 Проект\01 Входящие документы - Данные от клиента и Данные от собственника - убираем
-
     #region ./Клиент/Объекты/Город/Адрес, Дом, ТЦ/
 
     /*
@@ -38,14 +43,7 @@ public class DirectoriesInLocation
 
     #region ./02 Фото
 
-    /*
-      ./02 Фото/01 Замеры
-      */
-
-    List<DirectoryEntity> photo = new List<DirectoryEntity>();
-    photo.Add(new DirectoryEntity("01 Замеры"));
-
-    Folders.Add(new DirectoryEntity("02 Фото", photo));
+    Folders.Add(new DirectoryEntity("02 Фото"));
 
     #endregion
 
@@ -62,18 +60,6 @@ public class DirectoriesInLocation
      ./04 Проект/02 Проект на согласование
      ./04 Проект/03 Проект рабочий
      */
-
-    #region ./04 Проект/01 Входящие документы
-
-    /*
-     ./04 Проект/01 Входящие документы/Данные от клиента
-     ./04 Проект/01 Входящие документы/Данные от собственника
-     */
-    List<DirectoryEntity> inDoc = new List<DirectoryEntity>();
-    inDoc.Add(new DirectoryEntity("Данные от клиента"));
-    inDoc.Add(new DirectoryEntity("Данные от собственника"));
-
-    #endregion
 
     #region ./04 Проект/03 Проект рабочий
 
@@ -92,7 +78,8 @@ public class DirectoriesInLocation
     #endregion
 
     List<DirectoryEntity> proj = new List<DirectoryEntity>();
-    proj.Add(new DirectoryEntity("01 Входящие документы", inDoc));
+    
+    proj.Add(new DirectoryEntity("01 Входящие документы"));
     proj.Add(new DirectoryEntity("02 Проект на согласование"));
     proj.Add(new DirectoryEntity("03 Проект рабочий", workDoc));
 

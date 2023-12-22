@@ -1,9 +1,18 @@
 namespace ClientExplorer.Application;
 
+/// <summary>
+/// Директории в каталоге клиента 
+/// </summary>
 public class DirectoriesInClient
 {
+  /// <summary>
+  /// Список директорий в каталоге клиентка
+  /// </summary>
   public List<DirectoryEntity> Folders { get; private set; }
 
+  /// <summary>
+  /// Генератор директорий в каталоге клиента, по умолчанию
+  /// </summary>
   public DirectoriesInClient()
   {
     Folders = new List<DirectoryEntity>();
