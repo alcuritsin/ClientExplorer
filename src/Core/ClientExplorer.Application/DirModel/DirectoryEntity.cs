@@ -1,3 +1,5 @@
+using System.Data;
+
 namespace ClientExplorer.Application;
 
 /// <summary>
@@ -33,6 +35,43 @@ public class DirectoryEntity
     return GetDirectoryFrom(this);
   }
 
+  private void AddChildDir(DirectoryEntity childDir)
+  {
+    childDir.ParentDirectory = this;
+    
+    var directoryEntities = this.ChildDirs;
+    
+    if (directoryEntities != null)
+    {
+      directoryEntities.Add(childDir);
+    }
+    else
+    {
+      this.ChildDirs = new List<DirectoryEntity>();
+      this.ChildDirs.Add(childDir);
+    }
+    
+  }
+
+  /// <summary>
+  /// Добавляет поддиректории из шаблона, если они есть. 
+  /// </summary>
+  /// <param name="root">Путь до каталога</param>
+  /// <param name="parent">Сущность каталога в программе</param>
+  public void AddSubDirs(DirectoryInfo root, DirectoryEntity parent)
+  {
+    var subDirs = root.GetDirectories();
+    
+    foreach (var directory in subDirs)
+    {
+      var directoryEntity = new DirectoryEntity(directory.Name);
+      
+      parent.AddChildDir(directoryEntity);
+      
+      AddSubDirs(directory, directoryEntity);            
+    }
+  }
+  
   private string GetDirectoryFrom(DirectoryEntity directoryEntity)
   {
     var result = Path.DirectorySeparatorChar + directoryEntity.Name;

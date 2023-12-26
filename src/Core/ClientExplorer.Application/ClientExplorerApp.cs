@@ -39,6 +39,19 @@ public static class ClientExplorerApp
   }
 
   /// <summary>
+  /// Возвращает путь к каталогу шаблонов директорий
+  /// </summary>
+  /// <returns>Путь к каталогу шаблонов</returns>
+  public static string GetTemplateDirectoryPath()
+  {
+    var templateDirectoryPath = GetOnClientPathAssetsFolderPath();
+
+    templateDirectoryPath += Path.DirectorySeparatorChar + "TemplateDirectories";
+    
+    return templateDirectoryPath;
+  }
+
+  /// <summary>
   /// Возвращает путь к папке хранения служебных данных приложения, в папке клиентов.
   /// </summary>
   /// <returns>
