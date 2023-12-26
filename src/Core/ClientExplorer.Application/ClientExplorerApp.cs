@@ -1,11 +1,26 @@
 ﻿namespace ClientExplorer.Application;
 
+/// <summary>
+/// 
+/// </summary>
 public static class ClientExplorerApp
 {
-  public const string VersionApp = "ver: 1.0.0";
+  /// <summary>
+  /// Версия программы
+  /// </summary>
+  public const string VersionApp = "ver: 1.0.1";
+  /// <summary>
+  /// Начальные настройки приложения
+  /// </summary>
   public static readonly AppSetting Settings = new AppSetting().LoadSettings();
 
+  /// <summary>
+  /// Директории в каталоге клиента 
+  /// </summary>
   public static readonly DirectoriesInClient DirectoriesInClient = new DirectoriesInClient();
+  /// <summary>
+  /// Директории в каталоге локации 
+  /// </summary>
   public static readonly DirectoriesInLocation DirectoriesInLocation = new DirectoriesInLocation();
 
 
@@ -24,12 +39,25 @@ public static class ClientExplorerApp
   }
 
   /// <summary>
+  /// Возвращает путь к каталогу шаблонов директорий
+  /// </summary>
+  /// <returns>Путь к каталогу шаблонов</returns>
+  public static string GetTemplateDirectoryPath()
+  {
+    var templateDirectoryPath = GetOnClientPathAssetsFolderPath();
+
+    templateDirectoryPath += Path.DirectorySeparatorChar + "TemplateDirectories";
+    
+    return templateDirectoryPath;
+  }
+
+  /// <summary>
   /// Возвращает путь к папке хранения служебных данных приложения, в папке клиентов.
   /// </summary>
   /// <returns>
   /// Путь к папке хранения служебных данных приложения.
   /// </returns>
-  public static string GetOnClientPathDataResourceAppPath()
+  private static string GetOnClientPathDataResourceAppPath()
   {
     var onClientPathDataResourceAppPath = Settings.CurrentPath + Path.DirectorySeparatorChar;
     onClientPathDataResourceAppPath += Settings.OnClientPathDataResourceAppFolderName + Path.DirectorySeparatorChar;
@@ -43,7 +71,7 @@ public static class ClientExplorerApp
   /// <returns>
   /// Путь к папке хранения служебных данных приложения.
   /// </returns>
-  public static string GetOnClientPathAssetsFolderPath()
+  private static string GetOnClientPathAssetsFolderPath()
   {
     var onClientPathAssetsFolderPath = GetOnClientPathDataResourceAppPath();
     onClientPathAssetsFolderPath += Settings.OnClientPathAssetsFolderName + Path.DirectorySeparatorChar;

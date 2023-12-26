@@ -1,111 +1,62 @@
 namespace ClientExplorer.Application;
+using static ClientExplorerApp;
 
+/// <summary>
+/// Директории в каталоге локации 
+/// </summary>
 public class DirectoriesInLocation
 {
+  /// <summary>
+  /// Список директорий в каталоге локации
+  /// </summary>
   public List<DirectoryEntity> Folders { get; private set; }
 
+  /// <summary>
+  /// Генератор директорий в каталоге локации, по умолчанию
+  /// </summary>
   public DirectoriesInLocation()
   {
+    
     Folders = new List<DirectoryEntity>();
+    
     InitLocationFolders();
+    
+    Folders.Sort((x, y) => String.Compare(x.Name, y.Name, StringComparison.Ordinal));
+    
   }
 
   private void InitLocationFolders()
   {
-    //TODO Вынести список папок в какой-то файл настроек, для возможности редактирования.
-    //Пока список папок хардкодим. Известная проблема - из-за использования в качестве дочерней директории,
-    //объект этого же класса, образуется рекурсия с бесконечностью. Это не позволяет сериализовать такую коллекцию.
     
-    //TODO Откорректировать структуру папок
-    // из папки 02 Фото папку 01 Замеры убираем
-    // 04 Проект\01 Входящие документы - Данные от клиента и Данные от собственника - убираем
+      #region ./Клиент/Объекты/Город/Адрес, Дом, ТЦ/
 
-    #region ./Клиент/Объекты/Город/Адрес, Дом, ТЦ/
-
-    /*
-     ./01 Документы
-     ./02 Фото
-     ./03 Дизайн
-     ./04 Проект
-     ./05 Согласование в администрации
-     */
-
-    #region ./01 Документы
-
-    Folders.Add(new DirectoryEntity("01 Документы"));
-
-    #endregion
-
-    #region ./02 Фото
-
-    /*
-      ./02 Фото/01 Замеры
-      */
-
-    List<DirectoryEntity> photo = new List<DirectoryEntity>();
-    photo.Add(new DirectoryEntity("01 Замеры"));
-
-    Folders.Add(new DirectoryEntity("02 Фото", photo));
-
-    #endregion
-
-    #region ./03 Дизайн
-
-    Folders.Add(new DirectoryEntity("03 Дизайн"));
-
-    #endregion
-
-    #region ./04 Проект
-
-    /*
-     ./04 Проект/01 Входящие документы
-     ./04 Проект/02 Проект на согласование
-     ./04 Проект/03 Проект рабочий
-     */
-
-    #region ./04 Проект/01 Входящие документы
-
-    /*
-     ./04 Проект/01 Входящие документы/Данные от клиента
-     ./04 Проект/01 Входящие документы/Данные от собственника
-     */
-    List<DirectoryEntity> inDoc = new List<DirectoryEntity>();
-    inDoc.Add(new DirectoryEntity("Данные от клиента"));
-    inDoc.Add(new DirectoryEntity("Данные от собственника"));
-
-    #endregion
-
-    #region ./04 Проект/03 Проект рабочий
-
-    /*
-     ./04 Проект/03 Проект рабочий/01 Файлы для печати
-     ./04 Проект/03 Проект рабочий/02 Файлы для плоттера
-     ./04 Проект/03 Проект рабочий/03 Файлы для фрезера
-     ./04 Проект/03 Проект рабочий/04 Файлы для лазера
-     */
-    List<DirectoryEntity> workDoc = new List<DirectoryEntity>();
-    workDoc.Add(new DirectoryEntity("01 Файлы для печати"));
-    workDoc.Add(new DirectoryEntity("02 Файлы для плоттера"));
-    workDoc.Add(new DirectoryEntity("03 Файлы для фрезера"));
-    workDoc.Add(new DirectoryEntity("04 Файлы для лазера"));
-
-    #endregion
-
-    List<DirectoryEntity> proj = new List<DirectoryEntity>();
-    proj.Add(new DirectoryEntity("01 Входящие документы", inDoc));
-    proj.Add(new DirectoryEntity("02 Проект на согласование"));
-    proj.Add(new DirectoryEntity("03 Проект рабочий", workDoc));
-
-    Folders.Add(new DirectoryEntity("04 Проект", proj));
-
-    #endregion
-
-    #region ./05 Согласование в администрации
-
-    Folders.Add(new DirectoryEntity("05 Согласование в администрации"));
-
-    #endregion
-
-    #endregion
+        var templatePath = GetTemplateDirectoryPath() + Path.DirectorySeparatorChar + "InLocation";
+        
+        var directoryInfo = new DirectoryInfo(templatePath);
+        
+        if (!Directory.Exists(templatePath))
+        {
+          var msg = string.Format("Err: In methods - {0}. {1} - not available...",
+            nameof(DirectoriesInLocation),
+            nameof(templatePath));
+            //TODO: Вывести сообщение об ошибке. Не доступена папка ".ClientExplorer/Assets/InClient".
+            return;
+        }
+          
+        foreach (var directory in directoryInfo.GetDirectories())
+        {
+          //  Точка вначале - символ скрытности. Такие директории пропускать. 
+          if (directory.Name.First() != '.')
+          {
+            var directoryEntity = new DirectoryEntity(directory.Name);
+            
+            directoryEntity.AddSubDirs(directory,directoryEntity);
+      
+            Folders.Add(directoryEntity);
+          }
+        }
+          
+      #endregion
+      
   }
 }
