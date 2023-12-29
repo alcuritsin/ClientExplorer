@@ -24,7 +24,7 @@ public class ClientEntityViewModel : BaseViewModel
     else
     {
       Icon = new Bitmap(AvaloniaLocator.Current.GetService<IAssetLoader>()
-        .Open(new Uri($"avares://ClientExplorer/Assets/not-available.png")));
+        ?.Open(new Uri($"avares://ClientExplorer/Assets/not-available.png")));
     }
   }
 }

@@ -58,8 +58,24 @@
   <ItemGroup>
     <Content Include=".ClientExplorer\Assets\AddressLocations.json" />
     <None Remove="Assets\Setting.json" />
+    <Content Include=".ClientExplorer\Assets\AddressLocations_bak.json" />
     <Content Include="Assets\Settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include=".ClientExplorer\Assets\TemplateDirectories\InClient\Документы общие\" />
+    <Folder Include=".ClientExplorer\Assets\TemplateDirectories\InClient\Каталог стандартных решений\" />
+    <Folder Include=".ClientExplorer\Assets\TemplateDirectories\InLocation\01 Документы\" />
+    <Folder Include=".ClientExplorer\Assets\TemplateDirectories\InLocation\02 Фото\" />
+    <Folder Include=".ClientExplorer\Assets\TemplateDirectories\InLocation\03 Дизайн\" />
+    <Folder Include=".ClientExplorer\Assets\TemplateDirectories\InLocation\04 Проект\01 Входящие документы\" />
+    <Folder Include=".ClientExplorer\Assets\TemplateDirectories\InLocation\04 Проект\02 Проект на согласование\" />
+    <Folder Include=".ClientExplorer\Assets\TemplateDirectories\InLocation\04 Проект\03 Проект рабочий\01 Файлы для печати\" />
+    <Folder Include=".ClientExplorer\Assets\TemplateDirectories\InLocation\04 Проект\03 Проект рабочий\02 Файлы для плоттера\" />
+    <Folder Include=".ClientExplorer\Assets\TemplateDirectories\InLocation\04 Проект\03 Проект рабочий\03 Файлы для фрезера\" />
+    <Folder Include=".ClientExplorer\Assets\TemplateDirectories\InLocation\04 Проект\03 Проект рабочий\04 Файлы для лазера\" />
+    <Folder Include=".ClientExplorer\Assets\TemplateDirectories\InLocation\05 Согласование в администрации\" />
   </ItemGroup>
 </Project>

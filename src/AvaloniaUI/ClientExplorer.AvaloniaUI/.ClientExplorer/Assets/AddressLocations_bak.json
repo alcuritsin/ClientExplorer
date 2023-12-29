@@ -1,11 +1,6 @@
 [
   {
     "CityName": "Абатское",
-    "StreetName": "",
-    "HouseNumber": ""
-  },
-  {
-    "CityName": "Абатское",
     "StreetName": "Зеленая",
     "HouseNumber": "35"
   },
@@ -21,18 +16,8 @@
   },
   {
     "CityName": "Акъяр",
-    "StreetName": "",
-    "HouseNumber": ""
-  },
-  {
-    "CityName": "Акъяр",
     "StreetName": "Батанова",
     "HouseNumber": "6"
-  },
-  {
-    "CityName": "Алапаевск",
-    "StreetName": "",
-    "HouseNumber": ""
   },
   {
     "CityName": "Алапаевск",
@@ -121,28 +106,8 @@
   },
   {
     "CityName": "Арамиль",
-    "StreetName": "1 Мая",
-    "HouseNumber": "29-А"
-  },
-  {
-    "CityName": "Арамиль",
     "StreetName": "1 мая",
     "HouseNumber": "31"
-  },
-  {
-    "CityName": "Арамиль",
-    "StreetName": "Белинского",
-    "HouseNumber": "13"
-  },
-  {
-    "CityName": "Арамиль",
-    "StreetName": "Клубная",
-    "HouseNumber": "25"
-  },
-  {
-    "CityName": "Арамиль",
-    "StreetName": "Пролетарская",
-    "HouseNumber": "82-б"
   },
   {
     "CityName": "Арамиль",
@@ -246,7 +211,7 @@
   },
   {
     "CityName": "Асбест",
-    "StreetName": "Ладыженского",
+    "StreetName": "Лажыженского",
     "HouseNumber": "30-1"
   },
   {
@@ -455,11 +420,6 @@
     "HouseNumber": "28"
   },
   {
-    "CityName": "Белогорск",
-    "StreetName": "Ленина",
-    "HouseNumber": "63"
-  },
-  {
     "CityName": "Белорецк",
     "StreetName": "50 лет Октября",
     "HouseNumber": "78-1"
@@ -478,16 +438,6 @@
     "CityName": "Белорецк",
     "StreetName": "Точисского",
     "HouseNumber": "9"
-  },
-  {
-    "CityName": "Белоярский ХМАО",
-    "StreetName": "7 мкр",
-    "HouseNumber": "9"
-  },
-  {
-    "CityName": "Белоярский",
-    "StreetName": "",
-    "HouseNumber": ""
   },
   {
     "CityName": "Белоярский",
@@ -541,18 +491,8 @@
   },
   {
     "CityName": "Белоярский",
-    "StreetName": "Спортивный квартал",
-    "HouseNumber": "1"
-  },
-  {
-    "CityName": "Белоярский",
     "StreetName": "Строителей",
     "HouseNumber": "15А"
-  },
-  {
-    "CityName": "Белоярский",
-    "StreetName": "Химиков",
-    "HouseNumber": "3"
   },
   {
     "CityName": "Белый Яр",
@@ -1170,11 +1110,6 @@
     "HouseNumber": "79"
   },
   {
-    "CityName": "Варгаши",
-    "StreetName": "Социалистическая",
-    "HouseNumber": "96"
-  },
-  {
     "CityName": "Варна",
     "StreetName": "Мостовой",
     "HouseNumber": "1В"
@@ -1193,26 +1128,6 @@
     "CityName": "Верх-Нейвинск",
     "StreetName": "Ленина",
     "HouseNumber": "18"
-  },
-  {
-    "CityName": "Верхняя Пышма",
-    "StreetName": "Мальцева",
-    "HouseNumber": "2-Б"
-  },
-  {
-    "CityName": "Верхняя Пышма",
-    "StreetName": "Петрова",
-    "HouseNumber": "59-Б"
-  },
-  {
-    "CityName": "Верхняя Пышма",
-    "StreetName": "Успенский пр",
-    "HouseNumber": "97"
-  },
-  {
-    "CityName": "Верхняя Салда",
-    "StreetName": "Спортивная",
-    "HouseNumber": "4"
   },
   {
     "CityName": "Верхотурье",
@@ -1367,11 +1282,6 @@
   {
     "CityName": "Горный Щит",
     "StreetName": "Буденного",
-    "HouseNumber": ""
-  },
-  {
-    "CityName": "Горный Щит",
-    "StreetName": "Буденного",
     "HouseNumber": "15"
   },
   {
@@ -1491,11 +1401,6 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "",
-    "HouseNumber": ""
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "22 Партсъезда",
     "HouseNumber": "2"
   },
@@ -1551,18 +1456,8 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "8 Марта",
-    "HouseNumber": "118"
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "8 марта",
     "HouseNumber": "128"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "8 Марта",
-    "HouseNumber": "145"
   },
   {
     "CityName": "Екатеринбург",
@@ -1593,11 +1488,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "8 марта",
     "HouseNumber": "46"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "8 Марта",
-    "HouseNumber": "51"
   },
   {
     "CityName": "Екатеринбург",
@@ -1676,23 +1566,8 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Академика Парина",
-    "HouseNumber": "41-2"
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "Академика Сахарова",
     "HouseNumber": "107-1"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Академика Сахарова",
-    "HouseNumber": "45"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Академика Сахарова",
-    "HouseNumber": "53"
   },
   {
     "CityName": "Екатеринбург",
@@ -1708,6 +1583,11 @@
     "CityName": "Екатеринбург",
     "StreetName": "Алтайская",
     "HouseNumber": "64"
+  },
+  {
+    "CityName": "Екатеринбург",
+    "StreetName": "Амендсена",
+    "HouseNumber": "65"
   },
   {
     "CityName": "Екатеринбург",
@@ -1791,11 +1671,6 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Бакинских Комиссаров",
-    "HouseNumber": "99"
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "Бардина",
     "HouseNumber": "11а"
   },
@@ -1838,11 +1713,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "Бардина",
     "HouseNumber": "42"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Баумана",
-    "HouseNumber": "1"
   },
   {
     "CityName": "Екатеринбург",
@@ -1901,12 +1771,12 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Бахчиванджи",
+    "StreetName": "Бахчиванжи",
     "HouseNumber": "14"
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Бахчиванджи",
+    "StreetName": "Бахчиванжи",
     "HouseNumber": "2Б"
   },
   {
@@ -1938,11 +1808,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "Белинского",
     "HouseNumber": "143"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Белинского",
-    "HouseNumber": "152"
   },
   {
     "CityName": "Екатеринбург",
@@ -2003,11 +1868,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "Белореченская",
     "HouseNumber": "7-1"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Белореченская",
-    "HouseNumber": "9-1"
   },
   {
     "CityName": "Екатеринбург",
@@ -2166,7 +2026,7 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Верх-Исетский бульвар",
+    "StreetName": "Верх_Исетский бульвар",
     "HouseNumber": "13"
   },
   {
@@ -2197,11 +2057,6 @@
   {
     "CityName": "Екатеринбург",
     "StreetName": "Викулова",
-    "HouseNumber": "38-4"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Викулова",
     "HouseNumber": "41"
   },
   {
@@ -2212,17 +2067,7 @@
   {
     "CityName": "Екатеринбург",
     "StreetName": "Вильгельма Де Генина",
-    "HouseNumber": ""
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Вильгельма Де Генина",
     "HouseNumber": "31"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Вильгельма Де Генина",
-    "HouseNumber": "34"
   },
   {
     "CityName": "Екатеринбург",
@@ -2236,18 +2081,8 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Вильгельма Де Генина",
-    "HouseNumber": "42"
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "Вильгельма де Генина",
     "HouseNumber": "49"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Владимира Высоцкого",
-    "HouseNumber": "5"
   },
   {
     "CityName": "Екатеринбург",
@@ -2258,11 +2093,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "Водоемная",
     "HouseNumber": "80"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Воеводина",
-    "HouseNumber": "8"
   },
   {
     "CityName": "Екатеринбург",
@@ -2426,11 +2256,6 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Горные лыжи",
-    "HouseNumber": ""
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "Горького",
     "HouseNumber": "69"
   },
@@ -2512,16 +2337,11 @@
   {
     "CityName": "Екатеринбург",
     "StreetName": "Данилы Зверева",
-    "HouseNumber": "11"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Данилы Зверева",
     "HouseNumber": "17А"
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Данилы Зверева",
+    "StreetName": "Данилы_Зверева",
     "HouseNumber": "17б"
   },
   {
@@ -2596,11 +2416,6 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Евгения Савкова",
-    "HouseNumber": "31"
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "Заводская",
     "HouseNumber": "12"
   },
@@ -2623,16 +2438,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "Зои Космодемьянской",
     "HouseNumber": "44"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Золотистый Бульвар",
-    "HouseNumber": "7"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Золотистый",
-    "HouseNumber": "11"
   },
   {
     "CityName": "Екатеринбург",
@@ -2686,17 +2491,17 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Калинина",
-    "HouseNumber": "79"
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "Карла Либкнехта",
     "HouseNumber": "18"
   },
   {
     "CityName": "Екатеринбург",
     "StreetName": "Кировградская",
+    "HouseNumber": "4"
+  },
+  {
+    "CityName": "Екатеринбург",
+    "StreetName": "Кировоградская",
     "HouseNumber": "4"
   },
   {
@@ -2738,11 +2543,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "Комсомольская",
     "HouseNumber": "14"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Комсомольская",
-    "HouseNumber": "19"
   },
   {
     "CityName": "Екатеринбург",
@@ -2872,11 +2672,6 @@
   {
     "CityName": "Екатеринбург",
     "StreetName": "Краснолесья",
-    "HouseNumber": "109А"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Краснолесья",
     "HouseNumber": "133"
   },
   {
@@ -2901,11 +2696,6 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Краснофлотцев",
-    "HouseNumber": "69"
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "Красный",
     "HouseNumber": "7"
   },
@@ -2918,11 +2708,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "Красных Партизан",
     "HouseNumber": "1"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Крауля",
-    "HouseNumber": "4"
   },
   {
     "CityName": "Екатеринбург",
@@ -2948,11 +2733,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "Крауля",
     "HouseNumber": "65"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Крауля",
-    "HouseNumber": "69"
   },
   {
     "CityName": "Екатеринбург",
@@ -3027,11 +2807,6 @@
   {
     "CityName": "Екатеринбург",
     "StreetName": "Куйбышева",
-    "HouseNumber": "44"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Куйбышева",
     "HouseNumber": "45"
   },
   {
@@ -3078,11 +2853,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "Ленина",
     "HouseNumber": "25"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Ленина",
-    "HouseNumber": "37-Б"
   },
   {
     "CityName": "Екатеринбург",
@@ -3266,11 +3036,6 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Мамина-Сибиряка",
-    "HouseNumber": "85А"
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "Машинная",
     "HouseNumber": "27В"
   },
@@ -3367,11 +3132,6 @@
   {
     "CityName": "Екатеринбург",
     "StreetName": "Мира",
-    "HouseNumber": "26 А"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Мира",
     "HouseNumber": "29-1"
   },
   {
@@ -3383,11 +3143,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "Мира",
     "HouseNumber": "41"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Мира",
-    "HouseNumber": "47-3"
   },
   {
     "CityName": "Екатеринбург",
@@ -3403,11 +3158,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "Молотобойцев",
     "HouseNumber": "5"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Монтажников",
-    "HouseNumber": "2-Б"
   },
   {
     "CityName": "Екатеринбург",
@@ -3428,11 +3178,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "Московская",
     "HouseNumber": "77"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Московский тракт 9-й км",
-    "HouseNumber": "16-Б"
   },
   {
     "CityName": "Екатеринбург",
@@ -3661,16 +3406,6 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Победы",
-    "HouseNumber": "9"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Полимерный",
-    "HouseNumber": "9"
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "Посадская",
     "HouseNumber": "3"
   },
@@ -3731,7 +3466,7 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Радищева",
+    "StreetName": "Радищего",
     "HouseNumber": "31"
   },
   {
@@ -3743,11 +3478,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "Расточная",
     "HouseNumber": "17-1"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Реактивная",
-    "HouseNumber": ""
   },
   {
     "CityName": "Екатеринбург",
@@ -3768,6 +3498,11 @@
     "CityName": "Екатеринбург",
     "StreetName": "Репина",
     "HouseNumber": "90"
+  },
+  {
+    "CityName": "Екатеринбург",
+    "StreetName": "Репина",
+    "HouseNumber": "94"
   },
   {
     "CityName": "Екатеринбург",
@@ -3813,16 +3548,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "Родонитовая",
     "HouseNumber": "4А"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Розы Люксембург",
-    "HouseNumber": "12"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Рощинская",
-    "HouseNumber": "21"
   },
   {
     "CityName": "Екатеринбург",
@@ -3987,11 +3712,6 @@
   {
     "CityName": "Екатеринбург",
     "StreetName": "Селькоровская",
-    "HouseNumber": "11"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Селькоровская",
     "HouseNumber": "36"
   },
   {
@@ -4107,12 +3827,7 @@
   {
     "CityName": "Екатеринбург",
     "StreetName": "Советская",
-    "HouseNumber": "64-2"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Совхозная",
-    "HouseNumber": "2"
+    "HouseNumber": "51"
   },
   {
     "CityName": "Екатеринбург",
@@ -4156,11 +3871,6 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Ст. Разина",
-    "HouseNumber": "33"
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "Стахановская",
     "HouseNumber": "34"
   },
@@ -4168,11 +3878,6 @@
     "CityName": "Екатеринбург",
     "StreetName": "Стачек",
     "HouseNumber": "4"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Стены Цоя",
-    "HouseNumber": ""
   },
   {
     "CityName": "Екатеринбург",
@@ -4361,11 +4066,6 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Тенистая",
-    "HouseNumber": "6"
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "Терешковой",
     "HouseNumber": "144"
   },
@@ -4531,16 +4231,6 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Фабричная",
-    "HouseNumber": "25"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Фронтовых Бригад",
-    "HouseNumber": "18 А"
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "Фронтовых Бригад",
     "HouseNumber": "27Ж"
   },
@@ -4616,16 +4306,6 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Хрустальногорская",
-    "HouseNumber": "88"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Хрустальногорская",
-    "HouseNumber": "93"
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "Цвиллинга",
     "HouseNumber": "7а-2"
   },
@@ -4636,18 +4316,8 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Циолковского",
-    "HouseNumber": "57"
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "Чайковского",
     "HouseNumber": "78"
-  },
-  {
-    "CityName": "Екатеринбург",
-    "StreetName": "Чайковского",
-    "HouseNumber": "79"
   },
   {
     "CityName": "Екатеринбург",
@@ -4916,11 +4586,6 @@
   },
   {
     "CityName": "Екатеринбург",
-    "StreetName": "Якова Свердлова",
-    "HouseNumber": "14"
-  },
-  {
-    "CityName": "Екатеринбург",
     "StreetName": "Ясная",
     "HouseNumber": "2"
   },
@@ -4930,37 +4595,37 @@
     "HouseNumber": "31А"
   },
   {
-    "CityName": "Екатеринбург",
+    "CityName": "Ектеринбург",
     "StreetName": "Волгоградская",
     "HouseNumber": "39А"
   },
   {
-    "CityName": "Екатеринбург",
+    "CityName": "Ектеринбург",
     "StreetName": "Готвальда",
     "HouseNumber": "19"
   },
   {
-    "CityName": "Екатеринбург",
+    "CityName": "Ектеринбург",
     "StreetName": "Космонавтов",
     "HouseNumber": "56"
   },
   {
-    "CityName": "Екатеринбург",
+    "CityName": "Ектеринбург",
     "StreetName": "Красноармейская",
     "HouseNumber": "10"
   },
   {
-    "CityName": "Екатеринбург",
+    "CityName": "Ектеринбург",
     "StreetName": "Михеева",
     "HouseNumber": "12"
   },
   {
-    "CityName": "Екатеринбург",
+    "CityName": "Ектеринбург",
     "StreetName": "Победы",
     "HouseNumber": "94"
   },
   {
-    "CityName": "Екатеринбург",
+    "CityName": "Ектеринбург",
     "StreetName": "Тбиллиский бульвар",
     "HouseNumber": "13"
   },
@@ -5546,11 +5211,6 @@
   },
   {
     "CityName": "Кадниково",
-    "StreetName": "Карла Маркса",
-    "HouseNumber": "1"
-  },
-  {
-    "CityName": "Кадниково",
     "StreetName": "Хрустальная",
     "HouseNumber": "2А"
   },
@@ -5693,16 +5353,6 @@
     "CityName": "Калья",
     "StreetName": "Красноармейская",
     "HouseNumber": "21"
-  },
-  {
-    "CityName": "Каменск Уральский",
-    "StreetName": "Каменская",
-    "HouseNumber": "11"
-  },
-  {
-    "CityName": "Каменск Уральский",
-    "StreetName": "Суворова",
-    "HouseNumber": "24"
   },
   {
     "CityName": "Камышлов",
@@ -5866,11 +5516,6 @@
   },
   {
     "CityName": "Качканар",
-    "StreetName": "Гикалова",
-    "HouseNumber": "7"
-  },
-  {
-    "CityName": "Качканар",
     "StreetName": "Ленина",
     "HouseNumber": "121А"
   },
@@ -5978,11 +5623,6 @@
     "CityName": "Кировград",
     "StreetName": "Свердлова",
     "HouseNumber": "40-2"
-  },
-  {
-    "CityName": "Кировград",
-    "StreetName": "Свердлова",
-    "HouseNumber": "64"
   },
   {
     "CityName": "Кировград",
@@ -6135,11 +5775,6 @@
     "HouseNumber": "15"
   },
   {
-    "CityName": "Корпуса букв",
-    "StreetName": "",
-    "HouseNumber": ""
-  },
-  {
     "CityName": "Косулино",
     "StreetName": "Ленина",
     "HouseNumber": "129"
@@ -6276,11 +5911,6 @@
   },
   {
     "CityName": "Красноуральск",
-    "StreetName": "Иллариона Янкина",
-    "HouseNumber": "20"
-  },
-  {
-    "CityName": "Красноуральск",
     "StreetName": "Ленина",
     "HouseNumber": "23"
   },
@@ -6338,11 +5968,6 @@
     "CityName": "Краснохолмский",
     "StreetName": "Фрунзе",
     "HouseNumber": "28"
-  },
-  {
-    "CityName": "Красноярск",
-    "StreetName": "Газеты Красноярский Рабочий",
-    "HouseNumber": "120"
   },
   {
     "CityName": "Криулино",
@@ -6521,11 +6146,6 @@
   },
   {
     "CityName": "Курган",
-    "StreetName": "Машиностроителей",
-    "HouseNumber": "3-А"
-  },
-  {
-    "CityName": "Курган",
     "StreetName": "Мкрн. 6А",
     "HouseNumber": "1"
   },
@@ -6683,11 +6303,6 @@
     "CityName": "Лангепас",
     "StreetName": "Фрунзе",
     "HouseNumber": "56"
-  },
-  {
-    "CityName": "Лебяжье",
-    "StreetName": "Лукияновская",
-    "HouseNumber": "49"
   },
   {
     "CityName": "Левиха",
@@ -6905,11 +6520,6 @@
     "HouseNumber": "3"
   },
   {
-    "CityName": "Макушино",
-    "StreetName": "Ленина",
-    "HouseNumber": "66-А"
-  },
-  {
     "CityName": "Малиновский",
     "StreetName": "Ленина",
     "HouseNumber": "16"
@@ -7008,6 +6618,11 @@
     "CityName": "Междуреченск",
     "StreetName": "Строителей",
     "HouseNumber": "71"
+  },
+  {
+    "CityName": "Междуреченск",
+    "StreetName": "Строителей",
+    "HouseNumber": "8"
   },
   {
     "CityName": "Междуреченск",
@@ -7138,11 +6753,6 @@
     "CityName": "Мишкино",
     "StreetName": "Почтовая",
     "HouseNumber": "4"
-  },
-  {
-    "CityName": "Мокроусов0",
-    "StreetName": "Советская",
-    "HouseNumber": "38"
   },
   {
     "CityName": "Мортка",
@@ -8270,61 +7880,6 @@
     "HouseNumber": "33"
   },
   {
-    "CityName": "Нижний Новгород",
-    "StreetName": "Любимая",
-    "HouseNumber": "1"
-  },
-  {
-    "CityName": "Нижний Тагил",
-    "StreetName": "Вагоностроителей",
-    "HouseNumber": "24"
-  },
-  {
-    "CityName": "Нижний Тагил",
-    "StreetName": "Газетная",
-    "HouseNumber": "22"
-  },
-  {
-    "CityName": "Нижний Тагил",
-    "StreetName": "Захарова",
-    "HouseNumber": "10"
-  },
-  {
-    "CityName": "Нижний Тагил",
-    "StreetName": "Краснознаменная",
-    "HouseNumber": "41"
-  },
-  {
-    "CityName": "Нижний Тагил",
-    "StreetName": "Ленина",
-    "HouseNumber": "10"
-  },
-  {
-    "CityName": "Нижний Тагил",
-    "StreetName": "Ленина",
-    "HouseNumber": "69"
-  },
-  {
-    "CityName": "Нижний Тагил",
-    "StreetName": "Металлургов",
-    "HouseNumber": "58"
-  },
-  {
-    "CityName": "Нижний Тагил",
-    "StreetName": "Октябрьский проспект",
-    "HouseNumber": "24-А"
-  },
-  {
-    "CityName": "Нижний Тагил",
-    "StreetName": "Черноисточинское",
-    "HouseNumber": "64"
-  },
-  {
-    "CityName": "Нижний Тагил",
-    "StreetName": "Черноисточинское",
-    "HouseNumber": "7"
-  },
-  {
     "CityName": "Николо-Павловское",
     "StreetName": "Новая",
     "HouseNumber": "1А"
@@ -9041,11 +8596,6 @@
   },
   {
     "CityName": "Первоуральск",
-    "StreetName": "1",
-    "HouseNumber": ""
-  },
-  {
-    "CityName": "Первоуральск",
     "StreetName": "Билимбаевская",
     "HouseNumber": "34-4"
   },
@@ -9063,11 +8613,6 @@
     "CityName": "Первоуральск",
     "StreetName": "Ватутина",
     "HouseNumber": "37"
-  },
-  {
-    "CityName": "Первоуральск",
-    "StreetName": "Ватутина",
-    "HouseNumber": "38"
   },
   {
     "CityName": "Первоуральск",
@@ -9122,11 +8667,6 @@
   {
     "CityName": "Первоуральск",
     "StreetName": "Ильича",
-    "HouseNumber": "37"
-  },
-  {
-    "CityName": "Первоуральск",
-    "StreetName": "Ильича",
     "HouseNumber": "37А"
   },
   {
@@ -9146,11 +8686,6 @@
   },
   {
     "CityName": "Первоуральск",
-    "StreetName": "Московское шоссе",
-    "HouseNumber": "6-В"
-  },
-  {
-    "CityName": "Первоуральск",
     "StreetName": "Сантехизделий",
     "HouseNumber": "34"
   },
@@ -9158,11 +8693,6 @@
     "CityName": "Первоуральск",
     "StreetName": "Талица",
     "HouseNumber": "5"
-  },
-  {
-    "CityName": "Первоуральск",
-    "StreetName": "Трубников",
-    "HouseNumber": "29"
   },
   {
     "CityName": "Первоуральск",
@@ -9695,11 +9225,6 @@
     "HouseNumber": "2Б"
   },
   {
-    "CityName": "Печать",
-    "StreetName": "",
-    "HouseNumber": ""
-  },
-  {
     "CityName": "Пионерский",
     "StreetName": "Комсомольская",
     "HouseNumber": "9А"
@@ -9793,11 +9318,6 @@
     "CityName": "Полевской",
     "StreetName": "Володарского",
     "HouseNumber": "80"
-  },
-  {
-    "CityName": "Полевской",
-    "StreetName": "Горького",
-    "HouseNumber": "11-А"
   },
   {
     "CityName": "Полевской",
@@ -9990,11 +9510,6 @@
     "HouseNumber": "2Б"
   },
   {
-    "CityName": "Прохладный",
-    "StreetName": "Сетевая",
-    "HouseNumber": "2-А"
-  },
-  {
     "CityName": "Пуровск",
     "StreetName": "Монтажников",
     "HouseNumber": "15"
@@ -10035,11 +9550,6 @@
     "HouseNumber": "31а"
   },
   {
-    "CityName": "Пыть-Ях",
-    "StreetName": "Николая_Самардякова",
-    "HouseNumber": "4"
-  },
-  {
     "CityName": "Пышма",
     "StreetName": "Заводская",
     "HouseNumber": "21"
@@ -10058,11 +9568,6 @@
     "CityName": "Пышма",
     "StreetName": "Строителей",
     "HouseNumber": "1"
-  },
-  {
-    "CityName": "Пышма",
-    "StreetName": "Торговая",
-    "HouseNumber": "2"
   },
   {
     "CityName": "Радужный",
@@ -10113,11 +9618,6 @@
     "CityName": "Радужный",
     "StreetName": "Цветников",
     "HouseNumber": "39"
-  },
-  {
-    "CityName": "Раскрой фанеры",
-    "StreetName": "",
-    "HouseNumber": ""
   },
   {
     "CityName": "Растущий",
@@ -10228,11 +9728,6 @@
     "CityName": "Реж",
     "StreetName": "Калинина",
     "HouseNumber": "14а"
-  },
-  {
-    "CityName": "Реж",
-    "StreetName": "Калинина",
-    "HouseNumber": "19"
   },
   {
     "CityName": "Реж",
@@ -10365,11 +9860,6 @@
     "HouseNumber": "7"
   },
   {
-    "CityName": "Ринг",
-    "StreetName": "",
-    "HouseNumber": ""
-  },
-  {
     "CityName": "Рудничный",
     "StreetName": "Чкалова",
     "HouseNumber": "18"
@@ -10453,11 +9943,6 @@
     "CityName": "Салават",
     "StreetName": "Юлаева",
     "HouseNumber": "26"
-  },
-  {
-    "CityName": "Санкт-Петербург",
-    "StreetName": "Кожевенная линия",
-    "HouseNumber": "40 Б"
   },
   {
     "CityName": "Сарана",
@@ -10562,11 +10047,6 @@
   {
     "CityName": "Североуральск",
     "StreetName": "Ленина",
-    "HouseNumber": "31"
-  },
-  {
-    "CityName": "Североуральск",
-    "StreetName": "Ленина",
     "HouseNumber": "42"
   },
   {
@@ -10585,11 +10065,6 @@
     "HouseNumber": "45"
   },
   {
-    "CityName": "Северский гранитный",
-    "StreetName": "",
-    "HouseNumber": ""
-  },
-  {
     "CityName": "Серафимовский",
     "StreetName": "Девонская",
     "HouseNumber": "29"
@@ -10598,11 +10073,6 @@
     "CityName": "Серов",
     "StreetName": "Автодорожная",
     "HouseNumber": "15"
-  },
-  {
-    "CityName": "Серов",
-    "StreetName": "Заславского",
-    "HouseNumber": "18"
   },
   {
     "CityName": "Серов",
@@ -10896,11 +10366,6 @@
   },
   {
     "CityName": "Среднеуральск",
-    "StreetName": "Парижской Коммуны",
-    "HouseNumber": "7-А"
-  },
-  {
-    "CityName": "Среднеуральск",
     "StreetName": "Советская",
     "HouseNumber": "39"
   },
@@ -10915,11 +10380,6 @@
     "HouseNumber": "18"
   },
   {
-    "CityName": "Старопышминск",
-    "StreetName": "Ленина",
-    "HouseNumber": "34"
-  },
-  {
     "CityName": "Староуткинск",
     "StreetName": "Кирова",
     "HouseNumber": "1"
@@ -10928,11 +10388,6 @@
     "CityName": "Старый Оскол",
     "StreetName": "Молодежный",
     "HouseNumber": "10"
-  },
-  {
-    "CityName": "Стенд на выставку",
-    "StreetName": "",
-    "HouseNumber": ""
   },
   {
     "CityName": "Стерлитамак",
@@ -11466,11 +10921,6 @@
   },
   {
     "CityName": "Талица",
-    "StreetName": "",
-    "HouseNumber": ""
-  },
-  {
-    "CityName": "Талица",
     "StreetName": "Васильева",
     "HouseNumber": "11"
   },
@@ -11652,11 +11102,6 @@
   {
     "CityName": "Тугулым",
     "StreetName": "Ленина",
-    "HouseNumber": "58"
-  },
-  {
-    "CityName": "Тугулым",
-    "StreetName": "Ленина",
     "HouseNumber": "62"
   },
   {
@@ -11703,11 +11148,6 @@
     "CityName": "Туринск",
     "StreetName": "Спорта",
     "HouseNumber": "29"
-  },
-  {
-    "CityName": "Тюмень",
-    "StreetName": "",
-    "HouseNumber": ""
   },
   {
     "CityName": "Тюмень",
@@ -11982,11 +11422,6 @@
   {
     "CityName": "Тюмень",
     "StreetName": "Московский тракт",
-    "HouseNumber": "120-ст2"
-  },
-  {
-    "CityName": "Тюмень",
-    "StreetName": "Московский тракт",
     "HouseNumber": "120А"
   },
   {
@@ -12043,6 +11478,11 @@
     "CityName": "Тюмень",
     "StreetName": "Одесская",
     "HouseNumber": "40"
+  },
+  {
+    "CityName": "Тюмень",
+    "StreetName": "Одесская",
+    "HouseNumber": "59"
   },
   {
     "CityName": "Тюмень",
@@ -12111,6 +11551,11 @@
   },
   {
     "CityName": "Тюмень",
+    "StreetName": "Пражская",
+    "HouseNumber": "10"
+  },
+  {
+    "CityName": "Тюмень",
     "StreetName": "Протозанова",
     "HouseNumber": "11"
   },
@@ -12127,12 +11572,12 @@
   {
     "CityName": "Тюмень",
     "StreetName": "Республики",
-    "HouseNumber": ""
+    "HouseNumber": "143А"
   },
   {
     "CityName": "Тюмень",
     "StreetName": "Республики",
-    "HouseNumber": "143А"
+    "HouseNumber": "146"
   },
   {
     "CityName": "Тюмень",
@@ -12227,6 +11672,11 @@
   {
     "CityName": "Тюмень",
     "StreetName": "Ставропольская",
+    "HouseNumber": "1"
+  },
+  {
+    "CityName": "Тюмень",
+    "StreetName": "Ставропольская",
     "HouseNumber": "8"
   },
   {
@@ -12268,11 +11718,6 @@
     "CityName": "Тюмень",
     "StreetName": "Туристская",
     "HouseNumber": "13А"
-  },
-  {
-    "CityName": "Тюмень",
-    "StreetName": "Урицкого",
-    "HouseNumber": "36"
   },
   {
     "CityName": "Тюмень",
@@ -12372,6 +11817,11 @@
   {
     "CityName": "Тюмень",
     "StreetName": "Широтная",
+    "HouseNumber": "169"
+  },
+  {
+    "CityName": "Тюмень",
+    "StreetName": "Широтная",
     "HouseNumber": "199"
   },
   {
@@ -12403,6 +11853,16 @@
     "CityName": "Тюмень",
     "StreetName": "Энергетиков",
     "HouseNumber": "52"
+  },
+  {
+    "CityName": "Тюмень",
+    "StreetName": "Энергетиков",
+    "HouseNumber": "52"
+  },
+  {
+    "CityName": "Тюмень",
+    "StreetName": "Энергетиков",
+    "HouseNumber": "62"
   },
   {
     "CityName": "Тюмень",
@@ -12866,11 +12326,6 @@
   },
   {
     "CityName": "Ханты-Мансийск",
-    "StreetName": "Островского",
-    "HouseNumber": "14"
-  },
-  {
-    "CityName": "Ханты-Мансийск",
     "StreetName": "Сирина",
     "HouseNumber": "78"
   },
@@ -13011,16 +12466,6 @@
   },
   {
     "CityName": "Челябинск",
-    "StreetName": "аэропорт Баландино",
-    "HouseNumber": ""
-  },
-  {
-    "CityName": "Челябинск",
-    "StreetName": "Аэропорт",
-    "HouseNumber": "1"
-  },
-  {
-    "CityName": "Челябинск",
     "StreetName": "Бажова",
     "HouseNumber": "91"
   },
@@ -13078,11 +12523,6 @@
     "CityName": "Челябинск",
     "StreetName": "Воровского",
     "HouseNumber": "59"
-  },
-  {
-    "CityName": "Челябинск",
-    "StreetName": "Воровского",
-    "HouseNumber": "73"
   },
   {
     "CityName": "Челябинск",
@@ -13241,6 +12681,11 @@
   },
   {
     "CityName": "Челябинск",
+    "StreetName": "Копейское шоссе",
+    "HouseNumber": "64"
+  },
+  {
+    "CityName": "Челябинск",
     "StreetName": "Краснопольский пр-кт",
     "HouseNumber": "29"
   },
@@ -13253,11 +12698,6 @@
     "CityName": "Челябинск",
     "StreetName": "Ленина",
     "HouseNumber": "35"
-  },
-  {
-    "CityName": "Челябинск",
-    "StreetName": "Ленина",
-    "HouseNumber": "36"
   },
   {
     "CityName": "Челябинск",
@@ -13398,11 +12838,6 @@
     "CityName": "Челябинск",
     "StreetName": "Свердловский",
     "HouseNumber": "84Б"
-  },
-  {
-    "CityName": "Челябинск",
-    "StreetName": "Свободы",
-    "HouseNumber": "98"
   },
   {
     "CityName": "Челябинск",
@@ -13630,11 +13065,6 @@
     "HouseNumber": "31"
   },
   {
-    "CityName": "Шаля",
-    "StreetName": "Орджоникидзе",
-    "HouseNumber": "2-Б"
-  },
-  {
     "CityName": "Шаркан",
     "StreetName": "Советская",
     "HouseNumber": "41"
@@ -13648,11 +13078,6 @@
     "CityName": "Шумиха",
     "StreetName": "Белоносова",
     "HouseNumber": "2"
-  },
-  {
-    "CityName": "Шумиха",
-    "StreetName": "Ленина",
-    "HouseNumber": "66"
   },
   {
     "CityName": "Шумиха",
